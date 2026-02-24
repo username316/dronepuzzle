@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bwx78u7hlesfp"]
+
+[ext_resource type="Script" uid="uid://dtj7tneaquy0v" path="res://drone.gd" id="1_1eobg"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_etgmo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cachy"]
+albedo_color = Color(0, 1, 1, 1)
+
+[node name="Drone" type="Node3D"]
+script = ExtResource("1_1eobg")
+
+[node name="model" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="model"]
+mesh = SubResource("BoxMesh_etgmo")
+surface_material_override/0 = SubResource("StandardMaterial3D_cachy")

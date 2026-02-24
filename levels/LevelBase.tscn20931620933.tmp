@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://d05r7jbw752k3"]
+
+[ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level_base.gd" id="1_djagn"]
+[ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://Drone.tscn" id="2_4eioo"]
+[ext_resource type="PackedScene" uid="uid://dfpe27iw2mp4l" path="res://CameraFollow.tscn" id="2_vct3b"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
+size = Vector2(20, 10)
+
+[node name="LevelBase" type="Node3D"]
+script = ExtResource("1_djagn")
+
+[node name="CameraFollow" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_vct3b")]
+target = NodePath("../Drone")
+
+[node name="Drone" parent="." instance=ExtResource("2_4eioo")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.994552, 0)
+mesh = SubResource("PlaneMesh_djagn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787, 0, 0, 0)

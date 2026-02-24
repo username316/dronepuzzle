@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgpadmu477mwb"]
+
+[ext_resource type="Script" uid="uid://b3ep3f2dsb8jp" path="res://ui/start_menu.gd" id="1_bx376"]
+
+[node name="StartMenu" type="Node3D"]
+script = ExtResource("1_bx376")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="StartButton" type="Button" parent="CanvasLayer"]
+offset_left = 303.0
+offset_top = 235.0
+offset_right = 767.0
+offset_bottom = 356.0
+text = "START"
+
+[connection signal="pressed" from="CanvasLayer/StartButton" to="." method="_on_start_button_pressed"]
