@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d05r7jbw752k3"]
+[gd_scene load_steps=5 format=3 uid="uid://d05r7jbw752k3"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level_base.gd" id="1_djagn"]
 [ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://Drone.tscn" id="2_4eioo"]
@@ -6,10 +6,13 @@
 [sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
 size = Vector2(20, 10)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_djagn"]
+
 [node name="LevelBase" type="Node3D"]
 script = ExtResource("1_djagn")
 
-[node name="Drone" parent="." instance=ExtResource("2_4eioo")]
+[node name="Drone" parent="." node_paths=PackedStringArray("target_area") instance=ExtResource("2_4eioo")]
+target_area = NodePath("../Finish")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.994552, 0)
@@ -19,4 +22,11 @@ mesh = SubResource("PlaneMesh_djagn")
 transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787, 0, 0, 0)
 
 [node name="CameraTop" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 3.44148, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 8.15517, 0)
+
+[node name="Finish" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.43604, -0.173215, 3.45469)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Finish"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.117307, 0)
+shape = SubResource("BoxShape3D_djagn")
