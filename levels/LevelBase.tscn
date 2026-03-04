@@ -30,8 +30,3 @@ transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787
 
 [node name="CameraTop" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -1.03316e-07, 1, 0, -1, -1.03316e-07, -0.168555, 13.8563, -0.0282453)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.72501, 0.309711, 0.374627)
-use_collision = true
-size = Vector3(1, 6.82202, 5.78186)
