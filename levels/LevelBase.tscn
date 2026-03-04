@@ -15,11 +15,12 @@ freeze_mode = 1
 custom_integrator = false
 linear_damp = 0.05
 angular_damp = 1.0
-target_position = Vector3(-7, 2, 5)
+target_position = Vector3(3, 6, -5)
 arrive_radius = 5.0
+vision_enabled = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.46068, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, -1, 0.012)
 mesh = SubResource("PlaneMesh_djagn")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

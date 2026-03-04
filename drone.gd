@@ -22,6 +22,7 @@ extends RigidBody3D
 # Vision / avoidance (camera-only)
 @export var vision_interval := 0.05      # 20 Hz is much better than 10 Hz
 @export var avoid_yaw_speed := 3.5
+@export var vision_enabled := true
 
 # Flow + edges thresholds (tune in Inspector)
 @export var avoid_trigger_flow := 0.06
@@ -96,10 +97,16 @@ func _physics_process(delta: float) -> void:
 
 	else:
 		# Vision update
-		vision_timer += delta
-		if vision_timer >= vision_interval:
-			vision_timer = 0.0
-			process_vision()
+		if vision_enabled:
+			vision_timer += delta
+			if vision_timer >= vision_interval:
+				vision_timer = 0.0
+				process_vision()
+		else:
+			# ensure avoidance is disabled when camera is off
+			avoid_active = false
+			avoid_yaw_dir = 0.0
+			avoid_strength = 0.0
 
 		# Steering (goal + camera avoidance)
 		steer_toward_goal(dist, delta)
