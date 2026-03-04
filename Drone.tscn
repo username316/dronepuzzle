@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bwx78u7hlesfp"]
+[gd_scene load_steps=5 format=3 uid="uid://bwx78u7hlesfp"]
 
 [ext_resource type="Script" uid="uid://dtj7tneaquy0v" path="res://drone.gd" id="1_1eobg"]
 
@@ -7,7 +7,13 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cachy"]
 albedo_color = Color(0, 1, 1, 1)
 
-[node name="Drone" type="Node3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_1eobg"]
+
+[node name="Drone" type="RigidBody3D"]
+mass = 1.5
+custom_integrator = true
+linear_damp = 0.2
+angular_damp = 1.5
 script = ExtResource("1_1eobg")
 
 [node name="model" type="Node3D" parent="."]
@@ -15,3 +21,20 @@ script = ExtResource("1_1eobg")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="model"]
 mesh = SubResource("BoxMesh_etgmo")
 surface_material_override/0 = SubResource("StandardMaterial3D_cachy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_1eobg")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+current = true
+
+[node name="VisionViewport" type="SubViewport" parent="."]
+size = Vector2i(160, 120)
+render_target_update_mode = 4
+
+[node name="VisionCamera" type="Camera3D" parent="VisionViewport"]
+fov = 80.0
+near = 0.1
+far = 20.0
