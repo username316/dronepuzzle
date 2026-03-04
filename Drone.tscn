@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwx78u7hlesfp"]
+[gd_scene load_steps=6 format=3 uid="uid://bwx78u7hlesfp"]
 
 [ext_resource type="Script" uid="uid://dtj7tneaquy0v" path="res://drone.gd" id="1_1eobg"]
+[ext_resource type="Script" uid="uid://daji7esbscd5f" path="res://LidarSensor3D.gd" id="2_3rlx3"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_etgmo"]
 
@@ -15,6 +16,9 @@ custom_integrator = true
 linear_damp = 0.2
 angular_damp = 1.5
 script = ExtResource("1_1eobg")
+target_position = Vector3(5, 0, 5)
+vision_enabled = false
+lidar_enabled = false
 
 [node name="model" type="Node3D" parent="."]
 
@@ -38,3 +42,6 @@ render_target_update_mode = 4
 fov = 80.0
 near = 0.1
 far = 20.0
+
+[node name="Lidar" type="Node3D" parent="."]
+script = ExtResource("2_3rlx3")
