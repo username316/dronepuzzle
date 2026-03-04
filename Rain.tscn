@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://dtobi21uvl4et"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_djagn"]
+emission_shape = 3
+emission_box_extents = Vector3(10, 8, 10)
+color = Color(0.470588, 0.709804, 0.819608, 0.164706)
+
+[sub_resource type="Curve" id="Curve_djagn"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.863095, 0.494382), 0.0, 0.0, 0, 0, Vector2(0.97619, 0.426966), 0.0, 0.0, 0, 0, Vector2(1, 0.247191), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4eioo"]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_fsmbg"]
+material = SubResource("StandardMaterial3D_4eioo")
+size = 0.1
+section_length = 0.4
+section_segments = 1
+curve = SubResource("Curve_djagn")
+
+[node name="Rain" type="GPUParticles3D"]
+amount = 3000
+randomness = 1.0
+visibility_aabb = AABB(-5, -10, -5, 10, 10, 10)
+process_material = SubResource("ParticleProcessMaterial_djagn")
+draw_pass_1 = SubResource("RibbonTrailMesh_fsmbg")
