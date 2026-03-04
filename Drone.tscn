@@ -16,7 +16,6 @@ custom_integrator = true
 linear_damp = 0.2
 angular_damp = 1.5
 script = ExtResource("1_1eobg")
-target_position = Vector3(5, 0, 5)
 vision_enabled = false
 lidar_enabled = false
 

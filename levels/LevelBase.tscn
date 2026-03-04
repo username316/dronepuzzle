@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://d05r7jbw752k3"]
+[gd_scene load_steps=8 format=3 uid="uid://d05r7jbw752k3"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_djagn"]
 [ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://Drone.tscn" id="2_4eioo"]
 [ext_resource type="PackedScene" uid="uid://dtobi21uvl4et" path="res://Rain.tscn" id="3_4eioo"]
+[ext_resource type="Script" uid="uid://nxtxa01uvdaa" path="res://levels/pause_menu.gd" id="4_fsmbg"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
 size = Vector2(10, 10)
@@ -11,21 +12,25 @@ size = Vector2(10, 10)
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
 fog_enabled = true
+fog_light_color = Color(0.177111, 0.19591, 0.225462, 1)
 fog_density = 0.0
 volumetric_fog_enabled = true
 volumetric_fog_density = 1.0
 volumetric_fog_ambient_inject = 16.0
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_4eioo"]
+radius = 1.0
+
 [node name="Level" type="Node3D"]
 script = ExtResource("1_djagn")
 
-[node name="Drone" parent="." instance=ExtResource("2_4eioo")]
+[node name="Drone" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_4eioo")]
 can_sleep = false
 freeze_mode = 1
 custom_integrator = false
 linear_damp = 0.05
 angular_damp = 1.0
-target_position = Vector3(7, 6, 7)
+target = NodePath("../Target")
 arrive_radius = 5.0
 vision_enabled = true
 lidar_enabled = true
@@ -39,13 +44,47 @@ mesh = SubResource("PlaneMesh_djagn")
 transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787, 0, 0, 0)
 
 [node name="CameraTop" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.818531, 0.574463, 0, -0.574463, 0.818531, 0, 1.98068, 2.2902)
-
-[node name="Obstacles" type="Node" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 4.16827, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_djagn")
 
 [node name="Rain" parent="." instance=ExtResource("3_4eioo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
-emitting = false
+
+[node name="Obstacles" type="Node" parent="."]
+
+[node name="Target" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.28225, 1.48308, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Target"]
+shape = SubResource("SphereShape3D_4eioo")
+
+[node name="PauseMenu" type="CanvasLayer" parent="."]
+process_mode = 3
+script = ExtResource("4_fsmbg")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PauseMenu"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -95.0
+offset_top = -20.0
+offset_right = 95.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContinueButton" type="Button" parent="PauseMenu/HBoxContainer"]
+layout_mode = 2
+text = "Continue"
+
+[node name="ToStartButton" type="Button" parent="PauseMenu/HBoxContainer"]
+layout_mode = 2
+text = "Back to Start"
+
+[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
+[connection signal="pressed" from="PauseMenu/HBoxContainer/ContinueButton" to="PauseMenu" method="_on_continue_button_pressed"]
+[connection signal="pressed" from="PauseMenu/HBoxContainer/ToStartButton" to="PauseMenu" method="_on_to_start_button_pressed"]

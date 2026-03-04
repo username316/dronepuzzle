@@ -11,7 +11,8 @@ extends RigidBody3D
 @export var height_strength := 15.0
 @export var height_damping := 8.0
 
-@export var target_position: Vector3
+@export var target: Area3D
+var target_position: Vector3
 @export var arrive_radius := 8.0
 @export var stop_radius := 2.0
 
@@ -119,6 +120,8 @@ var lidar_avoid_timer: float = 0.0
 #Escape
 var backoff_timer: float = 0.0
 
+func _ready() -> void:
+	target_position = target.global_position
 
 func _physics_process(delta: float) -> void:
 	# --- Altitude hold ---
