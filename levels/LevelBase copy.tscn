@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://d05r7jbw752k3"]
+
+[ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_djagn"]
+[ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://Drone.tscn" id="2_4eioo"]
+[ext_resource type="PackedScene" uid="uid://dtobi21uvl4et" path="res://Rain.tscn" id="3_4eioo"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
+size = Vector2(10, 10)
+
+[sub_resource type="Environment" id="Environment_djagn"]
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+fog_enabled = true
+fog_density = 0.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 1.0
+volumetric_fog_ambient_inject = 16.0
+
+[node name="Level" type="Node3D"]
+script = ExtResource("1_djagn")
+
+[node name="Drone" parent="." instance=ExtResource("2_4eioo")]
+can_sleep = false
+freeze_mode = 1
+custom_integrator = false
+linear_damp = 0.05
+angular_damp = 1.0
+target_position = Vector3(7, 6, 7)
+arrive_radius = 5.0
+vision_enabled = true
+lidar_enabled = true
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, -1, 0.012)
+layers = 2
+mesh = SubResource("PlaneMesh_djagn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787, 0, 0, 0)
+
+[node name="CameraTop" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.818531, 0.574463, 0, -0.574463, 0.818531, 0, 1.98068, 2.2902)
+
+[node name="Obstacles" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_djagn")
+
+[node name="Rain" parent="." instance=ExtResource("3_4eioo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+emitting = false
