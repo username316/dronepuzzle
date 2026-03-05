@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwx78u7hlesfp"]
+[gd_scene load_steps=7 format=3 uid="uid://bwx78u7hlesfp"]
 
 [ext_resource type="Script" uid="uid://dtj7tneaquy0v" path="res://drone.gd" id="1_1eobg"]
 [ext_resource type="Script" uid="uid://daji7esbscd5f" path="res://LidarSensor3D.gd" id="2_3rlx3"]
+[ext_resource type="Script" uid="uid://bqbw46l8qmuff" path="res://camera_pivot.gd" id="2_5j1j2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_etgmo"]
 
@@ -29,8 +30,10 @@ surface_material_override/0 = SubResource("StandardMaterial3D_cachy")
 shape = SubResource("BoxShape3D_1eobg")
 
 [node name="CameraPivot" type="Node3D" parent="."]
+script = ExtResource("2_5j1j2")
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2, 2)
 current = true
 
 [node name="VisionViewport" type="SubViewport" parent="."]

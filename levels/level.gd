@@ -1,7 +1,9 @@
 extends Node3D
 class_name Level
 
+@onready var drone = $Drone
 @onready var camera_top = $CameraTop
+@onready var drone_pivot_camera = drone.get_node("CameraPivot/Camera3D")
 @onready var environment = $WorldEnvironment.get_environment()
 @onready var rain_particles = $Rain
 @onready var pause_menu = $PauseMenu
@@ -15,19 +17,13 @@ class_name Level
 var current_camera: Camera3D
 
 func _ready() -> void:
-	set_current_camera(camera_top)
+	set_current_camera(drone_pivot_camera)
 	
 	pause_menu.visible = false
 	
 	environment.set_fog_density(fog_density)
 	rain_particles.emitting = raining
 
-func _input(event: InputEvent) -> void:
-	'if event.is_action_pressed("zoom_in"):
-		current_camera.zoom_out()
-	if event.is_action_pressed("zoom_out"):
-		current_camera.zoom_in()'
-		
 func set_current_camera(cam: Camera3D):
 	current_camera = cam
 	current_camera.set_current(true)
@@ -43,7 +39,3 @@ func get_mouse_dir(x, y):
 
 func _on_target_body_entered(body: Node3D) -> void:
 	pass # Replace with function body.
-
-func pause():
-	pause_menu.visible = true
-	get_tree().paused = true

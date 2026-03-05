@@ -51,6 +51,7 @@ environment = SubResource("Environment_djagn")
 
 [node name="Rain" parent="." instance=ExtResource("3_4eioo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+emitting = false
 
 [node name="Obstacles" type="Node" parent="."]
 
@@ -64,7 +65,7 @@ shape = SubResource("SphereShape3D_4eioo")
 process_mode = 3
 script = ExtResource("4_fsmbg")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PauseMenu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -73,18 +74,24 @@ anchor_bottom = 0.5
 offset_left = -95.0
 offset_top = -20.0
 offset_right = 95.0
-offset_bottom = 20.0
+offset_bottom = 46.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="ContinueButton" type="Button" parent="PauseMenu/HBoxContainer"]
+[node name="Label" type="Label" parent="PauseMenu/VBoxContainer"]
+layout_mode = 2
+text = "Paused"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="PauseMenu/VBoxContainer"]
 layout_mode = 2
 text = "Continue"
 
-[node name="ToStartButton" type="Button" parent="PauseMenu/HBoxContainer"]
+[node name="ToStartButton" type="Button" parent="PauseMenu/VBoxContainer"]
 layout_mode = 2
 text = "Back to Start"
 
 [connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
-[connection signal="pressed" from="PauseMenu/HBoxContainer/ContinueButton" to="PauseMenu" method="_on_continue_button_pressed"]
-[connection signal="pressed" from="PauseMenu/HBoxContainer/ToStartButton" to="PauseMenu" method="_on_to_start_button_pressed"]
+[connection signal="pressed" from="PauseMenu/VBoxContainer/ContinueButton" to="PauseMenu" method="_on_continue_button_pressed"]
+[connection signal="pressed" from="PauseMenu/VBoxContainer/ToStartButton" to="PauseMenu" method="_on_to_start_button_pressed"]
