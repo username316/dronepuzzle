@@ -1,5 +1,5 @@
 @tool 
-extends Node3D
+extends Level
 
 # LEVEL 1: THE PROVING GROUNDS
 # Professional Version - Safety Updated to fix Cyclic and Tree errors
@@ -11,6 +11,7 @@ extends Node3D
 			build_level.call_deferred()
 
 func _ready():
+	super._ready()
 	# SAFETY GATE: Only run if we are actually in the scene tree
 	if not is_inside_tree():
 		return

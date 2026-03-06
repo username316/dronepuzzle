@@ -1,5 +1,5 @@
 @tool 
-extends Node3D
+extends Level
 
 # LEVEL 2: THE VENTILATION SHAFTS
 # Focus: Vertical navigation and staggered flight paths.
@@ -10,6 +10,8 @@ extends Node3D
 			build_level.call_deferred()
 
 func _ready():
+	super._ready()
+	
 	if not is_inside_tree():
 		return
 	if not is_node_ready():

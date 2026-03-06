@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://chdtsh7or1qd1"]
+[gd_scene load_steps=3 format=3 uid="uid://bpooynlgj3ygo"]
 
 [ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/LevelBase.tscn" id="1_b84ys"]
 [ext_resource type="Script" uid="uid://bmww6phrn2hrs" path="res://levels/Level1_Builder.gd" id="2_32mhh"]
@@ -9,3 +9,12 @@ refresh_level = false
 
 [node name="Drone" parent="." index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 15)
+
+[node name="Target" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58324, 1.48308, -19.3427)
+
+[node name="CollisionShape3D" parent="Target" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.66978, 0, -0.365494)
+
+[node name="PauseMenu" parent="." index="8"]
+visible = false

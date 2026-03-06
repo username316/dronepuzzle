@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://dya4drv4qjqwx"]
+[gd_scene load_steps=3 format=3 uid="uid://dopsm57knb8hf"]
 
 [ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/LevelBase.tscn" id="1_gq8fh"]
 [ext_resource type="Script" uid="uid://21jnqyseu7nt" path="res://levels/Level3_Builder.gd" id="2_11ac5"]
@@ -6,6 +6,11 @@
 [node name="Level" instance=ExtResource("1_gq8fh")]
 script = ExtResource("2_11ac5")
 refresh_level = false
+fog_density = null
+raining = null
 
 [node name="Drone" parent="." index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 25)
+
+[node name="Target" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0243931, 1.48308, -30.7729)
