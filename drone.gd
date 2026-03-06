@@ -12,7 +12,6 @@ extends RigidBody3D
 @export var height_damping := 8.0
 
 @export var target: Area3D
-var target_position: Vector3
 @export var arrive_radius := 8.0
 @export var stop_radius := 2.0
 
@@ -54,11 +53,13 @@ var target_position: Vector3
 # -----------------------
 # LiDAR params
 # -----------------------
-@export var lidar_trigger_dist := 7.0
-@export var lidar_clear_dist := 8.0
+@export var lidar_trigger_dist := 9.0
+@export var lidar_clear_dist := 11.0
 @export var lidar_min_avoid_time := 0.45
 @export var lidar_dir_deadband := 0.35
 @export var lidar_smooth := 0.20
+@export var lidar_trigger_hold_time := 0.12
+
 
 # -----------------------
 # Avoidance behavior tuning (important)
@@ -66,15 +67,23 @@ var target_position: Vector3
 @export var avoid_creep := 0.55          # how much forward remains during avoidance (0..1)
 @export var avoid_stop_strength := 0.90  # if avoid_strength above this, stop forward
 @export var avoid_bank := 0.7            # roll lerp during avoidance (0..1)
-@export var avoid_force := 22.0          # horizontal push strength (tune 10..30)
+@export var avoid_force := 24.0          # horizontal push strength (tune 10..30)
 @export var backoff_force := 18.0         # extra push backward when too close
-@export var no_forward_dist := 2.5     # if C < this, do not command forward pitch
-@export var brake_dist := 3.5          # if C < this, brake forward velocity
+@export var no_forward_dist := 3.5     # if C < this, do not command forward pitch
+@export var brake_dist := 5.0          # if C < this, brake forward velocity
 @export var reverse_dist := 0.9        # last resort reverse
-@export var forward_brake_gain := 22.0 # how hard to brake forward speed
+@export var forward_brake_gain := 26.0 # how hard to brake forward speed
+@export var climb_trigger_dist := 3.5
+@export var climb_clear_dist := 2.8
+@export var climb_rate := 2.0
+@export var climb_target_offset := 2.0
+@export var max_hover_height := 8.0
+@export var return_rate := 1.5
 
 @onready var vision_viewport: SubViewport = get_node("VisionViewport")
 @onready var lidar: LidarSensor3D = $Lidar
+@onready var lidar_up: LidarSensor3D = $LidarUp
+@onready var lidar_down: LidarSensor3D = $LidarDown
 
 # --------------------------------------
 # Escape / un-wedge behavior
@@ -84,7 +93,11 @@ var target_position: Vector3
 @export var backoff_tilt := 0.10       # positive = backwards in your scheme
 
 
-
+#Target
+var target_position: Vector3
+#Hover
+var desired_hover_height: float = 3.0
+var climb_active := false
 # Timers
 var vision_timer := 0.0
 var prev_img: Image = null
@@ -110,6 +123,8 @@ var avoid_active_lidar := false
 var avoid_dir_lidar := 0.0
 var avoid_strength_lidar := 0.0
 var lidar_center_latest: float = 20.0
+var lidar_trigger_timer: float = 0.0
+
 
 # LiDAR smoothing + timer
 var lidar_left_f: float = 0.0
@@ -122,10 +137,11 @@ var backoff_timer: float = 0.0
 
 func _ready() -> void:
 	target_position = target.global_position
+	desired_hover_height = hover_height
 
 func _physics_process(delta: float) -> void:
 	# --- Altitude hold ---
-	var height_error := hover_height - global_position.y
+	var height_error := desired_hover_height - global_position.y
 	var vertical_velocity := linear_velocity.y
 	var height_correction := height_error * height_strength - vertical_velocity * height_damping
 	target_thrust = clamp(9.8 * mass + height_correction, min_thrust, max_thrust)
@@ -137,7 +153,8 @@ func _physics_process(delta: float) -> void:
 	var reached := dist <= stop_radius
 	
 	if lidar != null:
-		lidar.global_rotation = Vector3(0.0, global_rotation.y, 0.0)
+		lidar.global_rotation.y = global_rotation.y
+		lidar_up.global_rotation.y = global_rotation.y
 
 	if reached:
 		_do_reached_hold(delta)
@@ -145,6 +162,7 @@ func _physics_process(delta: float) -> void:
 		# 1) Update sensors (each writes into its own output vars)
 		_update_vision(delta)
 		_update_lidar(delta)
+		vertical_avoidance_update(delta)
 
 		# 2) Fuse into final avoid_active/avoid_yaw_dir/avoid_strength
 		fuse_avoidance(
@@ -332,9 +350,9 @@ func edge_density(img: Image, x0: int, x1: int, y0: int, y1: int, step: int) -> 
 # LiDAR avoidance
 # -----------------------
 func lidar_avoidance_update() -> void:
-	var left: float   = lidar.get_sector_min(-60.0, -20.0)
-	var center: float = lidar.get_sector_min(-12.0, 12.0)
-	var right: float  = lidar.get_sector_min(20.0, 60.0)
+	var left: float = lidar.get_sector_percentile(-60.0, -20.0, 0.25)
+	var center: float = lidar.get_sector_percentile(-8.0, 8.0, 0.25)
+	var right: float = lidar.get_sector_percentile(20.0, 60.0, 0.25)
 
 	# Smooth (low-pass)
 	if lidar_left_f == 0.0:
@@ -349,39 +367,79 @@ func lidar_avoidance_update() -> void:
 	left = lidar_left_f
 	center = lidar_center_f
 	right = lidar_right_f
-	
+
 	lidar_center_latest = center
-	
+
 	# DEBUG
 	if Engine.get_physics_frames() % 10 == 0:
 		print("L:", left, " C:", center, " R:", right, " avoid:", avoid_active_lidar)
 
-	# Trigger avoidance
-	if not avoid_active_lidar and center < lidar_trigger_dist:
+	# -----------------------
+	# Trigger hold
+	# -----------------------
+	if center < lidar_trigger_dist:
+		lidar_trigger_timer += get_physics_process_delta_time()
+	else:
+		lidar_trigger_timer = 0.0
+
+	# Trigger avoidance only if obstacle persists for a short time
+	if not avoid_active_lidar and lidar_trigger_timer >= lidar_trigger_hold_time:
 		avoid_active_lidar = true
 		lidar_avoid_timer = lidar_min_avoid_time
 
-	# Countdown
+	# Countdown latch timer
 	if lidar_avoid_timer > 0.0:
 		lidar_avoid_timer -= get_physics_process_delta_time()
 
 	# Clear only when timer expired AND clearly safe
 	if avoid_active_lidar and lidar_avoid_timer <= 0.0 and center > lidar_clear_dist:
 		avoid_active_lidar = false
+		lidar_trigger_timer = 0.0
 
 	if avoid_active_lidar:
-		# Strength first
-		avoid_strength_lidar = clamp((lidar_trigger_dist - center) / max(lidar_trigger_dist, 0.001), 0.0, 1.0)
+		# Strength based on center closeness
+		avoid_strength_lidar = clamp(
+			(lidar_trigger_dist - center) / max(lidar_trigger_dist, 0.001),
+			0.0,
+			1.0
+		)
 
-		# If both sides are very close, keep the previous direction (don't flip)
+		# If both sides are very close, keep previous direction
 		if not (left < 1.5 and right < 1.5):
-			var diff := left - right
+			var diff: float = left - right
 			if abs(diff) > lidar_dir_deadband:
 				avoid_dir_lidar = -1.0 if diff > 0.0 else 1.0
 	else:
 		avoid_strength_lidar = 0.0
 		avoid_dir_lidar = 0.0
 
+
+func vertical_avoidance_update(delta: float) -> void:
+	if not lidar_enabled or lidar == null or lidar_up == null:
+		climb_active = false
+		desired_hover_height = move_toward(desired_hover_height, hover_height, return_rate * delta)
+		return
+
+	var front_mid: float = lidar.get_sector_min(-10.0, 10.0)
+	var front_up: float = lidar_up.get_sector_min(-20.0, 20.0)
+
+	print("mid:", front_mid, " up:", front_up, " desired_h:", desired_hover_height, " climb:", climb_active)
+
+	# Hysteresis for climb state
+	if climb_active:
+		# Stay climbing until front is mostly clear
+		if front_mid > lidar_clear_dist:
+			climb_active = false
+	else:
+		# Start climbing if blocked ahead and enough space above
+		if front_mid < climb_trigger_dist and front_up > climb_clear_dist:
+			climb_active = true
+
+	if climb_active:
+		var target_h: float = min(hover_height + climb_target_offset, max_hover_height)
+		desired_hover_height = move_toward(desired_hover_height, target_h, climb_rate * delta)
+	else:
+		desired_hover_height = move_toward(desired_hover_height, hover_height, return_rate * delta)
 # -----------------------
 # Fusion
 # -----------------------
@@ -432,29 +490,35 @@ func steer_toward_goal(dist: float, delta: float) -> void:
 	# Avoidance override (typed to avoid Variant inference)
 	if avoid_active:
 		var c: float = lidar_center_latest
+		var a_strength: float = clamp(avoid_strength, 0.0, 1.0)
+
+		# If climbing, don't yaw hard away; keep some forward motion
+		if climb_active:
+			var speed_scale: float = clamp(dist / arrive_radius, 0.0, 1.0)
+			speed_scale = pow(speed_scale, 0.35)
+			var commanded: float = lerp(cruise_tilt, max_forward_tilt, speed_scale)
+
+			target_pitch = -commanded * 0.45
+			target_roll = lerp(target_roll, 0.0, 0.2)
+			return
+
+		# Normal horizontal avoidance
 		var yaw_scale: float = 1.0
 		if lidar_enabled:
-			# less yaw when very close -> less jitter, more sliding away
 			yaw_scale = clamp((c - 0.8) / 2.2, 0.15, 1.0)
 
 		rotation.y += avoid_yaw_dir * avoid_yaw_speed * yaw_scale * delta
 		target_roll = lerp(target_roll, avoid_yaw_dir * max_side_tilt, 0.7)
 
-		var a_strength: float = clamp(avoid_strength, 0.0, 1.0)
-
-		# Default: do not push forward if we're within no_forward_dist
 		if lidar_enabled and c < no_forward_dist:
 			target_pitch = 0.0
 		else:
-			# Otherwise allow a little creep forward while turning
 			var speed_scale: float = clamp(dist / arrive_radius, 0.0, 1.0)
 			speed_scale = pow(speed_scale, 0.35)
 			var commanded: float = lerp(cruise_tilt, max_forward_tilt, speed_scale)
-
 			var slow: float = lerp(1.0, 0.35, a_strength)
 			target_pitch = -commanded * slow
 
-		# Extra braking / last resort reverse handled by forces (feels more physical)
 		return
 	
 	

@@ -6,11 +6,12 @@
 [node name="Level" instance=ExtResource("1_gljt1")]
 script = ExtResource("2_f5x84")
 refresh_level = false
-fog_density = null
-raining = null
 
 [node name="Drone" parent="." index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, 6)
 
 [node name="Target" parent="." index="7"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0138512, 21.409, 0.0115042)
+
+[node name="PauseMenu" parent="." index="8"]
+visible = false
