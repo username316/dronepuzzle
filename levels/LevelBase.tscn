@@ -32,6 +32,8 @@ linear_damp = 0.05
 angular_damp = 1.0
 target = NodePath("../Target")
 arrive_radius = 5.0
+vision_enabled = true
+lidar_enabled = false
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, -1, 0.012)
