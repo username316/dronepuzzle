@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://d05r7jbw752k3"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_djagn"]
-[ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://Drone.tscn" id="2_4eioo"]
+[ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://drone/Drone.tscn" id="2_4eioo"]
 [ext_resource type="PackedScene" uid="uid://dtobi21uvl4et" path="res://Rain.tscn" id="3_4eioo"]
 [ext_resource type="Script" uid="uid://nxtxa01uvdaa" path="res://levels/pause_menu.gd" id="4_fsmbg"]
 
@@ -32,8 +32,6 @@ linear_damp = 0.05
 angular_damp = 1.0
 target = NodePath("../Target")
 arrive_radius = 5.0
-vision_enabled = true
-lidar_enabled = false
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, -1, 0.012)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://bwx78u7hlesfp"]
 
-[ext_resource type="Script" uid="uid://dtj7tneaquy0v" path="res://drone.gd" id="1_1eobg"]
-[ext_resource type="Script" uid="uid://daji7esbscd5f" path="res://LidarSensor3D.gd" id="2_3rlx3"]
+[ext_resource type="Script" uid="uid://dtj7tneaquy0v" path="res://drone/drone.gd" id="1_1eobg"]
+[ext_resource type="Script" uid="uid://daji7esbscd5f" path="res://drone/LidarSensor3D.gd" id="2_3rlx3"]
 [ext_resource type="Script" uid="uid://bqbw46l8qmuff" path="res://camera_pivot.gd" id="2_5j1j2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_etgmo"]
