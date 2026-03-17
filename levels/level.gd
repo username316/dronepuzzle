@@ -8,6 +8,8 @@ class_name Level
 @onready var rain_particles = $Rain
 @onready var pause_menu = $LevelUI/PauseMenu
 @onready var level_complete_menu = $LevelUI/LevelCompleteMenu
+@onready var stopwatch = $LevelUI/Stopwatch
+@onready var stopwatch_text = $LevelUI/Stopwatch/Label
 
 #environment
 @export var fog_density: float = 0.0
@@ -25,6 +27,11 @@ func _ready() -> void:
 	
 	environment.set_fog_density(fog_density)
 	rain_particles.emitting = raining
+	
+	stopwatch.start()
+	
+func _process(delta: float) -> void:
+	stopwatch_text.text = str(stopwatch.get_time_elapsed_str())
 
 func set_current_camera(cam: Camera3D):
 	current_camera = cam
@@ -40,4 +47,5 @@ func get_mouse_dir(x, y):
 		return Vector2(0, 0)
 
 func _on_target_body_entered(body: Node3D) -> void:
-	print("level complete")
+	stopwatch.stop()
+	level_complete_menu.complete_level(stopwatch.time_elapsed)

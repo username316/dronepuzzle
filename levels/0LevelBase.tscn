@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://d05r7jbw752k3"]
+[gd_scene load_steps=10 format=3 uid="uid://d05r7jbw752k3"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_djagn"]
 [ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://drone/Drone.tscn" id="2_4eioo"]
 [ext_resource type="PackedScene" uid="uid://dtobi21uvl4et" path="res://Rain.tscn" id="3_4eioo"]
 [ext_resource type="Script" uid="uid://nxtxa01uvdaa" path="res://levels/pause_menu.gd" id="4_fsmbg"]
 [ext_resource type="Script" uid="uid://dge6s5kwma7kv" path="res://levels/level_complete_menu.gd" id="5_im322"]
+[ext_resource type="Script" uid="uid://crr0kair60bdb" path="res://levels/stopwatch.gd" id="6_u5bbg"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
 size = Vector2(10, 10)
@@ -64,6 +65,7 @@ shape = SubResource("SphereShape3D_4eioo")
 process_mode = 3
 
 [node name="PauseMenu" type="Control" parent="LevelUI"]
+visible = false
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -136,6 +138,11 @@ layout_mode = 2
 text = "LEVEL COMPLETE"
 horizontal_alignment = 1
 
+[node name="TimeLabel" type="Label" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
+layout_mode = 2
+text = "IN 0.0s"
+horizontal_alignment = 1
+
 [node name="HSeparator" type="HSeparator" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
 layout_mode = 2
 
@@ -143,7 +150,27 @@ layout_mode = 2
 layout_mode = 2
 text = "MAIN MENU"
 
-[connection signal="body_entered" from="Target" to="LevelUI/LevelCompleteMenu" method="_on_level_complete"]
+[node name="Stopwatch" type="Control" parent="LevelUI"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 10.0
+offset_top = 616.0
+offset_right = 50.0
+offset_bottom = 656.0
+script = ExtResource("6_u5bbg")
+
+[node name="Label" type="Label" parent="LevelUI/Stopwatch"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = -17.0
+grow_vertical = 0
+text = "0.0"
+
+[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ContinueButton" to="LevelUI/PauseMenu" method="_on_continue_button_pressed"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ToStartButton" to="LevelUI/PauseMenu" method="_on_to_start_button_pressed"]
 [connection signal="pressed" from="LevelUI/LevelCompleteMenu/VBoxContainer/MainMenuButton" to="LevelUI/LevelCompleteMenu" method="_on_main_menu_button_pressed"]
