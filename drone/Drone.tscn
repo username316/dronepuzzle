@@ -32,7 +32,7 @@ shape = SubResource("BoxShape3D_1eobg")
 script = ExtResource("2_5j1j2")
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 2, 2)
+transform = Transform3D(1, 0, 0, 0, 0.78549, 0.618875, 0, -0.618875, 0.78549, 0, 2.35899, 2)
 current = true
 
 [node name="VisionViewport" type="SubViewport" parent="."]

@@ -16,7 +16,7 @@ var rotating: bool = false
 func _ready() -> void:
 	camera.position.y = initial_y
 	camera.position.z = initial_z
-	camera.rotation.x = deg_to_rad(-45)
+	camera.rotation.x = deg_to_rad(-30)
 
 func zoom(speed):
 	camera.translate(Vector3.FORWARD * speed)

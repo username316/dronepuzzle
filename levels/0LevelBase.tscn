@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://d05r7jbw752k3"]
+[gd_scene load_steps=9 format=3 uid="uid://d05r7jbw752k3"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_djagn"]
 [ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://drone/Drone.tscn" id="2_4eioo"]
 [ext_resource type="PackedScene" uid="uid://dtobi21uvl4et" path="res://Rain.tscn" id="3_4eioo"]
 [ext_resource type="Script" uid="uid://nxtxa01uvdaa" path="res://levels/pause_menu.gd" id="4_fsmbg"]
+[ext_resource type="Script" uid="uid://dge6s5kwma7kv" path="res://levels/level_complete_menu.gd" id="5_im322"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
 size = Vector2(10, 10)
@@ -59,11 +60,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.28225, 1.48308, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Target"]
 shape = SubResource("SphereShape3D_4eioo")
 
-[node name="PauseMenu" type="CanvasLayer" parent="."]
+[node name="LevelUI" type="CanvasLayer" parent="."]
 process_mode = 3
-script = ExtResource("4_fsmbg")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu"]
+[node name="PauseMenu" type="Control" parent="LevelUI"]
+layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -72,24 +73,77 @@ anchor_bottom = 0.5
 offset_left = -95.0
 offset_top = -20.0
 offset_right = 95.0
-offset_bottom = 46.0
+offset_bottom = 73.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("4_fsmbg")
 
-[node name="Label" type="Label" parent="PauseMenu/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelUI/PauseMenu"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="LevelUI/PauseMenu/VBoxContainer"]
 layout_mode = 2
-text = "Paused"
+text = "PAUSED"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ContinueButton" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="ContinueButton" type="Button" parent="LevelUI/PauseMenu/VBoxContainer"]
 layout_mode = 2
-text = "Continue"
+text = "CONTINUE"
 
-[node name="ToStartButton" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="ToStartButton" type="Button" parent="LevelUI/PauseMenu/VBoxContainer"]
 layout_mode = 2
-text = "Back to Start"
+text = "BACK TO START"
 
-[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
-[connection signal="pressed" from="PauseMenu/VBoxContainer/ContinueButton" to="PauseMenu" method="_on_continue_button_pressed"]
-[connection signal="pressed" from="PauseMenu/VBoxContainer/ToStartButton" to="PauseMenu" method="_on_to_start_button_pressed"]
+[node name="LevelCompleteMenu" type="Control" parent="LevelUI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_im322")
+
+[node name="ColorRect" type="ColorRect" parent="LevelUI/LevelCompleteMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+color = Color(0, 0, 0, 0.309804)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelUI/LevelCompleteMenu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -59.5
+offset_top = -20.0
+offset_right = 59.5
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
+layout_mode = 2
+text = "LEVEL COMPLETE"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainMenuButton" type="Button" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
+layout_mode = 2
+text = "MAIN MENU"
+
+[connection signal="body_entered" from="Target" to="LevelUI/LevelCompleteMenu" method="_on_level_complete"]
+[connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ContinueButton" to="LevelUI/PauseMenu" method="_on_continue_button_pressed"]
+[connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ToStartButton" to="LevelUI/PauseMenu" method="_on_to_start_button_pressed"]
+[connection signal="pressed" from="LevelUI/LevelCompleteMenu/VBoxContainer/MainMenuButton" to="LevelUI/LevelCompleteMenu" method="_on_main_menu_button_pressed"]

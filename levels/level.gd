@@ -6,7 +6,8 @@ class_name Level
 @onready var drone_pivot_camera = drone.get_node("CameraPivot/Camera3D")
 @onready var environment = $WorldEnvironment.get_environment()
 @onready var rain_particles = $Rain
-@onready var pause_menu = $PauseMenu
+@onready var pause_menu = $LevelUI/PauseMenu
+@onready var level_complete_menu = $LevelUI/LevelCompleteMenu
 
 #environment
 @export var fog_density: float = 0.0
@@ -20,6 +21,7 @@ func _ready() -> void:
 	set_current_camera(drone_pivot_camera)
 	
 	pause_menu.visible = false
+	level_complete_menu.visible = false
 	
 	environment.set_fog_density(fog_density)
 	rain_particles.emitting = raining
@@ -38,4 +40,4 @@ func get_mouse_dir(x, y):
 		return Vector2(0, 0)
 
 func _on_target_body_entered(body: Node3D) -> void:
-	pass # Replace with function body.
+	print("level complete")
