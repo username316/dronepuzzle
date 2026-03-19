@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://1cfey14nb1xh"]
+
+[ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_ar1rs"]
+[ext_resource type="Script" uid="uid://p7ww07bysy23" path="res://levels/Level2_old_Builder.gd" id="2_evov3"]
+
+[node name="Level" instance=ExtResource("1_ar1rs")]
+script = ExtResource("2_evov3")
+refresh_level = false
+
+[node name="Drone" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, 6)
+
+[node name="Target" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0138512, 21.409, 0.0115042)
+
+[node name="LevelCompleteMenu" parent="LevelUI" index="1"]
+visible = false

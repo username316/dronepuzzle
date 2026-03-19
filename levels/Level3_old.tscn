@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://dopsm57knb8hf"]
 
-[ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_gq8fh"]
-[ext_resource type="Script" uid="uid://21jnqyseu7nt" path="res://levels/Level3_Builder.gd" id="2_11ac5"]
+[ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_us1a2"]
+[ext_resource type="Script" uid="uid://21jnqyseu7nt" path="res://levels/Level3_old_Builder.gd" id="2_r1460"]
 
-[node name="Level" instance=ExtResource("1_gq8fh")]
-script = ExtResource("2_11ac5")
+[node name="Level" instance=ExtResource("1_us1a2")]
+script = ExtResource("2_r1460")
 refresh_level = false
 
 [node name="Drone" parent="." index="0"]
