@@ -13,5 +13,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 25)
 [node name="Target" parent="." index="7"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0243931, 1.48308, -30.7729)
 
-[node name="PauseMenu" parent="LevelUI" index="0"]
+[node name="LevelCompleteMenu" parent="LevelUI" index="1"]
 visible = false
