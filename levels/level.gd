@@ -31,6 +31,9 @@ func _ready() -> void:
 	stopwatch.start()
 	
 func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+		
 	stopwatch_text.text = str(stopwatch.get_time_elapsed_str())
 
 func set_current_camera(cam: Camera3D):

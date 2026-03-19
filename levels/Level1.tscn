@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_b84ys"]
 [ext_resource type="Script" uid="uid://bmww6phrn2hrs" path="res://levels/Level1_Builder.gd" id="2_32mhh"]
 
-[node name="Level" instance=ExtResource("1_b84ys")]
+[node name="Level2" instance=ExtResource("1_b84ys")]
 script = ExtResource("2_32mhh")
 refresh_level = false
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://boiplp476iar5"]
+[gd_scene load_steps=10 format=3 uid="uid://1cfey14nb1xh"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_432n0"]
 [ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://drone/Drone.tscn" id="2_1hrej"]
@@ -22,7 +22,7 @@ volumetric_fog_ambient_inject = 16.0
 [sub_resource type="SphereShape3D" id="SphereShape3D_qcwkq"]
 radius = 1.0
 
-[node name="Level" type="Node3D"]
+[node name="Level2" type="Node3D"]
 script = ExtResource("1_432n0")
 
 [node name="Drone" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1hrej")]
@@ -252,6 +252,7 @@ offset_bottom = -17.0
 grow_vertical = 0
 text = "0.0"
 
+[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ContinueButton" to="LevelUI/PauseMenu" method="_on_continue_button_pressed"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ToStartButton" to="LevelUI/PauseMenu" method="_on_to_start_button_pressed"]
 [connection signal="pressed" from="LevelUI/LevelCompleteMenu/VBoxContainer/MainMenuButton" to="LevelUI/LevelCompleteMenu" method="_on_main_menu_button_pressed"]
