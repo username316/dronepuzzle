@@ -1,0 +1,129 @@
+[gd_scene load_steps=5 format=3 uid="uid://ca62umo8tdenk"]
+
+[ext_resource type="PackedScene" uid="uid://ri1ay4oav7n3" path="res://models/drone/scene.gltf" id="1_dqreo"]
+
+[sub_resource type="Animation" id="Animation_dqreo"]
+resource_name = "fly"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface36/polySurface36_ai_whitePlastic_0:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface40/polySurface40_ai_whitePlastic_0:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface47/polySurface47_ai_whitePlastic_0:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface45/polySurface45_ai_whitePlastic_0:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_lsa15"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface36/polySurface36_ai_whitePlastic_0:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 4.92183, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface40/polySurface40_ai_whitePlastic_0:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 6.28319, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface47/polySurface47_ai_whitePlastic_0:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface45/polySurface45_ai_whitePlastic_0:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xojg6"]
+_data = {
+&"RESET": SubResource("Animation_lsa15"),
+&"fly": SubResource("Animation_dqreo")
+}
+
+[node name="Drone3DModel" instance=ExtResource("1_dqreo")]
+
+[node name="Sketchfab_model" parent="." index="0"]
+transform = Transform3D(0, -1, 0, 2.22045e-16, 0, 1, -1, 0, 2.22045e-16, 3.37156, -5.68537e-16, 5.9152)
+
+[node name="polySurface36_ai_whitePlastic_0" parent="Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface36" index="0"]
+transform = Transform3D(0.207911, 0, -0.978148, 0, 1, 0, 0.978148, 0, 0.207911, 0, 0, 0)
+
+[node name="polySurface40_ai_whitePlastic_0" parent="Sketchfab_model/b688934f931d4976a8559b7232b633bd_fbx/RootNode/Drone/polySurface40" index="0"]
+transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, 0, 0, 0)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
+libraries = {
+&"": SubResource("AnimationLibrary_xojg6")
+}
+autoplay = "fly"
