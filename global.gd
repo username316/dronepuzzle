@@ -23,3 +23,12 @@ func load_levels_from_dir(path: String):
 		for f: String in dir.get_files():
 			if f.begins_with("Level") and f.ends_with(".tscn"):
 				level_paths.append(f)
+
+
+var vision_enabled: bool = true
+var lidar_enabled: bool = true
+var minThrust: float = 0.00
+var maxThrust: float = 0.00
+var brakeStrength: float = 0.00
+var lidarStopRange: float = 0.00
+var tiltSpeed: float = 0.00
