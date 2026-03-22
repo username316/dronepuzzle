@@ -1,0 +1,137 @@
+[gd_scene format=3 uid="uid://c4x0u4vcnp8gl"]
+
+[ext_resource type="Script" uid="uid://bvitibvhvmelw" path="res://ui/start_menu.gd" id="1_ufv5y"]
+[ext_resource type="FontFile" uid="uid://dn0y4mgxjrhu" path="res://ui/Robot Crush.ttf" id="2_0d5ky"]
+[ext_resource type="Texture2D" uid="uid://c3dait4iwtn1l" path="res://ui/gradient.png" id="2_g1ph5"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tb71d"]
+texture = ExtResource("2_g1ph5")
+modulate_color = Color(0.9529412, 0.9529412, 0.9529412, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yoqr7"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3352"]
+bg_color = Color(0.63529414, 0.63529414, 0.63529414, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ufv5y"]
+bg_color = Color(0.8235294, 0.8235294, 0.8235294, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7htnq"]
+
+[node name="StartMenu" type="Control" unique_id=1937831929]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ufv5y")
+
+[node name="Panel" type="Panel" parent="." unique_id=1600413546]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_tb71d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1189777822]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -141.025
+offset_top = -73.12813
+offset_right = 141.02502
+offset_bottom = 117.12811
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 18
+
+[node name="Button" type="Button" parent="VBoxContainer" unique_id=152148685]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_yoqr7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_d3352")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ufv5y")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_7htnq")
+text = "Start"
+
+[node name="Button2" type="Button" parent="VBoxContainer" unique_id=1561487578]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_yoqr7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_d3352")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ufv5y")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_7htnq")
+text = "Exit"
+
+[node name="Label" type="Label" parent="." unique_id=1464180746]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -420.5
+offset_top = 44.0
+offset_right = 420.5
+offset_bottom = 158.0
+grow_horizontal = 2
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("2_0d5ky")
+theme_override_font_sizes/font_size = 105
+text = "Drone Simulation"
+
+[node name="Label2" type="Label" parent="." unique_id=1448147023]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = -200.0
+offset_right = 158.0
+offset_bottom = -29.0
+grow_vertical = 0
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 18
+text = "Credits:
+Matteo Iacono
+Ekam Sial 
+Vinayak Bains
+Jennifer Tan
+John Millar"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_exit_pressed"]
