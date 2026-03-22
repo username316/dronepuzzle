@@ -170,6 +170,14 @@ var corridor_locked: bool = false
 var corridor_locked_motion_local: Vector3 = Vector3(0.0, 0.0, -1.0)
 
 func _ready() -> void:
+	vision_enabled = Global.vision_enabled
+	lidar_enabled = Global.lidar_enabled
+	min_thrust = Global.minThrust
+	max_thrust = Global.maxThrust
+	brake_strength = Global.brakeStrength
+	lidar_trigger_dist = Global.lidarStopRange
+	tilt_speed = Global.tiltSpeed
+
 	if target != null:
 		target_position = target.global_position
 	else:
