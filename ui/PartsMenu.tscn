@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dfeoy2u7wk3yd"]
+[gd_scene load_steps=14 format=3 uid="uid://dfeoy2u7wk3yd"]
 
 [ext_resource type="Script" uid="uid://q1a4kah5ajn7" path="res://ui/parts_menu.gd" id="1_1jvdv"]
 [ext_resource type="FontFile" uid="uid://dn0y4mgxjrhu" path="res://ui/Robot Crush.ttf" id="2_5dmbo"]
@@ -8,7 +8,27 @@
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_quho7"]
 texture = ExtResource("2_ln4wt")
-modulate_color = Color(0.9529412, 0.9529412, 0.9529412, 1)
+modulate_color = Color(0.952941, 0.952941, 0.952941, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ln4wt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajhwg"]
+bg_color = Color(0.823529, 0.823529, 0.823529, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_auhkm"]
+bg_color = Color(0.635294, 0.635294, 0.635294, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5dmbo"]
 bg_color = Color(1, 1, 1, 1)
@@ -19,26 +39,6 @@ corner_radius_bottom_left = 16
 shadow_size = 5
 shadow_offset = Vector2(0, 3.41)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_auhkm"]
-bg_color = Color(0.63529414, 0.63529414, 0.63529414, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_size = 5
-shadow_offset = Vector2(0, 3.41)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ajhwg"]
-bg_color = Color(0.8235294, 0.8235294, 0.8235294, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_size = 5
-shadow_offset = Vector2(0, 3.41)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ln4wt"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ln4wt"]
 bg_color = Color(1, 1, 1, 1)
 corner_radius_top_left = 16
@@ -48,15 +48,13 @@ corner_radius_bottom_left = 16
 shadow_size = 5
 shadow_offset = Vector2(0, 3.41)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_quho7"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_quho7"]
 bg_color = Color(1, 1, 1, 1)
 border_width_left = 7
 border_width_top = 7
 border_width_right = 7
 border_width_bottom = 7
-border_color = Color(0.7987912, 0.7987912, 0.79879117, 1)
+border_color = Color(0.798791, 0.798791, 0.798791, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -69,7 +67,7 @@ shadow_size = 1
 shadow_offset = Vector2(1.9, 2.1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o4p4g"]
-bg_color = Color(0.31764707, 0.64705884, 0.7882353, 1)
+bg_color = Color(0.317647, 0.647059, 0.788235, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -77,7 +75,7 @@ corner_radius_bottom_left = 10
 expand_margin_top = 4.0
 expand_margin_bottom = 4.0
 
-[node name="PartsMenu" type="Control" unique_id=1512276306]
+[node name="PartsMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -86,7 +84,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1jvdv")
 
-[node name="Panel" type="Panel" parent="." unique_id=1496252306]
+[node name="Panel" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -96,7 +94,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_quho7")
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="." unique_id=1441732322]
+[node name="Label" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -110,7 +108,7 @@ theme_override_fonts/font = ExtResource("2_5dmbo")
 theme_override_font_sizes/font_size = 90
 text = "Parts Menu"
 
-[node name="Button" type="Button" parent="." unique_id=711285885]
+[node name="Button" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -120,18 +118,18 @@ offset_top = -120.0
 offset_right = 241.0
 offset_bottom = -33.0
 grow_vertical = 0
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
-theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 27
-theme_override_styles/normal = SubResource("StyleBoxFlat_5dmbo")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_auhkm")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ajhwg")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ln4wt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ajhwg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_auhkm")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5dmbo")
 text = "Exit"
 
-[node name="Button2" type="Button" parent="." unique_id=1337459989]
+[node name="Button2" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -144,18 +142,18 @@ offset_right = -37.0
 offset_bottom = -33.0
 grow_horizontal = 0
 grow_vertical = 0
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
-theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 27
-theme_override_styles/normal = SubResource("StyleBoxFlat_5dmbo")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_auhkm")
-theme_override_styles/hover = SubResource("StyleBoxFlat_ajhwg")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ln4wt")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ajhwg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_auhkm")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5dmbo")
 text = "Next"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=155945247]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 85.0
 offset_top = 142.0
@@ -163,27 +161,25 @@ offset_right = 298.6
 offset_bottom = 334.0
 theme_override_constants/separation = 25
 
-[node name="Label2" type="Label" parent="VBoxContainer" unique_id=1926087840]
+[node name="Label2" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 7
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_quho7")
 text = "       Vision"
 vertical_alignment = 1
 
-[node name="Label3" type="Label" parent="VBoxContainer" unique_id=777975140]
+[node name="Label3" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 7
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_quho7")
 text = "        Lidar"
 vertical_alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="." unique_id=560104224]
+[node name="CheckBox" type="CheckBox" parent="."]
 layout_mode = 0
 offset_left = 245.0
 offset_top = 164.0
@@ -192,7 +188,7 @@ offset_bottom = 204.0
 theme_override_icons/checked = ExtResource("4_dateu")
 theme_override_icons/unchecked = ExtResource("5_7racy")
 
-[node name="CheckBox2" type="CheckBox" parent="." unique_id=936128144]
+[node name="CheckBox2" type="CheckBox" parent="."]
 layout_mode = 0
 offset_left = 245.0
 offset_top = 273.0
@@ -201,7 +197,7 @@ offset_bottom = 313.0
 theme_override_icons/checked = ExtResource("4_dateu")
 theme_override_icons/unchecked = ExtResource("5_7racy")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=756858231]
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
 layout_mode = 0
 offset_left = 341.0
 offset_top = 137.0
@@ -209,61 +205,56 @@ offset_right = 1095.2
 offset_bottom = 492.2
 theme_override_constants/separation = 25
 
-[node name="Label4" type="Label" parent="VBoxContainer2" unique_id=1404396262]
+[node name="Label4" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 7
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_quho7")
 text = "   Min Thrust (0-50)"
 vertical_alignment = 1
 
-[node name="Label6" type="Label" parent="VBoxContainer2" unique_id=426344222]
+[node name="Label6" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 7
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_quho7")
 text = "   Max Thrust (0-100)"
 vertical_alignment = 1
 
-[node name="Label8" type="Label" parent="VBoxContainer2" unique_id=2066024153]
+[node name="Label8" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 7
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_quho7")
 text = "   Brake strength (0-15)"
 vertical_alignment = 1
 
-[node name="Label10" type="Label" parent="VBoxContainer2" unique_id=828399165]
+[node name="Label10" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 7
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_quho7")
 text = "   Lidar stop range (0-15)"
 vertical_alignment = 1
 
-[node name="Label12" type="Label" parent="VBoxContainer2" unique_id=759722023]
+[node name="Label12" type="Label" parent="VBoxContainer2"]
 layout_mode = 2
 size_flags_vertical = 7
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_quho7")
 text = "   Tilt Speed (0-10)"
 vertical_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="." unique_id=292666205]
+[node name="HSlider" type="HSlider" parent="."]
 layout_mode = 0
 offset_left = 621.0
 offset_top = 153.0
-offset_right = 1003.19995
+offset_right = 1003.2
 offset_bottom = 169.0
 theme_override_constants/center_grabber = 1
 theme_override_styles/slider = SubResource("StyleBoxFlat_quho7")
@@ -272,7 +263,7 @@ theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_o4p4g")
 max_value = 50.0
 step = 0.01
 
-[node name="Label5" type="Label" parent="." unique_id=550480158]
+[node name="Label5" type="Label" parent="."]
 layout_mode = 0
 offset_left = 1018.0
 offset_top = 147.0
@@ -284,7 +275,7 @@ text = "0.00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider2" type="HSlider" parent="." unique_id=451904347]
+[node name="HSlider2" type="HSlider" parent="."]
 layout_mode = 0
 offset_left = 645.0
 offset_top = 229.0
@@ -296,7 +287,7 @@ theme_override_styles/grabber_area = SubResource("StyleBoxFlat_o4p4g")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_o4p4g")
 step = 0.01
 
-[node name="Label7" type="Label" parent="." unique_id=637010219]
+[node name="Label7" type="Label" parent="."]
 layout_mode = 0
 offset_left = 1022.0
 offset_top = 222.0
@@ -308,7 +299,7 @@ text = "0.00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider3" type="HSlider" parent="." unique_id=1174334677]
+[node name="HSlider3" type="HSlider" parent="."]
 layout_mode = 0
 offset_left = 681.0
 offset_top = 305.0
@@ -321,7 +312,7 @@ theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_o4p4g")
 max_value = 15.0
 step = 0.01
 
-[node name="Label9" type="Label" parent="." unique_id=658467625]
+[node name="Label9" type="Label" parent="."]
 layout_mode = 0
 offset_left = 1021.0
 offset_top = 298.0
@@ -333,7 +324,7 @@ text = "0.00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider4" type="HSlider" parent="." unique_id=1338719044]
+[node name="HSlider4" type="HSlider" parent="."]
 layout_mode = 0
 offset_left = 699.0
 offset_top = 382.0
@@ -346,7 +337,7 @@ theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_o4p4g")
 max_value = 15.0
 step = 0.01
 
-[node name="Label11" type="Label" parent="." unique_id=92591161]
+[node name="Label11" type="Label" parent="."]
 layout_mode = 0
 offset_left = 1024.0
 offset_top = 373.0
@@ -358,7 +349,7 @@ text = "0.00"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HSlider5" type="HSlider" parent="." unique_id=397236034]
+[node name="HSlider5" type="HSlider" parent="."]
 layout_mode = 0
 offset_left = 614.0
 offset_top = 457.0
@@ -371,7 +362,7 @@ theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_o4p4g")
 max_value = 10.0
 step = 0.01
 
-[node name="Label13" type="Label" parent="." unique_id=867203716]
+[node name="Label13" type="Label" parent="."]
 layout_mode = 0
 offset_left = 1024.0
 offset_top = 450.0
