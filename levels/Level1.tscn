@@ -13,10 +13,10 @@ refresh_level = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 15)
 
 [node name="Target" parent="." index="7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58324, 1.48308, -19.3427)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.276838, 1.41532, -19.4888)
 
 [node name="CollisionShape3D" parent="Target" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.66978, 0, -0.365494)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.206766, 0.0068382, 0.00798798)
 
 [node name="LevelCompleteMenu" parent="LevelUI" index="1"]
 visible = false
