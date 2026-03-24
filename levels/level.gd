@@ -11,11 +11,11 @@ class_name Level
 @onready var stopwatch = $LevelUI/Stopwatch
 @onready var stopwatch_text = $LevelUI/Stopwatch/Label
 @onready var camera_feed_panel = $LevelUI/CameraVeiwer
+@onready var message_display = $LevelUI/MessageDisplay
 
 #environment
 @export var fog_density: float = 0.0
 @export var raining: bool = false
-#@export var gps_available: bool = true
 
 #cameras
 var current_camera: Camera3D

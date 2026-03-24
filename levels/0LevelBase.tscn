@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d05r7jbw752k3"]
+[gd_scene load_steps=15 format=3 uid="uid://d05r7jbw752k3"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_djagn"]
 [ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://drone/Drone.tscn" id="2_4eioo"]
@@ -7,7 +7,8 @@
 [ext_resource type="Script" uid="uid://dge6s5kwma7kv" path="res://levels/level_complete_menu.gd" id="5_im322"]
 [ext_resource type="Script" uid="uid://crr0kair60bdb" path="res://levels/stopwatch.gd" id="6_u5bbg"]
 [ext_resource type="Script" uid="uid://dq7p05soov14w" path="res://levels/camera_veiwer.gd" id="7_errhk"]
-[ext_resource type="Script" uid="uid://ci65n7c2wyap2" path="res://levels/camera_ui.gd" id="8_4rjdo"]
+[ext_resource type="Script" path="res://levels/camera_ui.gd" id="8_4rjdo"]
+[ext_resource type="Script" uid="uid://dt10yhuvtlm0y" path="res://levels/message_display.gd" id="9_mn2ri"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
 size = Vector2(10, 10)
@@ -219,6 +220,26 @@ script = ExtResource("8_4rjdo")
 drone_path = NodePath("../../../Drone")
 camera_rect_path = NodePath("../TextureRect")
 
+[node name="MessageDisplay" type="Control" parent="LevelUI"]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource("9_mn2ri")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LevelUI/MessageDisplay"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -180.0
+offset_bottom = 50.0
+grow_horizontal = 0
+
+[connection signal="send_message" from="Drone" to="LevelUI/MessageDisplay" method="_on_receive_message"]
 [connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ContinueButton" to="LevelUI/PauseMenu" method="_on_continue_button_pressed"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ToStartButton" to="LevelUI/PauseMenu" method="_on_to_start_button_pressed"]

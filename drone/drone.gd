@@ -1,5 +1,7 @@
 extends RigidBody3D
 
+signal send_message(msg: String)
+
 # -----------------------
 # Flight / movement tuning
 # -----------------------
@@ -260,7 +262,6 @@ func _ready() -> void:
 
 	desired_hover_height = hover_height
 	planned_motion_world = -transform.basis.z
-
 
 func _physics_process(delta: float) -> void:
 	if planner_camera != null:
