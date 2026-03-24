@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwx78u7hlesfp"]
+[gd_scene load_steps=7 format=3 uid="uid://bwx78u7hlesfp"]
 
 [ext_resource type="Script" uid="uid://dtj7tneaquy0v" path="res://drone/drone.gd" id="1_1eobg"]
-[ext_resource type="PackedScene" uid="uid://ca62umo8tdenk" path="res://models/drone/Drone3DModel.tscn" id="2_1rck4"]
+[ext_resource type="PackedScene" uid="uid://ca62umo8tdenk" path="res://assets/drone/Drone3DModel.tscn" id="2_1rck4"]
 [ext_resource type="Script" uid="uid://daji7esbscd5f" path="res://drone/LidarSensor3D.gd" id="2_3rlx3"]
 [ext_resource type="Script" uid="uid://bqbw46l8qmuff" path="res://camera_pivot.gd" id="2_5j1j2"]
+[ext_resource type="AudioStream" uid="uid://gu1ia00o87xu" path="res://assets/569665__monosfera__dron.mp3" id="5_gnly4"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1eobg"]
 size = Vector3(0.940527, 0.595142, 0.951543)
@@ -59,3 +60,7 @@ debug_draw_enabled = false
 transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 0, -0.2)
 script = ExtResource("2_3rlx3")
 debug_draw_enabled = false
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_gnly4")
+autoplay = true

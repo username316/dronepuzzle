@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b6bkf1roueroe"
-path.s3tc="res://.godot/imported/ai_whitePlastic_tex_baseColor.png-8ca69165df7d0136e5da0dbfbb939f96.s3tc.ctex"
+path.s3tc="res://.godot/imported/ai_whitePlastic_tex_baseColor.png-fc96d1c7f75724453cb441c2f6c073c5.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://models/drone/textures/ai_whitePlastic_tex_baseColor.png"
-dest_files=["res://.godot/imported/ai_whitePlastic_tex_baseColor.png-8ca69165df7d0136e5da0dbfbb939f96.s3tc.ctex"]
+source_file="res://assets/drone/textures/ai_whitePlastic_tex_baseColor.png"
+dest_files=["res://.godot/imported/ai_whitePlastic_tex_baseColor.png-fc96d1c7f75724453cb441c2f6c073c5.s3tc.ctex"]
 
 [params]
 

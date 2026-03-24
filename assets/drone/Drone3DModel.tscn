@@ -1,6 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ca62umo8tdenk"]
 
-[ext_resource type="PackedScene" uid="uid://ri1ay4oav7n3" path="res://models/drone/scene.gltf" id="1_dqreo"]
+[ext_resource type="PackedScene" uid="uid://ri1ay4oav7n3" path="res://assets/drone/scene.gltf" id="1_dqreo"]
+
 
 [sub_resource type="Animation" id="Animation_dqreo"]
 resource_name = "fly"
