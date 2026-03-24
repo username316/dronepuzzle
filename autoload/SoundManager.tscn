@@ -1,10 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://imb2plp8o44g"]
 
 [ext_resource type="Script" uid="uid://cfvntb5ry76d4" path="res://autoload/sound_manager.gd" id="1_k2nfr"]
-[ext_resource type="AudioStream" uid="uid://de3nwrie5tpt" path="res://assets/264387__magedu__old_pc_button_reset.wav" id="2_bacxp"]
+[ext_resource type="AudioStream" uid="uid://cwmljughqrn0a" path="res://assets/342200__christopherderp__videogame-menu-button-click.wav" id="2_k2nfr"]
 
 [node name="SoundManager" type="Node"]
 script = ExtResource("1_k2nfr")
 
 [node name="ButtonAudio" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("2_bacxp")
+stream = ExtResource("2_k2nfr")
