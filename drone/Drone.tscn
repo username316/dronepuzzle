@@ -36,15 +36,23 @@ current = true
 [node name="VisionPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0572138, -0.450847)
 
-[node name="VisionViewport" type="SubViewport" parent="."]
+[node name="PlannerViewport" type="SubViewport" parent="."]
 size = Vector2i(320, 180)
 render_target_update_mode = 4
 
-[node name="VisionCamera" type="Camera3D" parent="VisionViewport"]
+[node name="PlannerCamera" type="Camera3D" parent="PlannerViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0482289, -0.435404)
-fov = 80.0
-near = 0.1
+fov = 85.0
 far = 20.0
+
+[node name="DisplayViewport" type="SubViewport" parent="."]
+size = Vector2i(320, 180)
+render_target_update_mode = 4
+
+[node name="DisplayCamera" type="Camera3D" parent="DisplayViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0482289, -0.435404)
+fov = 85.0
+far = 120.0
 
 [node name="Lidar" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.2)

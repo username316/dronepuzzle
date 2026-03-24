@@ -166,12 +166,11 @@ text = "MAIN MENU"
 
 [node name="Stopwatch" type="Control" parent="LevelUI"]
 layout_mode = 3
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -40.0
-offset_right = 40.0
-grow_vertical = 0
+anchors_preset = 0
+offset_left = 10.0
+offset_top = 616.0
+offset_right = 50.0
+offset_bottom = 656.0
 script = ExtResource("6_u5bbg")
 
 [node name="Label" type="Label" parent="LevelUI/Stopwatch"]
@@ -217,7 +216,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("8_4rjdo")
 drone_path = NodePath("../../../Drone")
-camera_rect_path = NodePath("../TextureRect")
 
 [connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ContinueButton" to="LevelUI/PauseMenu" method="_on_continue_button_pressed"]

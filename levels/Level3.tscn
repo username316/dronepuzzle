@@ -1,0 +1,260 @@
+[gd_scene load_steps=4 format=3 uid="uid://bax82uyjvwls4"]
+
+[ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_gq8fh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gq8fh"]
+albedo_color = Color(0.328067, 0.242298, 0.115459, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_11ac5"]
+
+[node name="Level" instance=ExtResource("1_gq8fh")]
+fog_density = -3.06
+
+[node name="Drone" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -88.5637, 0, -79.526)
+
+[node name="Ground" parent="." index="1"]
+transform = Transform3D(19.7646, 0, 0, 0, 1, 0, 0, 0, 19.0102, 0.006, -1, 0.012)
+
+[node name="Rain" parent="." index="5"]
+visible = false
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Obstacles" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -76.5686, 6.92084, -62.6775)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="Obstacles" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.4618, 6.92084, -55.1522)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="Obstacles" index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.8003, 6.92084, -73.0877)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="Obstacles" index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.5153, 6.92084, -61.7354)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="Obstacles" index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.3306, 6.92084, -42.1055)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="Obstacles" index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.886, 6.92084, -38.9441)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="Obstacles" index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.7185, 6.92084, -47.0468)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="Obstacles" index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.7281, 6.92084, -66.8726)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D9" type="CSGCylinder3D" parent="Obstacles" index="8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.3231, 6.92084, -20.1376)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D10" type="CSGCylinder3D" parent="Obstacles" index="9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.0715, 6.92084, -24.8529)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D11" type="CSGCylinder3D" parent="Obstacles" index="10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.3094, 6.92084, -48.9044)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D12" type="CSGCylinder3D" parent="Obstacles" index="11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.3628, 6.09854, -61.3647)
+use_collision = true
+radius = 2.77783
+height = 17.4863
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D13" type="CSGCylinder3D" parent="Obstacles" index="12"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.8357, 6.09854, -31.9071)
+use_collision = true
+radius = 2.77783
+height = 17.4863
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D14" type="CSGCylinder3D" parent="Obstacles" index="13"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.6115, 6.76514, -11.6043)
+use_collision = true
+radius = 2.77783
+height = 16.1531
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D15" type="CSGCylinder3D" parent="Obstacles" index="14"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5541, 6.76514, -14.4101)
+use_collision = true
+radius = 2.77783
+height = 16.1531
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D16" type="CSGCylinder3D" parent="Obstacles" index="15"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -76.3852, 6.92084, 20.9493)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D17" type="CSGCylinder3D" parent="Obstacles" index="16"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.2177, 6.92084, 12.8466)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D18" type="CSGCylinder3D" parent="Obstacles" index="17"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80.8223, 6.92084, 39.7558)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D19" type="CSGCylinder3D" parent="Obstacles" index="18"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60.5707, 6.92084, 35.0404)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D20" type="CSGCylinder3D" parent="Obstacles" index="19"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.8086, 6.92084, 10.989)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D21" type="CSGCylinder3D" parent="Obstacles" index="20"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.862, 6.09854, -1.47132)
+use_collision = true
+radius = 2.77783
+height = 17.4863
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D22" type="CSGCylinder3D" parent="Obstacles" index="21"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.3349, 6.09854, 27.9862)
+use_collision = true
+radius = 2.77783
+height = 17.4863
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D23" type="CSGCylinder3D" parent="Obstacles" index="22"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.1107, 6.76514, 48.289)
+use_collision = true
+radius = 2.77783
+height = 16.1531
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D24" type="CSGCylinder3D" parent="Obstacles" index="23"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.0533, 6.76514, 45.4832)
+use_collision = true
+radius = 2.77783
+height = 16.1531
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D25" type="CSGCylinder3D" parent="Obstacles" index="24"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6116, 6.92084, -43.0746)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D26" type="CSGCylinder3D" parent="Obstacles" index="25"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.55597, 6.92084, -51.1773)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D27" type="CSGCylinder3D" parent="Obstacles" index="26"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0486, 6.92084, -24.2681)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D28" type="CSGCylinder3D" parent="Obstacles" index="27"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.20299, 6.92084, -28.9835)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D29" type="CSGCylinder3D" parent="Obstacles" index="28"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.965, 6.92084, -53.0349)
+use_collision = true
+radius = 2.77783
+height = 15.8417
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D30" type="CSGCylinder3D" parent="Obstacles" index="29"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.9117, 6.09854, -65.4952)
+use_collision = true
+radius = 2.77783
+height = 17.4863
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D31" type="CSGCylinder3D" parent="Obstacles" index="30"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.4388, 6.09854, -36.0377)
+use_collision = true
+radius = 2.77783
+height = 17.4863
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D32" type="CSGCylinder3D" parent="Obstacles" index="31"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6629, 6.76514, -15.7349)
+use_collision = true
+radius = 2.77783
+height = 16.1531
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="CSGCylinder3D33" type="CSGCylinder3D" parent="Obstacles" index="32"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7204, 6.76514, -18.5407)
+use_collision = true
+radius = 2.77783
+height = 16.1531
+material = SubResource("StandardMaterial3D_gq8fh")
+
+[node name="Target" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 87.6644, 1.48308, 72.1737)
+
+[node name="CollisionShape3D" parent="Target" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.030426, 0, 0)
+
+[node name="TextureRect" parent="LevelUI/CameraVeiwer" index="0"]
+texture = SubResource("ViewportTexture_11ac5")

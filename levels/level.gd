@@ -10,6 +10,7 @@ class_name Level
 @onready var level_complete_menu = $LevelUI/LevelCompleteMenu
 @onready var stopwatch = $LevelUI/Stopwatch
 @onready var stopwatch_text = $LevelUI/Stopwatch/Label
+@onready var camera_feed_panel = $LevelUI/CameraVeiwer
 
 #environment
 @export var fog_density: float = 0.0
@@ -29,6 +30,9 @@ func _ready() -> void:
 	rain_particles.emitting = raining
 	
 	stopwatch.start()
+	
+	update_camera_feed_layout()
+	get_viewport().size_changed.connect(update_camera_feed_layout)
 	
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
@@ -52,3 +56,12 @@ func get_mouse_dir(x, y):
 func _on_target_body_entered(body: Node3D) -> void:
 	stopwatch.stop()
 	level_complete_menu.complete_level(stopwatch.time_elapsed)
+	
+func update_camera_feed_layout() -> void:
+	var s := get_viewport().get_visible_rect().size
+	var w := s.x * 0.25
+	var h := w * 9.0 / 16.0
+	var m := s.x * 0.02
+
+	camera_feed_panel.position = Vector2(s.x - w - m, s.y - h - m)
+	camera_feed_panel.size = Vector2(w, h)

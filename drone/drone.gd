@@ -54,6 +54,19 @@ extends RigidBody3D
 @export var avoid_clear_edge: float = 0.08
 @export var edge_step: int = 2
 @export var flow_step: int = 3
+@export var min_vision_samples_for_path_box: int = 3
+@export var min_corridor_confidence_for_path_box: float = 0.18
+
+@export var planner_camera_near: float = 0.05
+@export var planner_camera_far: float = 20.0
+@export var planner_camera_fov: float = 90.0
+
+@export var display_camera_near: float = 0.05
+@export var display_camera_far: float = 150.0
+@export var display_camera_fov: float = 90.0
+
+@export var display_camera_enabled: bool = true
+@export var planner_vision_enabled: bool = true
 
 # -----------------------
 # LiDAR params
@@ -114,6 +127,18 @@ extends RigidBody3D
 @export var vision_conf_decay: float = 0.8
 @export var planner_vertical_center_bias: float = 0.35
 @export var planner_vertical_margin_bias: float = 0.8
+@export var min_corridor_confidence_for_commit: float = 0.16
+@export var vision_corridor_commit_smooth: float = 0.10
+
+@export var camera_only_progress_scale: float = 0.70
+@export var camera_only_clearance_scale: float = 1.20
+@export var camera_only_min_margin_scale: float = 1.20
+@export var camera_only_vision_weight_scale: float = 1.60
+
+@export var roi_left_frac: float = 0.15
+@export var roi_right_frac: float = 0.85
+@export var roi_top_frac: float = 0.28
+@export var roi_bottom_frac: float = 0.82
 
 # Corridor memory
 @export var corridor_lock_time: float = 0.65
@@ -123,8 +148,11 @@ extends RigidBody3D
 @export var corridor_emergency_clearance: float = 1.0
 
 @onready var vision_pivot: Node3D = $VisionPivot
-@onready var vision_viewport: SubViewport = $VisionViewport
-@onready var vision_camera: Camera3D = $VisionViewport/VisionCamera
+@onready var planner_viewport: SubViewport = $PlannerViewport
+@onready var planner_camera: Camera3D = $PlannerViewport/PlannerCamera
+@onready var display_viewport: SubViewport = $DisplayViewport
+@onready var display_camera: Camera3D = $DisplayViewport/DisplayCamera
+
 @onready var lidar: LidarSensor3D = $Lidar
 @onready var lidar_up: LidarSensor3D = $LidarUp
 @onready var lidar_down: LidarSensor3D = $LidarDown
@@ -156,9 +184,18 @@ var avoid_active_vision: bool = false
 var avoid_dir_vision: float = 0.0
 var avoid_strength_vision: float = 0.0
 
+
 # Vision corridor output
 var vision_corridor_local: Vector3 = Vector3(0.0, 0.0, -1.0)
 var vision_corridor_confidence: float = 0.0
+var vision_corridor_rect_px: Rect2 = Rect2()
+var vision_corridor_rect_valid: bool = false
+var last_cell_weights: Array = []
+var last_best_weight: float = 0.0
+var last_corridor_cols: int = 0
+var last_corridor_rows: int = 0
+var last_vision_img: Image = null
+var vision_samples_ready: int = 0
 
 # LiDAR output
 var avoid_active_lidar: bool = false
@@ -176,6 +213,7 @@ var lidar_avoid_timer: float = 0.0
 # 3D motion planner output
 var planned_motion_local: Vector3 = Vector3(0.0, 0.0, -1.0)
 var planned_motion_world: Vector3 = Vector3(0.0, 0.0, -1.0)
+var stable_vision_corridor_local: Vector3 = Vector3(0.0, 0.0, -1.0)
 
 # Corridor lock
 var corridor_lock_timer: float = 0.0
@@ -195,6 +233,28 @@ func _ready() -> void:
 		target_position = target.global_position
 	else:
 		target_position = global_position
+		
+	if planner_camera != null:
+		planner_camera.near = planner_camera_near
+		planner_camera.far = planner_camera_far
+		planner_camera.fov = planner_camera_fov
+
+	if display_camera != null:
+		display_camera.near = display_camera_near
+		display_camera.far = display_camera_far
+		display_camera.fov = display_camera_fov
+	
+	if planner_viewport != null:
+		planner_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+
+	if display_viewport != null:
+		display_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+
+	if planner_camera != null:
+		planner_camera.current = planner_vision_enabled
+
+	if display_camera != null:
+		display_camera.current = display_camera_enabled
 
 	
 
@@ -203,8 +263,12 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	vision_camera.global_transform = vision_pivot.global_transform
-	
+	if planner_camera != null:
+		planner_camera.global_transform = vision_pivot.global_transform
+
+	if display_camera != null:
+		display_camera.global_transform = vision_pivot.global_transform
+
 	if target != null:
 		target_position = target.global_position
 
@@ -222,6 +286,19 @@ func _physics_process(delta: float) -> void:
 
 	_update_lidar(delta)
 	plan_visible_motion()
+
+	# Rebuild the path box AFTER plan_visible_motion so it uses the current plan
+	if (
+		last_vision_img != null
+		and last_cell_weights.size() > 0
+		and last_best_weight > 0.0
+		and vision_samples_ready >= min_vision_samples_for_path_box
+		and vision_corridor_confidence >= min_corridor_confidence_for_path_box
+	):
+		rebuild_path_box_from_plan(last_vision_img, last_cell_weights, last_corridor_cols, last_corridor_rows, last_best_weight)
+	else:
+		vision_corridor_rect_valid = false
+		vision_corridor_rect_px = Rect2()
 
 	var to_target_full: Vector3 = target_position - global_position
 	var to_target_flat: Vector3 = to_target_full
@@ -340,12 +417,15 @@ func _do_reached_hold(delta: float) -> void:
 	apply_central_force(hold_force * mass)
 
 func _update_vision(delta: float) -> void:
-	if not vision_enabled:
+	if not planner_vision_enabled:
 		avoid_active_vision = false
 		avoid_dir_vision = 0.0
 		avoid_strength_vision = 0.0
 		vision_corridor_local = Vector3(0.0, 0.0, -1.0)
+		stable_vision_corridor_local = Vector3(0.0, 0.0, -1.0)
 		vision_corridor_confidence = 0.0
+		vision_corridor_rect_valid = false
+		vision_corridor_rect_px = Rect2()
 		return
 
 	vision_timer += delta
@@ -364,17 +444,22 @@ func _update_lidar(_delta: float) -> void:
 	lidar_avoidance_update()
 
 func process_vision() -> void:
-	var img: Image = vision_viewport.get_texture().get_image()
+	var img: Image = planner_viewport.get_texture().get_image()
 	img.convert(Image.FORMAT_RGBA8)
 
 	if prev_img == null:
 		prev_img = img.duplicate()
+		last_vision_img = img.duplicate()
+		vision_samples_ready = 0
 		vision_avoid_latch = false
 		avoid_active_vision = false
 		avoid_dir_vision = 0.0
 		avoid_strength_vision = 0.0
+		stable_vision_corridor_local = Vector3(0.0, 0.0, -1.0)
 		vision_corridor_local = Vector3(0.0, 0.0, -1.0)
 		vision_corridor_confidence = 0.0
+		vision_corridor_rect_valid = false
+		vision_corridor_rect_px = Rect2()
 		return
 
 	var w: int = img.get_width()
@@ -389,6 +474,8 @@ func process_vision() -> void:
 	update_vision_corridor(img)
 
 	prev_img = img.duplicate()
+	last_vision_img = img.duplicate()
+	vision_samples_ready += 1
 
 	var trigger: bool = (center_flow > avoid_trigger_flow) or (edge_c > avoid_trigger_edge)
 	var clear: bool = (center_flow < avoid_clear_flow) and (edge_c < avoid_clear_edge)
@@ -422,17 +509,30 @@ func update_vision_corridor(img: Image) -> void:
 	var cols: int = 7
 	var rows: int = 5
 
+	var roi_x0: int = int(w * roi_left_frac)
+	var roi_x1: int = int(w * roi_right_frac)
+	var roi_y0: int = int(h * roi_top_frac)
+	var roi_y1: int = int(h * roi_bottom_frac)
+
+	var roi_w: int = max(roi_x1 - roi_x0, 1)
+	var roi_h: int = max(roi_y1 - roi_y0, 1)
+
 	var total_weight: float = 0.0
 	var sum_x: float = 0.0
 	var sum_y: float = 0.0
 	var best_weight: float = 0.0
 
+	var cell_weights: Array = []
+	cell_weights.resize(rows)
+	for r in range(rows):
+		cell_weights[r] = []
+
 	for row in range(rows):
 		for col in range(cols):
-			var x0: int = int(float(col) / float(cols) * float(w))
-			var x1: int = int(float(col + 1) / float(cols) * float(w))
-			var y0: int = int(float(row) / float(rows) * float(h))
-			var y1: int = int(float(row + 1) / float(rows) * float(h))
+			var x0: int = roi_x0 + int(float(col) / float(cols) * float(roi_w))
+			var x1: int = roi_x0 + int(float(col + 1) / float(cols) * float(roi_w))
+			var y0: int = roi_y0 + int(float(row) / float(rows) * float(roi_h))
+			var y1: int = roi_y0 + int(float(row + 1) / float(rows) * float(roi_h))
 
 			var edges: float = edge_density(img, x0, x1, y0, y1, edge_step)
 
@@ -440,32 +540,43 @@ func update_vision_corridor(img: Image) -> void:
 			if prev_img != null:
 				flow = flow_band(img, prev_img, x0, x1, y0, y1, flow_step)
 
-			# openness estimate
 			var openness: float = 1.0 / (0.001 + edges * 2.2 + flow * 1.6)
 
-			# prefer center-ish columns
 			var col_center_dist: float = abs(float(col) - float(cols - 1) * 0.5) / max(float(cols - 1) * 0.5, 0.001)
 			var center_bonus: float = 1.0 - col_center_dist
 
-			# prefer upper-middle a bit, but not too strongly
 			var row_norm: float = float(row) / max(float(rows - 1), 1.0)
-			var vertical_pref: float = 1.0 - abs(row_norm - 0.28) / 0.72
+			var vertical_pref: float = 1.0 - abs(row_norm - 0.38) / 0.62
 			vertical_pref = clamp(vertical_pref, 0.0, 1.0)
 
-			var weight: float = openness * 2.4 + center_bonus * 0.35 + vertical_pref * 0.35
+			var top_penalty: float = 0.0
+			if row == 0:
+				top_penalty = 0.35
 
-			if weight > 0.0:
-				var cx: float = (float(col) + 0.5) / float(cols)
-				var cy: float = (float(row) + 0.5) / float(rows)
+			var weight: float = openness * 2.2 + center_bonus * 0.30 + vertical_pref * 0.35 - top_penalty
+			weight = max(weight, 0.0)
 
-				sum_x += cx * weight
-				sum_y += cy * weight
-				total_weight += weight
-				best_weight = max(best_weight, weight)
+			cell_weights[row].append(weight)
+
+			total_weight += weight
+			best_weight = max(best_weight, weight)
+
+			var cx: float = (float(col) + 0.5) / float(cols)
+			var cy: float = (float(row) + 0.5) / float(rows)
+
+			sum_x += cx * weight
+			sum_y += cy * weight
+
+	last_cell_weights = cell_weights
+	last_best_weight = best_weight
+	last_corridor_cols = cols
+	last_corridor_rows = rows
 
 	if total_weight <= 0.0001:
-		vision_corridor_local = vision_corridor_local.lerp(Vector3(0.0, 0.0, -1.0), 0.10).normalized()
-		vision_corridor_confidence = lerpf(vision_corridor_confidence, 0.0, 0.10)
+		vision_corridor_local = vision_corridor_local.lerp(Vector3(0.0, 0.0, -1.0), 0.18).normalized()
+		vision_corridor_confidence = lerpf(vision_corridor_confidence, 0.0, 0.18)
+		vision_corridor_rect_valid = false
+		vision_corridor_rect_px = Rect2()
 		return
 
 	var mean_x: float = sum_x / total_weight
@@ -474,17 +585,182 @@ func update_vision_corridor(img: Image) -> void:
 	var x_norm: float = mean_x * 2.0 - 1.0
 	var y_norm: float = 1.0 - mean_y * 2.0
 
-	# softer lateral command, moderate upward bias
 	var lateral: float = x_norm * 0.28
 	var climb: float = max(y_norm, 0.0) * 0.36
 
 	var candidate: Vector3 = Vector3(lateral, climb, -1.0).normalized()
-
-	# confidence from overall support, not just one cell
-	var confidence: float = clamp((total_weight / float(cols * rows)) / max(best_weight, 0.001) * 1.8, 0.0, 0.75)
+	var confidence: float = clamp(total_weight / float(cols * rows) / max(best_weight, 0.001), 0.0, 0.75)
 
 	vision_corridor_local = vision_corridor_local.lerp(candidate, 0.18).normalized()
 	vision_corridor_confidence = lerpf(vision_corridor_confidence, confidence, 0.18)
+
+	if vision_corridor_confidence >= min_corridor_confidence_for_commit:
+		stable_vision_corridor_local = stable_vision_corridor_local.lerp(
+			vision_corridor_local,
+			vision_corridor_commit_smooth
+		).normalized()
+
+func rebuild_path_box_from_plan(img: Image, cell_weights: Array, cols: int, rows: int, best_weight: float) -> void:
+	var w: int = img.get_width()
+	var h: int = img.get_height()
+
+	var conf_t: float = clamp(vision_corridor_confidence, 0.0, 1.0)
+	var threshold: float = best_weight * lerp(0.84, 0.72, conf_t)
+
+	# Seed from the actual chosen plan, not from the biggest open image region.
+	var dir: Vector3 = planned_motion_local.normalized()
+
+	var x_norm: float = clamp(dir.x / 0.8, -1.0, 1.0)
+	var y_norm: float = clamp(dir.y / 0.6, 0.0, 1.0)
+
+	var px: float = (x_norm + 1.0) * 0.5
+	var py: float = (1.0 - y_norm) * 0.7 + 0.15
+
+	var seed_col: int = clamp(int(px * float(cols)), 0, cols - 1)
+	var seed_row: int = clamp(int(py * float(rows)), 0, rows - 1)
+
+	if cell_weights[seed_row][seed_col] < threshold:
+		var found: bool = false
+		var best_dist: float = 999999.0
+		var best_seed_col: int = seed_col
+		var best_seed_row: int = seed_row
+
+		for row in range(rows):
+			for col in range(cols):
+				var weight: float = cell_weights[row][col]
+				if weight >= threshold:
+					var dx: float = float(col - seed_col)
+					var dy: float = float(row - seed_row)
+					var d2: float = dx * dx + dy * dy
+					if d2 < best_dist:
+						best_dist = d2
+						best_seed_col = col
+						best_seed_row = row
+						found = true
+
+		if found:
+			seed_col = best_seed_col
+			seed_row = best_seed_row
+		else:
+			vision_corridor_rect_valid = false
+			vision_corridor_rect_px = Rect2()
+			return
+
+	var visited: Array = []
+	visited.resize(rows)
+	for r in range(rows):
+		visited[r] = []
+		for _c in range(cols):
+			visited[r].append(false)
+
+	var queue: Array[Vector2i] = [Vector2i(seed_col, seed_row)]
+	visited[seed_row][seed_col] = true
+
+	var min_col: int = seed_col
+	var max_col: int = seed_col
+	var min_row: int = seed_row
+	var max_row: int = seed_row
+
+	while queue.size() > 0:
+		var p: Vector2i = queue.pop_front()
+		var c: int = p.x
+		var r: int = p.y
+
+		min_col = min(min_col, c)
+		max_col = max(max_col, c)
+		min_row = min(min_row, r)
+		max_row = max(max_row, r)
+
+		var neighbors: Array[Vector2i] = [
+			Vector2i(c - 1, r),
+			Vector2i(c + 1, r),
+			Vector2i(c, r - 1),
+			Vector2i(c, r + 1)
+		]
+
+		for n in neighbors:
+			if n.x < 0 or n.x >= cols or n.y < 0 or n.y >= rows:
+				continue
+			if visited[n.y][n.x]:
+				continue
+			visited[n.y][n.x] = true
+
+			if cell_weights[n.y][n.x] >= threshold:
+				queue.append(n)
+
+	if max_col >= min_col and max_row >= min_row:
+		var rx: float = float(min_col) / float(cols) * float(w)
+		var ry: float = float(min_row) / float(rows) * float(h)
+		var rw: float = float(max_col - min_col + 1) / float(cols) * float(w)
+		var rh: float = float(max_row - min_row + 1) / float(rows) * float(h)
+
+		vision_corridor_rect_px = Rect2(rx, ry, rw, rh)
+
+		# Tighten the box a bit so it reads like a route, not a region blob.
+		var shrink_x: float = vision_corridor_rect_px.size.x * 0.12
+		var shrink_y: float = vision_corridor_rect_px.size.y * 0.18
+		vision_corridor_rect_px.position += Vector2(shrink_x, shrink_y)
+		vision_corridor_rect_px.size -= Vector2(shrink_x * 2.0, shrink_y * 2.0)
+
+		vision_corridor_rect_valid = vision_corridor_rect_px.size.x > 0.0 and vision_corridor_rect_px.size.y > 0.0
+	else:
+		vision_corridor_rect_valid = false
+		vision_corridor_rect_px = Rect2()
+
+
+func get_vision_corridor_rect_normalized() -> Rect2:
+	if not vision_corridor_rect_valid or planner_viewport == null:
+		return Rect2()
+
+	var vp_size: Vector2 = planner_viewport.size
+	if vp_size.x <= 0.0 or vp_size.y <= 0.0:
+		return Rect2()
+
+	return Rect2(
+		vision_corridor_rect_px.position / vp_size,
+		vision_corridor_rect_px.size / vp_size
+	)
+
+
+func has_vision_corridor_rect() -> bool:
+	return vision_corridor_rect_valid
+
+
+func is_target_visible() -> bool:
+	if display_camera == null:
+		return false
+
+	if display_camera.is_position_behind(target_position):
+		return false
+
+	var screen_pos: Vector2 = display_camera.unproject_position(target_position)
+	var vp_size: Vector2 = display_viewport.size
+
+	if screen_pos.x < 0.0 or screen_pos.y < 0.0 or screen_pos.x > vp_size.x or screen_pos.y > vp_size.y:
+		return false
+
+	var space_state := get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.create(
+		display_camera.global_position,
+		target_position
+	)
+	query.exclude = [self]
+
+	var result := space_state.intersect_ray(query)
+	if result.is_empty():
+		return true
+
+	if target != null and result.has("collider") and result["collider"] == target:
+		return true
+
+	return result["position"].distance_to(target_position) < 0.2
+
+
+func get_vision_camera() -> Camera3D:
+	return display_camera
+
+func get_planner_camera() -> Camera3D:
+	return planner_camera
 
 func flow_band(img: Image, prev: Image, x0: int, x1: int, y0: int, y1: int, step: int) -> float:
 	var sum: float = 0.0
@@ -611,14 +887,25 @@ func plan_visible_motion() -> void:
 	var goal_world: Vector3 = to_target.normalized()
 	var goal_local: Vector3 = (transform.basis.inverse() * goal_world).normalized()
 
+	var effective_progress_weight: float = planner_progress_weight
+	var effective_clearance_weight: float = planner_clearance_weight
+	var effective_min_margin_weight: float = planner_min_margin_weight
+	var effective_vision_weight: float = vision_corridor_weight
+
+	if planner_vision_enabled and not lidar_enabled:
+		effective_progress_weight *= camera_only_progress_scale
+		effective_clearance_weight *= camera_only_clearance_scale
+		effective_min_margin_weight *= camera_only_min_margin_scale
+		effective_vision_weight *= camera_only_vision_weight_scale
+
 	if not lidar_enabled or lidar == null:
 		var fallback_local: Vector3 = goal_local
 
-		if vision_enabled and vision_corridor_confidence > 0.10:
-			var v_mix: float = vision_corridor_weight * vision_corridor_confidence
+		if planner_vision_enabled and vision_corridor_confidence > 0.10:
+			var v_mix: float = effective_vision_weight * vision_corridor_confidence
 			if near_goal:
 				v_mix *= vision_corridor_near_goal_scale
-			fallback_local = goal_local.lerp(vision_corridor_local, v_mix).normalized()
+			fallback_local = goal_local.lerp(stable_vision_corridor_local, v_mix).normalized()
 
 		planned_motion_local = planned_motion_local.lerp(fallback_local, planner_direction_smooth).normalized()
 		planned_motion_world = (transform.basis * planned_motion_local).normalized()
@@ -665,22 +952,17 @@ func plan_visible_motion() -> void:
 			var vertical_min_margin: float = min(clear_up, clear_down)
 			var vertical_balance: float = 1.0 - clamp(abs(clear_up - clear_down) / 4.0, 0.0, 1.0)
 
-			# If there is much more room above than below, the current line is too low.
-			# Convert that into a desired climb amount for this yaw direction.
 			var vertical_offset: float = clamp((clear_up - clear_down) / 4.0, -1.0, 1.0)
 
-			# Bias toward slightly above true center in constrained spaces.
 			var desired_climb_bias: float = clamp(
 				0.18 + vertical_offset * 0.55 + planner_vertical_center_bias * 0.18,
 				0.0,
 				0.85
 			)
 
-			# Reward climb samples that match the safer vertical line.
 			var climb_alignment: float = 1.0 - abs(climb_bias - desired_climb_bias) / 0.85
 			climb_alignment = clamp(climb_alignment, 0.0, 1.0)
 
-			# Stronger when the passage is tight.
 			var constrained_vertical: float = 1.0 - clamp(vertical_min_margin / max(planner_vertical_safe_distance, 0.001), 0.0, 1.0)
 			var vertical_center_bias_score: float = climb_alignment * (0.35 + constrained_vertical * 0.65)
 
@@ -701,21 +983,18 @@ func plan_visible_motion() -> void:
 
 			var climb_penalty: float = climb_bias * planner_climb_weight
 
-			# If the route is vertically constrained and we're below center,
-			# reduce the penalty for climbing.
 			if vertical_offset > 0.08 and vertical_min_margin < planner_vertical_safe_distance * 1.4:
 				climb_penalty *= 0.35
 
-			# Extra reward when front is tight but up/down balance implies a centered corridor
 			var corridor_reward: float = 0.0
 			if clear_mid < climb_trigger_dist and combined_min_margin > planner_body_margin:
 				corridor_reward = 1.0 + vertical_balance * 0.7 + lateral_balance * 0.5
 
 			var score: float = (
-				goal_align * planner_progress_weight +
+				goal_align * effective_progress_weight +
 				forwardness * planner_forward_gain +
-				clearance_score * planner_clearance_weight +
-				min_margin_score * planner_min_margin_weight +
+				clearance_score * effective_clearance_weight +
+				min_margin_score * effective_min_margin_weight +
 				centering_score * planner_centering_weight +
 				vertical_center_bias_score * planner_vertical_margin_bias +
 				corridor_reward -
@@ -730,10 +1009,10 @@ func plan_visible_motion() -> void:
 				if abs(angle - goal_angle_deg) < 16.0 and vertical_min_margin > planner_body_margin:
 					score += 0.6
 
-			if vision_enabled and vision_corridor_confidence > 0.10:
-				var vision_align: float = clamp(dir_local.dot(vision_corridor_local), -1.0, 1.0)
+			if planner_vision_enabled and vision_corridor_confidence > 0.10:
+				var vision_align: float = clamp(dir_local.dot(stable_vision_corridor_local), -1.0, 1.0)
 
-				var v_mix: float = vision_corridor_weight * vision_corridor_confidence
+				var v_mix: float = effective_vision_weight * vision_corridor_confidence
 				if near_goal:
 					v_mix *= vision_corridor_near_goal_scale
 
@@ -788,8 +1067,8 @@ func update_corridor_lock(delta: float, candidate_motion_local: Vector3) -> void
 	var geometry_support: bool = center_clear < climb_trigger_dist
 
 	var vision_support: bool = false
-	if vision_enabled and vision_corridor_confidence > 0.18:
-		vision_support = candidate_motion_local.dot(vision_corridor_local) > 0.45
+	if planner_vision_enabled and vision_corridor_confidence > 0.18:
+		vision_support = candidate_motion_local.dot(stable_vision_corridor_local) > 0.45
 
 	var candidate_is_gap_route: bool = (
 		candidate_motion_local.y > corridor_lock_min_up and
@@ -871,6 +1150,16 @@ func steer_toward_goal(dist: float, delta: float, settling: bool) -> void:
 		var commanded_settle: float = lerp(0.02, cruise_tilt, speed_scale_settle)
 		target_pitch = -commanded_settle * settle_pitch_scale
 		target_roll = lerpf(target_roll, 0.0, delta * 4.0)
+		
+		if planner_vision_enabled and not lidar_enabled:
+			var conf: float = clamp(vision_corridor_confidence, 0.0, 1.0)
+
+			if conf < 0.10:
+				target_pitch = min(target_pitch, -0.02)
+			elif conf < 0.20:
+				target_pitch *= 0.35
+			elif conf < 0.35:
+				target_pitch *= 0.60
 
 		if avoid_active:
 			var c_settle: float = lidar_center_latest
@@ -949,12 +1238,60 @@ func apply_braking(dist: float) -> void:
 	
 
 func get_camera_feed() -> Texture2D:
-	return vision_viewport.get_texture()
+	if display_viewport == null:
+		return null
+	return display_viewport.get_texture()
+
+func get_planner_feed() -> Texture2D:
+	if planner_viewport == null:
+		return null
+	return planner_viewport.get_texture()
 
 func is_camera_enabled() -> bool:
-	return vision_enabled
+	return display_camera_enabled
+
+func is_planner_vision_enabled() -> bool:
+	return planner_vision_enabled
 
 func set_camera_enabled(enabled: bool) -> void:
-	vision_enabled = enabled
-	if vision_camera != null:
-		vision_camera.current = enabled
+	display_camera_enabled = enabled
+
+	if display_camera != null:
+		display_camera.current = enabled
+
+	if display_viewport != null:
+		display_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS if enabled else SubViewport.UPDATE_DISABLED
+
+func set_planner_vision_enabled(enabled: bool) -> void:
+	planner_vision_enabled = enabled
+
+	if planner_camera != null:
+		planner_camera.current = enabled
+
+	if planner_viewport != null:
+		planner_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS if enabled else SubViewport.UPDATE_DISABLED
+	
+func get_debug_world_points() -> Dictionary:
+	var origin := global_position
+	var goal_dir := (target_position - global_position).normalized()
+
+	return {
+		"origin": origin,
+		"goal_end": origin + goal_dir * 4.0,
+		"plan_end": origin + planned_motion_world.normalized() * 4.0,
+		"vision_end": origin + (transform.basis * vision_corridor_local).normalized() * 4.0,
+		"avoid_end": origin + transform.basis.x * avoid_yaw_dir * 2.5
+	}
+	
+func get_vision_viewport_size() -> Vector2:
+	if display_viewport == null:
+		return Vector2.ONE
+	return display_viewport.size
+
+func get_planner_viewport_size() -> Vector2:
+	if planner_viewport == null:
+		return Vector2.ONE
+	return planner_viewport.size
+
+func get_vision_corridor_rect_px() -> Rect2:
+	return vision_corridor_rect_px
