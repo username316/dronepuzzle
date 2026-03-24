@@ -63,4 +63,5 @@ debug_draw_enabled = false
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("5_gnly4")
+volume_db = -40.649
 autoplay = true

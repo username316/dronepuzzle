@@ -17,11 +17,16 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Global="*res://global.gd"
+Global="*res://autoload/global.gd"
+SoundManager="*res://autoload/SoundManager.tscn"
 
 [editor]
 
 import/use_multiple_threads=false
+
+[global_group]
+
+buttons=""
 
 [input]
 

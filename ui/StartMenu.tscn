@@ -70,7 +70,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 18
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -84,7 +84,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_d3352")
 theme_override_styles/normal = SubResource("StyleBoxFlat_yoqr7")
 text = "Start"
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
+[node name="Button2" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)

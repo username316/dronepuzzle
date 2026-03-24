@@ -16,6 +16,8 @@ func change_scene_to_path(path: String):
 	current_scene.queue_free()
 	current_scene = ResourceLoader.load(path).instantiate()
 	get_tree().root.add_child(current_scene)
+	
+	SoundManager.connect_sounds()
 
 func load_levels_from_dir(path: String):
 	var dir = DirAccess.open(path)

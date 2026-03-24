@@ -108,7 +108,7 @@ theme_override_fonts/font = ExtResource("2_5dmbo")
 theme_override_font_sizes/font_size = 90
 text = "Parts Menu"
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -129,7 +129,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_auhkm")
 theme_override_styles/normal = SubResource("StyleBoxFlat_5dmbo")
 text = "Exit"
 
-[node name="Button2" type="Button" parent="."]
+[node name="Button2" type="Button" parent="." groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -179,7 +179,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_ln4wt")
 text = "        Lidar"
 vertical_alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="."]
+[node name="CheckBox" type="CheckBox" parent="." groups=["buttons"]]
 layout_mode = 0
 offset_left = 245.0
 offset_top = 164.0
@@ -188,7 +188,7 @@ offset_bottom = 204.0
 theme_override_icons/checked = ExtResource("4_dateu")
 theme_override_icons/unchecked = ExtResource("5_7racy")
 
-[node name="CheckBox2" type="CheckBox" parent="."]
+[node name="CheckBox2" type="CheckBox" parent="." groups=["buttons"]]
 layout_mode = 0
 offset_left = 245.0
 offset_top = 273.0

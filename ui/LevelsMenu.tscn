@@ -70,7 +70,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 20
 
-[node name="Button" type="Button" parent="VBoxContainer"]
+[node name="Button" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -84,7 +84,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_vm51j")
 theme_override_styles/normal = SubResource("StyleBoxFlat_o56rd")
 text = "Level 1"
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
+[node name="Button2" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -98,7 +98,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_vm51j")
 theme_override_styles/normal = SubResource("StyleBoxFlat_o56rd")
 text = "Level 2"
 
-[node name="Button3" type="Button" parent="VBoxContainer"]
+[node name="Button3" type="Button" parent="VBoxContainer" groups=["buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -112,7 +112,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_vm51j")
 theme_override_styles/normal = SubResource("StyleBoxFlat_o56rd")
 text = "Level 3"
 
-[node name="Button4" type="Button" parent="."]
+[node name="Button4" type="Button" parent="." groups=["buttons"]]
 layout_mode = 0
 offset_left = 271.0
 offset_top = 522.0
@@ -129,7 +129,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_vm51j")
 theme_override_styles/normal = SubResource("StyleBoxFlat_o56rd")
 text = "Exit"
 
-[node name="Button5" type="Button" parent="."]
+[node name="Button5" type="Button" parent="." groups=["buttons"]]
 layout_mode = 0
 offset_left = 910.0
 offset_top = 522.0
@@ -146,7 +146,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_vm51j")
 theme_override_styles/normal = SubResource("StyleBoxFlat_o56rd")
 text = "Start"
 
-[node name="Button6" type="Button" parent="."]
+[node name="Button6" type="Button" parent="." groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
