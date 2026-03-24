@@ -113,11 +113,15 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_o56rd")
 text = "Level 3"
 
 [node name="Button4" type="Button" parent="." groups=["buttons"]]
-layout_mode = 0
-offset_left = 271.0
-offset_top = 522.0
-offset_right = 475.0
-offset_bottom = 609.0
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 256.0
+offset_top = -126.0
+offset_right = 460.0
+offset_bottom = -39.0
+grow_vertical = 0
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
@@ -130,11 +134,18 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_o56rd")
 text = "Exit"
 
 [node name="Button5" type="Button" parent="." groups=["buttons"]]
-layout_mode = 0
-offset_left = 910.0
-offset_top = 522.0
-offset_right = 1114.0
-offset_bottom = 609.0
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -126.0
+offset_right = -52.0
+offset_bottom = -39.0
+grow_horizontal = 0
+grow_vertical = 0
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
