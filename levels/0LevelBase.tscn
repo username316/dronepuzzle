@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d05r7jbw752k3"]
+[gd_scene load_steps=13 format=3 uid="uid://d05r7jbw752k3"]
 
 [ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_djagn"]
 [ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://drone/Drone.tscn" id="2_4eioo"]
@@ -6,9 +6,13 @@
 [ext_resource type="Script" uid="uid://nxtxa01uvdaa" path="res://levels/pause_menu.gd" id="4_fsmbg"]
 [ext_resource type="Script" uid="uid://dge6s5kwma7kv" path="res://levels/level_complete_menu.gd" id="5_im322"]
 [ext_resource type="Script" uid="uid://crr0kair60bdb" path="res://levels/stopwatch.gd" id="6_u5bbg"]
+[ext_resource type="Script" uid="uid://dq7p05soov14w" path="res://levels/camera_veiwer.gd" id="7_errhk"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
 size = Vector2(10, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u5bbg"]
+size = Vector3(9.92981, 0.0761836, 9.85718)
 
 [sub_resource type="Environment" id="Environment_djagn"]
 ambient_light_source = 3
@@ -22,6 +26,8 @@ volumetric_fog_ambient_inject = 16.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_4eioo"]
 radius = 1.0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_errhk"]
 
 [node name="Level" type="Node3D"]
 script = ExtResource("1_djagn")
@@ -39,6 +45,12 @@ arrive_radius = 5.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.006, -1, 0.012)
 layers = 2
 mesh = SubResource("PlaneMesh_djagn")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00152592, -0.236755, -0.0130614)
+shape = SubResource("BoxShape3D_u5bbg")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787, 0, 0, 0)
@@ -169,6 +181,29 @@ offset_right = 40.0
 offset_bottom = -17.0
 grow_vertical = 0
 text = "0.0"
+
+[node name="CameraVeiwer" type="Control" parent="LevelUI"]
+layout_mode = 3
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -334.0
+offset_top = -197.0
+offset_right = -14.0
+offset_bottom = -17.0
+grow_horizontal = 0
+grow_vertical = 0
+script = ExtResource("7_errhk")
+
+[node name="TextureRect" type="TextureRect" parent="LevelUI/CameraVeiwer"]
+clip_contents = true
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+texture = SubResource("ViewportTexture_errhk")
+stretch_mode = 5
 
 [connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
 [connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ContinueButton" to="LevelUI/PauseMenu" method="_on_continue_button_pressed"]

@@ -1,258 +1,109 @@
-[gd_scene load_steps=10 format=3 uid="uid://1cfey14nb1xh"]
+[gd_scene load_steps=5 format=3 uid="uid://0rysvuaq4xk0"]
 
-[ext_resource type="Script" uid="uid://b66pfg6mxdh1y" path="res://levels/level.gd" id="1_432n0"]
-[ext_resource type="PackedScene" uid="uid://bwx78u7hlesfp" path="res://drone/Drone.tscn" id="2_1hrej"]
-[ext_resource type="PackedScene" uid="uid://dtobi21uvl4et" path="res://Rain.tscn" id="3_wnytt"]
-[ext_resource type="Script" uid="uid://nxtxa01uvdaa" path="res://levels/pause_menu.gd" id="4_jiouf"]
-[ext_resource type="Script" uid="uid://dge6s5kwma7kv" path="res://levels/level_complete_menu.gd" id="5_pixff"]
-[ext_resource type="Script" uid="uid://crr0kair60bdb" path="res://levels/stopwatch.gd" id="6_6m74g"]
+[ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_gljt1"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_djagn"]
 size = Vector2(10, 10)
 
-[sub_resource type="Environment" id="Environment_djagn"]
-ambient_light_source = 3
-ambient_light_color = Color(1, 1, 1, 1)
-fog_enabled = true
-fog_density = 0.0
-volumetric_fog_enabled = true
-volumetric_fog_density = 1.0
-volumetric_fog_ambient_inject = 16.0
+[sub_resource type="BoxShape3D" id="BoxShape3D_u5bbg"]
+size = Vector3(9.92981, 0.0761836, 9.85718)
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_qcwkq"]
-radius = 1.0
+[sub_resource type="ViewportTexture" id="ViewportTexture_gljt1"]
 
-[node name="Level2" type="Node3D"]
-script = ExtResource("1_432n0")
+[node name="Level" instance=ExtResource("1_gljt1")]
 
-[node name="Drone" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_1hrej")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0.5, 0)
-can_sleep = false
-freeze_mode = 1
-custom_integrator = false
-linear_damp = 0.05
-angular_damp = 1.0
-target = NodePath("../Target")
-arrive_radius = 5.0
-lidar_enabled = true
+[node name="Ground" parent="." index="1"]
+transform = Transform3D(4.12139, 0, 0, 0, 2.695, 0, 0, 0, 3.44229, -14.0618, -1, 2.24009)
 
-[node name="Ground" type="MeshInstance3D" parent="."]
-transform = Transform3D(3.935, 0, 0, 0, 3.935, 0, 0, 0, 3.935, -14.7477, 0, 0.012)
-layers = 2
-mesh = SubResource("PlaneMesh_djagn")
-
-[node name="Roof" type="MeshInstance3D" parent="."]
-transform = Transform3D(3.935, 0, 0, 0, 3.935, 0, 0, 0, 3.935, -14.7477, 4.7664, 0.012)
+[node name="Roof" type="MeshInstance3D" parent="." index="2"]
+transform = Transform3D(4.12139, 0, 0, 0, 2.695, 0, 0, 0, 3.44229, -14.0618, 4.84023, 2.24009)
 visible = false
 layers = 2
 mesh = SubResource("PlaneMesh_djagn")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787, 0, 0, 0)
+[node name="StaticBody3D" type="StaticBody3D" parent="Roof" index="0"]
 
-[node name="CameraTop" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.818531, 0.574463, 0, -0.574463, 0.818531, 0, 1.98068, 2.2902)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Roof/StaticBody3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00152493, -0.0116024, -0.0130614)
+shape = SubResource("BoxShape3D_u5bbg")
 
-[node name="Rain" parent="." instance=ExtResource("3_wnytt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 18.5713, 0)
-emitting = false
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_djagn")
-
-[node name="Obstacles" type="Node" parent="."]
-
-[node name="CSGBox3D" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Obstacles" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.69532, 2.3828, 4.91326)
 use_collision = true
 size = Vector3(15.3237, 4.70459, 1)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Obstacles" index="1"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -15.131, 2.39867, 2.78126)
 use_collision = true
 size = Vector3(15, 4.70459, 1)
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D13" type="CSGBox3D" parent="Obstacles" index="2"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -21.1249, 2.39868, 15.9777)
 use_collision = true
 size = Vector3(19.6571, 4.70459, 1)
 
-[node name="CSGBox3D14" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D14" type="CSGBox3D" parent="Obstacles" index="3"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -21.1808, 2.39868, -9.86702)
 use_collision = true
 size = Vector3(19.6571, 4.70459, 1)
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D11" type="CSGBox3D" parent="Obstacles" index="4"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -31.4653, 2.39867, 3.08706)
 use_collision = true
 size = Vector3(26.8707, 4.70459, 1)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Obstacles" index="5"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 4.4657, 2.39697, 0.350745)
 use_collision = true
 size = Vector3(10.1398, 4.70459, 1)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Obstacles" index="6"]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.650453, 2.39697, -4.22641)
 use_collision = true
 size = Vector3(9.23828, 4.70459, 1)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Obstacles" index="7"]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -4.77675, 2.39697, -0.944901)
 use_collision = true
 size = Vector3(5.53418, 4.70459, 1)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Obstacles" index="8"]
 transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -8.28742, 2.39697, 1.33809)
 use_collision = true
 size = Vector3(6, 4.70459, 1)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Obstacles" index="9"]
 transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -18.5971, 2.39697, -4.19777)
 use_collision = true
 size = Vector3(6, 4.70459, 1)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D10" type="CSGBox3D" parent="Obstacles" index="10"]
 transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -27.985, 2.39697, -4.40559)
 use_collision = true
 size = Vector3(6, 4.70459, 1)
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D12" type="CSGBox3D" parent="Obstacles" index="11"]
 transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -27.9506, 2.39697, 10.7807)
 use_collision = true
 size = Vector3(6, 4.70459, 1)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Obstacles" index="12"]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -10.8096, 2.39697, 10.9537)
 use_collision = true
 size = Vector3(11.1299, 4.70459, 1)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D15" type="CSGBox3D" parent="Obstacles" index="13"]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -10.818, 2.39697, -4.74418)
 use_collision = true
 size = Vector3(11.1299, 4.70459, 1)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Obstacles"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Obstacles" index="14"]
 transform = Transform3D(1, 0, -1.74846e-07, 0, 1, 0, 1.74846e-07, 0, 1, -17.6364, 2.39697, 10.7515)
 use_collision = true
 size = Vector3(6, 4.70459, 1)
 
-[node name="Target" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.0781, 2.0789, 3.22594)
+[node name="Target" parent="." index="8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29.2011, 0.972117, 3.27275)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Target"]
-shape = SubResource("SphereShape3D_qcwkq")
-
-[node name="LevelUI" type="CanvasLayer" parent="."]
-process_mode = 3
-
-[node name="PauseMenu" type="Control" parent="LevelUI"]
-visible = false
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -95.0
-offset_top = -20.0
-offset_right = 95.0
-offset_bottom = 73.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("4_jiouf")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="LevelUI/PauseMenu"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Label" type="Label" parent="LevelUI/PauseMenu/VBoxContainer"]
-layout_mode = 2
-text = "PAUSED"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ContinueButton" type="Button" parent="LevelUI/PauseMenu/VBoxContainer"]
-layout_mode = 2
-text = "CONTINUE"
-
-[node name="ToStartButton" type="Button" parent="LevelUI/PauseMenu/VBoxContainer"]
-layout_mode = 2
-text = "BACK TO START"
-
-[node name="LevelCompleteMenu" type="Control" parent="LevelUI"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("5_pixff")
-
-[node name="ColorRect" type="ColorRect" parent="LevelUI/LevelCompleteMenu"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 3
-color = Color(0, 0, 0, 0.309804)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="LevelUI/LevelCompleteMenu"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -59.5
-offset_top = -20.0
-offset_right = 59.5
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
-
-[node name="Label" type="Label" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
-layout_mode = 2
-text = "LEVEL COMPLETE"
-horizontal_alignment = 1
-
-[node name="TimeLabel" type="Label" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
-layout_mode = 2
-text = "IN 0.0s"
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
-layout_mode = 2
-
-[node name="MainMenuButton" type="Button" parent="LevelUI/LevelCompleteMenu/VBoxContainer"]
-layout_mode = 2
-text = "MAIN MENU"
-
-[node name="Stopwatch" type="Control" parent="LevelUI"]
-layout_mode = 3
-anchors_preset = 0
-offset_left = 10.0
-offset_top = 616.0
-offset_right = 50.0
-offset_bottom = 656.0
-script = ExtResource("6_6m74g")
-
-[node name="Label" type="Label" parent="LevelUI/Stopwatch"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -40.0
-offset_right = 40.0
-offset_bottom = -17.0
-grow_vertical = 0
-text = "0.0"
-
-[connection signal="body_entered" from="Target" to="." method="_on_target_body_entered"]
-[connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ContinueButton" to="LevelUI/PauseMenu" method="_on_continue_button_pressed"]
-[connection signal="pressed" from="LevelUI/PauseMenu/VBoxContainer/ToStartButton" to="LevelUI/PauseMenu" method="_on_to_start_button_pressed"]
-[connection signal="pressed" from="LevelUI/LevelCompleteMenu/VBoxContainer/MainMenuButton" to="LevelUI/LevelCompleteMenu" method="_on_main_menu_button_pressed"]
+[node name="TextureRect" parent="LevelUI/CameraVeiwer" index="0"]
+texture = SubResource("ViewportTexture_gljt1")

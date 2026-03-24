@@ -28,7 +28,7 @@ func load_levels_from_dir(path: String):
 var vision_enabled: bool = true
 var lidar_enabled: bool = true
 var minThrust: float = 0.00
-var maxThrust: float = 0.00
-var brakeStrength: float = 0.00
-var lidarStopRange: float = 0.00
-var tiltSpeed: float = 0.00
+var maxThrust: float = 60.0
+var brakeStrength: float = 8.0
+var lidarStopRange: float = 9.0
+var tiltSpeed: float = 3.0

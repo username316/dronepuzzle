@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://bqbw46l8qmuff" path="res://camera_pivot.gd" id="2_5j1j2"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1eobg"]
-size = Vector3(1.6, 0.6, 1.6)
+size = Vector3(0.940527, 0.595142, 0.951543)
 
 [node name="Drone" type="RigidBody3D"]
 mass = 1.5
@@ -22,6 +22,7 @@ lidar_enabled = false
 transform = Transform3D(-0.04, 0, 3.49691e-09, 0, 0.04, 0, -3.49691e-09, 0, -0.04, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0132325, 0.00242922, -0.00291218)
 shape = SubResource("BoxShape3D_1eobg")
 
 [node name="CameraPivot" type="Node3D" parent="."]
@@ -31,11 +32,15 @@ script = ExtResource("2_5j1j2")
 transform = Transform3D(1, 0, 0, 0, 0.78549, 0.618875, 0, -0.618875, 0.78549, 0, 2.35899, 2)
 current = true
 
+[node name="VisionPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0572138, -0.450847)
+
 [node name="VisionViewport" type="SubViewport" parent="."]
-size = Vector2i(160, 120)
+size = Vector2i(320, 180)
 render_target_update_mode = 4
 
 [node name="VisionCamera" type="Camera3D" parent="VisionViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0482289, -0.435404)
 fov = 80.0
 near = 0.1
 far = 20.0
@@ -46,11 +51,11 @@ script = ExtResource("2_3rlx3")
 debug_draw_enabled = false
 
 [node name="LidarUp" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0.5, -0.3)
+transform = Transform3D(1, 0, 0, 0, 0.939693, -0.34202, 0, 0.34202, 0.939693, 0, 0.5, -0.3)
 script = ExtResource("2_3rlx3")
 debug_draw_enabled = false
 
 [node name="LidarDown" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.906308, -0.422618, 0, 0.422618, 0.906308, 0, 0, -0.2)
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 0, -0.2)
 script = ExtResource("2_3rlx3")
 debug_draw_enabled = false

@@ -98,3 +98,7 @@ func _create_pad(pos: Vector3, color: Color) -> CSGBox3D:
 	p.position = pos
 	p.material = _get_mat(color)
 	return p
+
+func _on_target_body_entered(body: Node3D) -> void:
+	stopwatch.stop()
+	level_complete_menu.complete_level(stopwatch.time_elapsed)
