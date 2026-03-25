@@ -251,10 +251,10 @@ height = 16.1531
 material = SubResource("StandardMaterial3D_gq8fh")
 
 [node name="Target" parent="." index="7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 87.6644, 1.48308, 72.1737)
-
-[node name="CollisionShape3D" parent="Target" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.030426, 0, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 87.7345, -0.0207542, 72.2515)
 
 [node name="TextureRect" parent="LevelUI/CameraVeiwer" index="0"]
 texture = SubResource("ViewportTexture_11ac5")
+
+[node name="Goal" parent="." index="9"]
+transform = Transform3D(3, 0, 0, 0, 4.382, 0, 0, 0, 2.518, 87.7399, -1.21627, 72.2547)

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://ciatl64kidlkv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0vi4d"]
+albedo_color = Color(0.470588, 0.470588, 0.470588, 1)
+metallic = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qbnh4"]
+albedo_color = Color(1, 0, 0, 1)
+
+[node name="Goal" type="Node3D"]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50061, 0.000571012)
+size = Vector3(0.1, 1, 0.1)
+material = SubResource("StandardMaterial3D_0vi4d")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 1.03019, 0.505457, 6.43134e-05)
+polygon = PackedVector2Array(0.391779, 0.36868, 0.311563, 1.00187, 0.470248, 1.00184, 0.438994, 0.782819)
+depth = 0.01
+material = SubResource("StandardMaterial3D_qbnh4")
