@@ -14,8 +14,14 @@ extends Control
 @export var confidence_bar_width_scale: float = 0.28
 @export var confidence_bar_height_scale: float = 0.03
 
+@export var path_rect_smooth: float = 0.22
+@export var path_rect_min_size_px: float = 2.0
+
 var drone: Node = null
 var camera_rect: TextureRect = null
+
+var smoothed_path_rect_norm: Rect2 = Rect2()
+var smoothed_path_valid: bool = false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -27,10 +33,19 @@ func _ready() -> void:
 		camera_rect = get_node(camera_rect_path)
 
 func _process(_delta: float) -> void:
+	var show: bool = drone != null and drone.is_camera_enabled()
+	visible = show
+
+	if not show:
+		smoothed_path_valid = false
+		smoothed_path_rect_norm = Rect2()
+		return
+
+	_update_smoothed_path_rect()
 	queue_redraw()
 
 func _draw() -> void:
-	if drone == null or not drone.vision_enabled:
+	if drone == null or not drone.is_camera_enabled():
 		return
 
 	var draw_rect: Rect2 = _get_camera_draw_rect()
@@ -48,18 +63,16 @@ func _draw() -> void:
 
 	var font := get_theme_default_font()
 
-	# Center reticle
 	draw_circle(center, marker_size * 0.7, Color.WHITE)
 	draw_line(center + Vector2(-reticle_size, 0), center + Vector2(reticle_size, 0), Color(1, 1, 1, 0.7), 1.0)
 	draw_line(center + Vector2(0, -reticle_size), center + Vector2(0, reticle_size), Color(1, 1, 1, 0.7), 1.0)
 
-	# Path box
 	var path_rect_px := Rect2()
 	var has_path_rect := false
-	if drone.has_vision_corridor_rect():
-		path_rect_px = _viewport_rect_to_hud(drone.get_vision_corridor_rect_px())
+	if smoothed_path_valid:
+		path_rect_px = _normalized_rect_to_hud(smoothed_path_rect_norm)
 
-		if path_rect_px.size.x > 2.0 and path_rect_px.size.y > 2.0:
+		if path_rect_px.size.x > path_rect_min_size_px and path_rect_px.size.y > path_rect_min_size_px:
 			has_path_rect = true
 			draw_rect(path_rect_px, Color.YELLOW, false, line_width)
 
@@ -69,7 +82,6 @@ func _draw() -> void:
 
 			_draw_label(font, path_label_pos, "PATH", font_size, Color.YELLOW)
 
-	# Goal marker
 	if drone.is_target_visible():
 		var cam: Camera3D = drone.get_vision_camera()
 		if cam != null:
@@ -91,7 +103,6 @@ func _draw() -> void:
 				)
 				_draw_label(font, goal_2d + Vector2(marker_size * 2.0, -marker_size * 1.5), "GOAL", font_size, Color.GREEN)
 
-	# Planned motion cue
 	var plan_local: Vector3 = drone.planned_motion_local.normalized()
 	var plan_pos: Vector2 = center + Vector2(plan_local.x, -plan_local.y) * hud_radius
 	plan_pos = _clamp_to_camera_rect(plan_pos, edge_margin)
@@ -100,7 +111,6 @@ func _draw() -> void:
 	draw_circle(plan_pos, marker_size, Color.CYAN)
 	_draw_label(font, plan_pos + Vector2(marker_size * 2.0, -marker_size * 1.5), "PLAN", font_size, Color.CYAN)
 
-	# Vision cue
 	var vision_local: Vector3 = drone.vision_corridor_local.normalized()
 	var vision_pos: Vector2 = center + Vector2(vision_local.x, -vision_local.y) * vision_radius
 	vision_pos = _clamp_to_camera_rect(vision_pos, edge_margin)
@@ -109,7 +119,6 @@ func _draw() -> void:
 	draw_circle(vision_pos, marker_size * 0.85, Color.YELLOW)
 	_draw_label(font, vision_pos + Vector2(marker_size * 2.0, -marker_size * 1.5), "VISION", font_size, Color.YELLOW)
 
-	# Avoid cue
 	if drone.avoid_active:
 		var avoid_pos: Vector2 = center + Vector2(drone.avoid_yaw_dir, 0.0) * avoid_radius
 		avoid_pos = _clamp_to_camera_rect(avoid_pos, edge_margin)
@@ -118,7 +127,6 @@ func _draw() -> void:
 		draw_circle(avoid_pos, marker_size * 0.9, Color.RED)
 		_draw_label(font, avoid_pos + Vector2(marker_size * 2.0, -marker_size * 1.5), "AVOID", font_size, Color.RED)
 
-	# Vision confidence
 	var text_pos := draw_rect.position + Vector2(edge_margin, edge_margin + font_size)
 	_draw_label(font, text_pos, "VISION %.2f" % drone.vision_corridor_confidence, font_size, Color.YELLOW)
 
@@ -135,6 +143,27 @@ func _draw() -> void:
 
 	if drone.avoid_active:
 		_draw_label(font, Vector2(draw_rect.position.x + edge_margin, bar_pos.y + bar_h + font_size + 6.0), "AVOIDING", font_size, Color.RED)
+
+func _update_smoothed_path_rect() -> void:
+	if drone == null or not drone.has_vision_corridor_rect():
+		smoothed_path_valid = false
+		smoothed_path_rect_norm = Rect2()
+		return
+
+	var target_rect: Rect2 = drone.get_vision_corridor_rect_normalized()
+
+	if target_rect.size.x <= 0.0 or target_rect.size.y <= 0.0:
+		smoothed_path_valid = false
+		smoothed_path_rect_norm = Rect2()
+		return
+
+	if not smoothed_path_valid:
+		smoothed_path_rect_norm = target_rect
+		smoothed_path_valid = true
+		return
+
+	smoothed_path_rect_norm.position = smoothed_path_rect_norm.position.lerp(target_rect.position, path_rect_smooth)
+	smoothed_path_rect_norm.size = smoothed_path_rect_norm.size.lerp(target_rect.size, path_rect_smooth)
 
 func _get_camera_draw_rect() -> Rect2:
 	if camera_rect == null:
@@ -156,10 +185,12 @@ func _viewport_to_hud(p: Vector2) -> Vector2:
 		(p.y / vp_size.y) * draw_rect.size.y
 	)
 
-func _viewport_rect_to_hud(r: Rect2) -> Rect2:
-	var p0 := _viewport_to_hud(r.position)
-	var p1 := _viewport_to_hud(r.position + r.size)
-	return Rect2(p0, p1 - p0)
+func _normalized_rect_to_hud(r: Rect2) -> Rect2:
+	var draw_rect := _get_camera_draw_rect()
+	return Rect2(
+		draw_rect.position + r.position * draw_rect.size,
+		r.size * draw_rect.size
+	)
 
 func _clamp_to_camera_rect(p: Vector2, margin: float) -> Vector2:
 	var r := _get_camera_draw_rect()
