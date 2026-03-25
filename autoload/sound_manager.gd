@@ -8,7 +8,8 @@ func _ready() -> void:
 func connect_sounds():
 	var buttons: Array = get_tree().get_nodes_in_group("buttons")
 	for b in buttons:
-		b.connect("pressed", _on_button_pressed)
+		if !b.pressed.is_connected(_on_button_pressed):
+			b.connect("pressed", _on_button_pressed)
 		
 func _on_button_pressed():
 	button_audio.play()
