@@ -30,12 +30,15 @@ signal send_message(msg: String)
 # Braking near goal
 @export var brake_strength: float = 8.0
 
+
 # Position hold (inside stop bubble)
 @export var hold_kp: float = 10.0
 @export var hold_kd: float = 6.0
 @export var max_hold_force: float = 40.0
 @export var reached_level_speed: float = 12.0
 @export var reached_stop_speed: float = 12.0
+@export var target_height_offset: float = -0.5
+@export var final_vertical_reach_radius: float = 0.35
 
 # -----------------------
 # Sensors toggles + fusion
@@ -58,6 +61,15 @@ signal send_message(msg: String)
 @export var flow_step: int = 3
 @export var min_vision_samples_for_path_box: int = 3
 @export var min_corridor_confidence_for_path_box: float = 0.18
+
+@export var vision_busy_edge_trigger_mult: float = 2.1
+@export var vision_busy_edge_clear_mult: float = 1.7
+@export var vision_busy_edge_weight_scale: float = 0.46
+@export var vision_busy_flow_weight_scale: float = 0.78
+@export var vision_bottom_clutter_penalty: float = 0.62
+@export var vision_corridor_neighbor_gain: float = 0.38
+@export var vision_corridor_width_gain: float = 0.52
+@export var vision_conf_decay_busy_scale: float = 0.42
 
 @export var planner_camera_near: float = 0.05
 @export var planner_camera_far: float = 20.0
@@ -89,6 +101,7 @@ signal send_message(msg: String)
 @export var side_push_force: float = 16.0
 @export var rear_trigger_dist: float = 1.0
 @export var rear_push_force: float = 12.0
+@export var lidar_dir_switch_mult: float = 1.8
 
 # -----------------------
 # Avoidance behavior tuning
@@ -102,6 +115,7 @@ signal send_message(msg: String)
 @export var brake_dist: float = 2.2
 @export var reverse_dist: float = 0.75
 @export var forward_brake_gain: float = 22.0
+
 
 # Vertical motion shaping
 @export var climb_trigger_dist: float = 3.0
@@ -121,6 +135,10 @@ signal send_message(msg: String)
 @export var max_extra_climb_above_hover: float = 4.0
 @export var high_return_rate: float = 6.0
 @export var window_clearance_margin: float = 0.35
+@export var climb_commit_release_speed: float = 4.5
+@export var climb_headroom_margin: float = 0.45
+@export var planner_roof_penalty_gain: float = 4.0
+@export var vision_upper_open_ratio: float = 0.80
 
 
 # -----------------------
@@ -164,6 +182,16 @@ signal send_message(msg: String)
 @export var corridor_lock_min_up: float = 0.18
 @export var corridor_lock_goal_align: float = 0.55
 @export var corridor_emergency_clearance: float = 1.0
+@export var route_assess_time: float = 0.36
+@export var route_reassess_time: float = 0.30
+@export var route_assess_confidence: float = 0.20
+@export var blind_creep_scale: float = 0.035
+
+@export var vision_reassess_backoff_time: float = 0.45
+@export var vision_reassess_pitch: float = 0.06
+@export var lidar_route_assess_dist: float = 2.2
+@export var climb_commit_time: float = 0.90
+@export var climb_commit_height_frac: float = 0.62
 
 
 # -----------------------
@@ -204,6 +232,9 @@ var desired_hover_height: float = 3.0
 # Timers
 var vision_timer: float = 0.0
 var prev_img: Image = null
+var route_assess_timer: float = 0.0
+var vision_reassess_timer: float = 0.0
+var climb_commit_timer: float = 0.0
 
 # Controller outputs
 var target_pitch: float = 0.0
@@ -222,7 +253,7 @@ var avoid_dir_vision: float = 0.0
 var avoid_strength_vision: float = 0.0
 var vision_upper_blockage: float = 0.0
 var vision_lower_blockage: float = 0.0
-
+var vision_scene_clutter: float = 0.0
 
 # Vision corridor output
 var vision_corridor_local: Vector3 = Vector3(0.0, 0.0, -1.0)
@@ -275,6 +306,8 @@ func _ready() -> void:
 	brake_strength = Global.brakeStrength
 	lidar_trigger_dist = Global.lidarStopRange
 	tilt_speed = Global.tiltSpeed
+	climb_commit_timer = 0.0
+	vision_scene_clutter = 0.0
 	
 	if target != null:
 		target_position = target.global_position
@@ -309,6 +342,11 @@ func _ready() -> void:
 
 	desired_hover_height = hover_height
 	planned_motion_world = -transform.basis.z
+	route_assess_timer = route_assess_time
+	vision_reassess_timer = 0.0
+
+func get_target_hover_y() -> float:
+	return clamp(target_position.y + target_height_offset, hover_height - 1.0, max_hover_height)
 
 func _physics_process(delta: float) -> void:
 	if planner_camera != null:
@@ -328,9 +366,15 @@ func _physics_process(delta: float) -> void:
 		lidar_down.global_rotation.y = global_rotation.y
 
 	_update_vision(delta)
-
-	# Let old visual corridor opinions fade unless they keep being re-observed.
-	vision_corridor_confidence = move_toward(vision_corridor_confidence, 0.0, delta * vision_conf_decay)
+	
+	
+	var clutter_t: float = clamp((vision_scene_clutter - 0.10) / 0.18, 0.0, 1.0)
+	var clutter_decay_scale: float = lerp(1.0, vision_conf_decay_busy_scale, clutter_t)
+	vision_corridor_confidence = move_toward(
+		vision_corridor_confidence,
+		0.0,
+		delta * vision_conf_decay * clutter_decay_scale
+	)
 
 	_update_lidar(delta)
 	plan_visible_motion()
@@ -343,7 +387,13 @@ func _physics_process(delta: float) -> void:
 		and vision_samples_ready >= min_vision_samples_for_path_box
 		and vision_corridor_confidence >= min_corridor_confidence_for_path_box
 	):
-		rebuild_path_box_from_plan(last_vision_img, last_cell_weights, last_corridor_cols, last_corridor_rows, last_best_weight)
+		rebuild_path_box_from_plan(
+			last_vision_img,
+			last_cell_weights,
+			last_corridor_cols,
+			last_corridor_rows,
+			last_best_weight
+		)
 	else:
 		vision_corridor_rect_valid = false
 		vision_corridor_rect_px = Rect2()
@@ -355,6 +405,7 @@ func _physics_process(delta: float) -> void:
 	var dist: float = to_target_flat.length()
 	var dist_3d: float = to_target_full.length()
 	var vertical_dist: float = abs(to_target_full.y)
+	var target_visible_now: bool = is_target_visible()
 
 	var blocked_near_goal: bool = (
 		(lidar_enabled and lidar_center_latest < no_forward_dist) or
@@ -362,7 +413,13 @@ func _physics_process(delta: float) -> void:
 		(avoid_active_vision and vision_corridor_confidence > 0.12)
 	)
 
-	var reached: bool = dist <= stop_radius and vertical_dist <= vertical_stop_radius
+	var target_hover_y: float = get_target_hover_y()
+	var hover_vertical_error: float = abs(global_position.y - target_hover_y)
+
+	var reached: bool = (
+		dist <= stop_radius and
+		hover_vertical_error <= final_vertical_reach_radius
+	)
 	var settling: bool = dist <= settle_radius and not blocked_near_goal
 
 	var flat_speed: float = Vector2(linear_velocity.x, linear_velocity.z).length()
@@ -383,23 +440,126 @@ func _physics_process(delta: float) -> void:
 	if stuck_timer >= stuck_time_trigger:
 		stuck_recover_timer = stuck_backoff_time
 		stuck_timer = 0.0
+		route_assess_timer = max(route_assess_timer, route_reassess_time)
 
-		# Camera-only should not carry a stale reactive avoid latch into recovery,
-		# because that creates a self-sustaining turn loop.
+		# Camera-only should back off and reassess instead of just trying to keep climbing.
 		if not lidar_enabled:
+			vision_reassess_timer = vision_reassess_backoff_time
+			corridor_locked = false
+			corridor_lock_timer = 0.0
 			vision_avoid_latch = false
 			avoid_active_vision = false
 			avoid_dir_vision = 0.0
 			avoid_strength_vision = 0.0
 
+	var visual_up_route_now: bool = (
+		planner_vision_enabled and
+		vision_corridor_confidence > min_corridor_confidence_for_commit and
+		stable_vision_corridor_local.y > 0.10 and
+		vision_lower_blockage > vision_upper_blockage + 0.015 and
+		vision_upper_blockage < vision_ceiling_block_threshold
+	)
+
+	var visual_obstacle_suspected: bool = (
+		planner_vision_enabled and (
+			not target_visible_now or
+			vision_lower_blockage > vision_upper_blockage + 0.015 or
+			avoid_active_vision
+		)
+	)
+
+	var lidar_obstacle_suspected: bool = (
+		lidar_enabled and (
+			lidar_center_latest < lidar_route_assess_dist or
+			avoid_active_lidar
+		)
+	)
+
+	var obstacle_suspected: bool = visual_obstacle_suspected or lidar_obstacle_suspected
+
+	var route_candidate: bool = (
+		visual_up_route_now or
+		abs(stable_vision_corridor_local.x) > 0.12 or
+		(planner_vision_enabled and not target_visible_now)
+	)
+
+	var route_committed: bool = (
+		corridor_locked or
+		abs(planned_motion_local.x) > 0.16 or
+		planned_motion_local.y > 0.16
+	)
+
+	var route_evidence: bool = (
+		route_committed or
+		(planner_vision_enabled and vision_corridor_confidence > route_assess_confidence and route_candidate)
+	)
+
+	if dist > stop_radius:
+		if not lidar_enabled:
+			# Camera-only should pause and assess more deliberately.
+			if visual_obstacle_suspected:
+				if visual_up_route_now and not corridor_locked:
+					route_assess_timer = max(route_assess_timer, route_assess_time * 1.35)
+				elif not route_committed:
+					route_assess_timer = max(route_assess_timer, route_assess_time)
+				else:
+					route_assess_timer = max(route_assess_timer - delta * 0.35, 0.0)
+			else:
+				route_assess_timer = max(route_assess_timer - delta * 1.35, 0.0)
+		else:
+			# LiDAR/fused should not sit in assessment just because something is within
+			# the broader climb-clear distance. Only hesitate when very close or when
+			# vision is still trying to decide an alternate corridor.
+			if visual_obstacle_suspected and not route_committed and not avoid_active_lidar:
+				route_assess_timer = max(route_assess_timer, route_assess_time * 0.55)
+			else:
+				route_assess_timer = max(route_assess_timer - delta * 2.2, 0.0)
+	else:
+		route_assess_timer = max(route_assess_timer - delta * 2.0, 0.0)
+
 	var direct_goal_ready: bool = (
 		not avoid_active_lidar and
 		not avoid_active_vision and
-		lidar_center_latest > max(no_forward_dist + 0.4, 2.2) and
+		(not lidar_enabled or lidar_center_latest > max(no_forward_dist + 0.4, 2.2)) and
 		abs(planned_motion_local.x) < 0.14 and
 		planned_motion_local.y < 0.10 and
 		-planned_motion_local.z > 0.72
 	)
+	
+	var lidar_headroom_ok: bool = true
+	if lidar_enabled and lidar_up != null:
+		var clear_up_now: float = lidar_up.get_sector_percentile(-10.0, 10.0, 0.25)
+		lidar_headroom_ok = clear_up_now > ceiling_clearance_margin + climb_headroom_margin
+
+	var visual_headroom_ok: bool = true
+	if planner_vision_enabled:
+		visual_headroom_ok = vision_upper_blockage < vision_ceiling_block_threshold * vision_upper_open_ratio
+
+	var upward_route_candidate: bool = (
+		(corridor_locked and corridor_locked_motion_local.y > min_up_intent_for_climb) or
+		(
+			planned_motion_local.y > 0.14 and (
+				visual_up_route_now or
+				(lidar_enabled and lidar_center_latest < climb_clear_dist)
+			)
+		)
+	)
+
+	var upward_headroom_ok: bool = lidar_headroom_ok if lidar_enabled else visual_headroom_ok
+	var upward_route_active: bool = upward_route_candidate and upward_headroom_ok
+
+	if upward_route_active:
+		climb_commit_timer = climb_commit_time
+	else:
+		var release_fast: bool = (
+			not upward_headroom_ok or
+			(target_visible_now and not blocked_near_goal and planned_motion_local.y < 0.08)
+		)
+
+		if release_fast:
+			climb_commit_timer = max(climb_commit_timer - delta * climb_commit_release_speed, 0.0)
+		else:
+			climb_commit_timer = max(climb_commit_timer - delta * 0.35, 0.0)
 
 	if reached:
 		corridor_locked = false
@@ -425,7 +585,6 @@ func _physics_process(delta: float) -> void:
 	if reached:
 		_do_reached_hold(delta)
 	else:
-		
 		var planner_owns_route: bool = (
 			corridor_locked or
 			(
@@ -458,7 +617,29 @@ func _physics_process(delta: float) -> void:
 			avoid_active_lidar, avoid_dir_lidar, avoid_strength_lidar
 		)
 
-		if stuck_recover_timer > 0.0:
+		if vision_reassess_timer > 0.0 and not lidar_enabled:
+			vision_reassess_timer -= delta
+
+			corridor_locked = false
+			corridor_lock_timer = 0.0
+			vision_avoid_latch = false
+			avoid_active_vision = false
+			avoid_dir_vision = 0.0
+			avoid_strength_vision = 0.0
+			avoid_active = false
+			avoid_yaw_dir = 0.0
+			avoid_strength = 0.0
+
+			desired_hover_height = move_toward(
+				desired_hover_height,
+				hover_height,
+				high_return_rate * delta
+			)
+
+			target_pitch = vision_reassess_pitch
+			target_roll = 0.0
+
+		elif stuck_recover_timer > 0.0:
 			stuck_recover_timer -= delta
 
 			if lidar_enabled:
@@ -471,7 +652,10 @@ func _physics_process(delta: float) -> void:
 				else:
 					side_bias = -1.0
 
-				var recover_force: Vector3 = (-forward * backoff_force + right * side_bias * avoid_force * 0.6) * mass
+				var recover_force: Vector3 = (
+					-forward * backoff_force +
+					right * side_bias * avoid_force * 0.6
+				) * mass
 				recover_force.y = 0.0
 				apply_central_force(recover_force)
 
@@ -479,30 +663,27 @@ func _physics_process(delta: float) -> void:
 				target_roll = side_bias * max_side_tilt * 0.5
 				rotation.y += side_bias * avoid_yaw_speed * stuck_turn_bias * delta
 			else:
-				# Camera-only recovery should be a steering reset, not a fake shove.
-				vision_avoid_latch = false
-				avoid_active_vision = false
-				avoid_dir_vision = 0.0
-				avoid_strength_vision = 0.0
-				avoid_active = false
-				avoid_yaw_dir = 0.0
-				avoid_strength = 0.0
+				target_pitch = vision_reassess_pitch
+				target_roll = 0.0
 
-				var recover_local: Vector3 = stable_vision_corridor_local
-				if recover_local.length() < 0.001:
-					recover_local = planned_motion_local
-				if recover_local.length() < 0.001:
-					recover_local = Vector3(0.0, 0.0, -1.0)
+		elif route_assess_timer > 0.0 and dist > stop_radius:
+			var assess_dir_world: Vector3 = planned_motion_world.normalized()
+			var assess_flat: Vector3 = assess_dir_world
+			assess_flat.y = 0.0
 
-				var recover_world: Vector3 = (transform.basis * recover_local).normalized()
-				var recover_flat: Vector3 = recover_world
-				recover_flat.y = 0.0
+			if assess_flat.length() > 0.001:
+				yaw_toward_goal(assess_flat.normalized(), delta)
 
-				if recover_flat.length() > 0.001:
-					yaw_toward_goal(recover_flat.normalized(), delta)
+			var creep_scale: float = blind_creep_scale
+			if route_evidence:
+				creep_scale *= 0.55
 
-				target_pitch = -0.03
-				target_roll = clamp(recover_local.x, -1.0, 1.0) * max_side_tilt * 0.20
+			target_pitch = -cruise_tilt * creep_scale
+			target_roll = clamp(planned_motion_local.x, -1.0, 1.0) * max_side_tilt * 0.10
+
+			if planned_motion_local.y > 0.10:
+				target_roll *= 0.7
+
 		else:
 			steer_toward_goal(dist, delta, settling)
 
@@ -610,8 +791,11 @@ func apply_avoidance_physics(scale: float = 1.0) -> void:
 func _do_reached_hold(delta: float) -> void:
 	target_pitch = 0.0
 	target_roll = 0.0
+	climb_commit_timer = 0.0
+	corridor_locked = false
+	corridor_lock_timer = 0.0
 
-	var reached_h: float = clamp(target_position.y, hover_height - 1.0, max_hover_height)
+	var reached_h: float = get_target_hover_y()
 	desired_hover_height = move_toward(desired_hover_height, reached_h, high_return_rate * delta)
 
 	rotation.x = lerpf(rotation.x, 0.0, delta * reached_level_speed)
@@ -678,13 +862,23 @@ func process_vision() -> void:
 		vision_corridor_confidence = 0.0
 		vision_corridor_rect_valid = false
 		vision_corridor_rect_px = Rect2()
+		vision_scene_clutter = 0.0
 		return
 
 	var w: int = img.get_width()
 	var h: int = img.get_height()
-	
+
+	# Global clutter estimate over the planning ROI.
+	var clutter_edges: float = edge_density(
+		img,
+		int(w * roi_left_frac), int(w * roi_right_frac),
+		int(h * roi_top_frac), int(h * roi_bottom_frac),
+		edge_step
+	)
+	vision_scene_clutter = lerpf(vision_scene_clutter, clutter_edges, 0.14)
+	var clutter_t: float = clamp((vision_scene_clutter - 0.10) / 0.18, 0.0, 1.0)
+
 	# Estimate how blocked the upper and lower forward view are.
-	# Lower blockage being higher than upper blockage suggests climbing may help.
 	var upper_edges: float = edge_density(
 		img,
 		int(w * 0.35), int(w * 0.65),
@@ -706,7 +900,12 @@ func process_vision() -> void:
 	var center_flow: float = flow_band(img, prev_img, int(w * 0.40), int(w * 0.60), int(h * 0.35), int(h * 0.65), flow_step)
 	var right_flow: float = flow_band(img, prev_img, int(w * 0.65), int(w * 0.90), int(h * 0.35), int(h * 0.65), flow_step)
 
-	var edge_c: float = edge_density(img, int(w * 0.40), int(w * 0.60), int(h * 0.35), int(h * 0.65), edge_step)
+	var edge_c: float = edge_density(
+		img,
+		int(w * 0.40), int(w * 0.60),
+		int(h * 0.35), int(h * 0.65),
+		edge_step
+	)
 
 	update_vision_corridor(img)
 
@@ -714,8 +913,18 @@ func process_vision() -> void:
 	last_vision_img = img.duplicate()
 	vision_samples_ready += 1
 
-	var trigger: bool = (center_flow > avoid_trigger_flow) or (edge_c > avoid_trigger_edge)
-	var clear: bool = (center_flow < avoid_clear_flow) and (edge_c < avoid_clear_edge)
+	# In busy foliage, pure edges are much less reliable than motion + corridor confidence.
+	var flow_trigger: float = avoid_trigger_flow * lerp(1.0, 0.92, clutter_t)
+	var flow_clear: float = avoid_clear_flow * lerp(1.0, 0.95, clutter_t)
+	var edge_trigger: float = avoid_trigger_edge * lerp(1.0, vision_busy_edge_trigger_mult, clutter_t)
+	var edge_clear: float = avoid_clear_edge * lerp(1.0, vision_busy_edge_clear_mult, clutter_t)
+
+	var corridor_uncertain: bool = vision_corridor_confidence < 0.24
+	var edge_trigger_active: bool = edge_c > edge_trigger and corridor_uncertain
+	var edge_clear_active: bool = edge_c < edge_clear
+
+	var trigger: bool = (center_flow > flow_trigger) or edge_trigger_active
+	var clear: bool = (center_flow < flow_clear) and edge_clear_active
 
 	if vision_avoid_latch:
 		if clear:
@@ -727,9 +936,9 @@ func process_vision() -> void:
 	if vision_avoid_latch:
 		var dir: float = -1.0 if left_flow < right_flow else 1.0
 
-		var s_flow: float = clamp((center_flow - avoid_trigger_flow) / max(avoid_trigger_flow, 0.001), 0.0, 1.0)
-		var s_edge: float = clamp((edge_c - avoid_trigger_edge) / max(avoid_trigger_edge, 0.001), 0.0, 1.0)
-		var s: float = clamp(max(s_flow, s_edge), 0.0, 1.0)
+		var s_flow: float = clamp((center_flow - flow_trigger) / max(flow_trigger, 0.001), 0.0, 1.0)
+		var s_edge: float = clamp((edge_c - edge_trigger) / max(edge_trigger, 0.001), 0.0, 1.0)
+		var s: float = clamp(max(s_flow, s_edge * lerp(1.0, 0.55, clutter_t)), 0.0, 1.0)
 
 		avoid_active_vision = true
 		avoid_dir_vision = dir
@@ -771,15 +980,16 @@ func update_vision_corridor(img: Image) -> void:
 		1.0
 	)
 
-	var total_weight: float = 0.0
-	var best_weight: float = -1e20
+	var clutter_t: float = clamp((vision_scene_clutter - 0.10) / 0.18, 0.0, 1.0)
+
+	var raw_weights: Array = []
+	raw_weights.resize(rows)
+	for r in range(rows):
+		raw_weights[r] = []
+
+	var best_raw: float = -1e20
 	var seed_col: int = int(cols * 0.5)
 	var seed_row: int = int(rows * 0.4)
-
-	var cell_weights: Array = []
-	cell_weights.resize(rows)
-	for r in range(rows):
-		cell_weights[r] = []
 
 	for row in range(rows):
 		for col in range(cols):
@@ -794,7 +1004,12 @@ func update_vision_corridor(img: Image) -> void:
 			if prev_img != null:
 				flow = flow_band(img, prev_img, x0, x1, y0, y1, flow_step)
 
-			var openness: float = 1.0 / (0.001 + edges * 2.4 + flow * 1.8)
+			# In busy scenes, do not let raw edge density dominate everything.
+			var openness: float = 1.0 / (
+				0.001 +
+				edges * lerp(2.4, vision_busy_edge_weight_scale * 2.4, clutter_t) +
+				flow * lerp(1.8, vision_busy_flow_weight_scale * 1.8, clutter_t)
+			)
 
 			var cx: float = (float(col) + 0.5) / float(cols)
 			var cy: float = (float(row) + 0.5) / float(rows)
@@ -807,10 +1022,10 @@ func update_vision_corridor(img: Image) -> void:
 			var base_vertical_pref: float = 1.0 - abs(row_norm - 0.42) / 0.58
 			base_vertical_pref = clamp(base_vertical_pref, 0.0, 1.0)
 
-			var upper_pref: float = 1.0 - abs(row_norm - 0.24) / 0.42
+			var upper_pref: float = 1.0 - abs(row_norm - 0.26) / 0.42
 			upper_pref = clamp(upper_pref, 0.0, 1.0)
 
-			var vertical_pref: float = lerp(base_vertical_pref, upper_pref, climb_hint)
+			var vertical_pref: float = lerp(base_vertical_pref, upper_pref, max(climb_hint, clutter_t * 0.30))
 
 			var goal_bias: float = 1.0 - Vector2(cx, cy).distance_to(Vector2(goal_px, goal_py)) / 1.1
 			goal_bias = clamp(goal_bias, 0.0, 1.0)
@@ -820,28 +1035,90 @@ func update_vision_corridor(img: Image) -> void:
 
 			var upward_route_bonus: float = 0.0
 			if climb_hint > 0.0:
-				upward_route_bonus = (1.0 - row_norm) * climb_hint
+				upward_route_bonus = (1.0 - row_norm) * climb_hint * 0.55
 
-			var top_penalty: float = 0.0
-			if row == 0:
-				top_penalty = lerp(0.10, 0.02, climb_hint)
+			# Forest-specific: the lower band is full of trunks, so penalize it more.
+			var bottom_penalty: float = clamp((row_norm - 0.48) / 0.52, 0.0, 1.0) * vision_bottom_clutter_penalty * clutter_t
 
 			var weight: float = (
-				openness * 2.4 +
-				goal_bias * 0.90 +
-				memory_bias * 0.70 +
-				center_bonus * 0.16 +
+				openness * lerp(2.4, 2.0, clutter_t) +
+				goal_bias * 1.00 +
+				memory_bias * 0.90 +
+				center_bonus * lerp(0.16, 0.08, clutter_t) +
 				vertical_pref * 0.42 +
-				upward_route_bonus * 0.55 -
-				top_penalty
+				upward_route_bonus -
+				bottom_penalty
 			)
 			weight = max(weight, 0.0)
 
-			cell_weights[row].append(weight)
-			total_weight += weight
+			raw_weights[row].append(weight)
 
-			if weight > best_weight:
-				best_weight = weight
+			if weight > best_raw:
+				best_raw = weight
+				seed_col = col
+				seed_row = row
+
+	if best_raw <= 0.0001:
+		vision_corridor_local = vision_corridor_local.lerp(Vector3(0.0, 0.0, -1.0), 0.18).normalized()
+		vision_corridor_confidence = lerpf(vision_corridor_confidence, 0.0, 0.18)
+		vision_corridor_rect_valid = false
+		vision_corridor_rect_px = Rect2()
+		return
+
+	var cell_weights: Array = []
+	cell_weights.resize(rows)
+	var total_weight: float = 0.0
+	var best_weight: float = -1e20
+
+	for row in range(rows):
+		cell_weights[row] = []
+		for col in range(cols):
+			var raw: float = raw_weights[row][col]
+
+			var neighbor_sum: float = 0.0
+			var neighbor_count: int = 0
+			var horiz_sum: float = 0.0
+			var horiz_count: int = 0
+
+			var neighbors: Array[Vector2i] = [
+				Vector2i(col - 1, row),
+				Vector2i(col + 1, row),
+				Vector2i(col, row - 1),
+				Vector2i(col, row + 1)
+			]
+
+			for n in neighbors:
+				if n.x < 0 or n.x >= cols or n.y < 0 or n.y >= rows:
+					continue
+				neighbor_sum += raw_weights[n.y][n.x]
+				neighbor_count += 1
+
+			if col > 0:
+				horiz_sum += raw_weights[row][col - 1]
+				horiz_count += 1
+			if col < cols - 1:
+				horiz_sum += raw_weights[row][col + 1]
+				horiz_count += 1
+
+			var local_support: float = 0.0
+			if neighbor_count > 0:
+				local_support = (neighbor_sum / float(neighbor_count)) / max(best_raw, 0.001)
+
+			var width_support: float = 0.0
+			if horiz_count > 0:
+				width_support = (horiz_sum / float(horiz_count)) / max(best_raw, 0.001)
+
+			var final_weight: float = raw * (
+				1.0 +
+				local_support * vision_corridor_neighbor_gain +
+				width_support * vision_corridor_width_gain
+			)
+
+			cell_weights[row].append(final_weight)
+			total_weight += final_weight
+
+			if final_weight > best_weight:
+				best_weight = final_weight
 				seed_col = col
 				seed_row = row
 
@@ -850,14 +1127,7 @@ func update_vision_corridor(img: Image) -> void:
 	last_corridor_cols = cols
 	last_corridor_rows = rows
 
-	if best_weight <= 0.0001:
-		vision_corridor_local = vision_corridor_local.lerp(Vector3(0.0, 0.0, -1.0), 0.18).normalized()
-		vision_corridor_confidence = lerpf(vision_corridor_confidence, 0.0, 0.18)
-		vision_corridor_rect_valid = false
-		vision_corridor_rect_px = Rect2()
-		return
-
-	var threshold: float = best_weight * lerp(0.68, 0.76, 1.0 - climb_hint)
+	var threshold: float = best_weight * lerp(0.62, 0.72, 1.0 - max(climb_hint, clutter_t * 0.35))
 
 	var visited: Array = []
 	visited.resize(rows)
@@ -872,6 +1142,7 @@ func update_vision_corridor(img: Image) -> void:
 	var comp_weight: float = 0.0
 	var comp_sum_x: float = 0.0
 	var comp_sum_y: float = 0.0
+	var comp_cells: int = 0
 
 	while queue.size() > 0:
 		var p: Vector2i = queue.pop_front()
@@ -888,6 +1159,7 @@ func update_vision_corridor(img: Image) -> void:
 		comp_weight += weight
 		comp_sum_x += cx * weight
 		comp_sum_y += cy * weight
+		comp_cells += 1
 
 		var neighbors: Array[Vector2i] = [
 			Vector2i(c - 1, r),
@@ -919,20 +1191,29 @@ func update_vision_corridor(img: Image) -> void:
 	var y_norm: float = 1.0 - mean_y * 2.0
 
 	var lateral: float = x_norm * 0.34
-	var climb: float = max(y_norm, 0.0) * lerp(0.48, 0.66, climb_hint)
+	var climb: float = max(y_norm, 0.0) * lerp(0.42, 0.60, climb_hint)
 
 	var candidate: Vector3 = Vector3(lateral, climb, -1.0).normalized()
 
 	var component_ratio: float = clamp(comp_weight / max(total_weight, 0.001), 0.0, 1.0)
-	var confidence: float = clamp(0.18 + component_ratio * 0.58 + climb_hint * 0.14, 0.0, 0.94)
+	var component_compactness: float = clamp(float(comp_cells) / float(cols * rows), 0.0, 1.0)
 
-	vision_corridor_local = vision_corridor_local.lerp(candidate, 0.32).normalized()
-	vision_corridor_confidence = lerpf(vision_corridor_confidence, confidence, 0.26)
+	var confidence: float = clamp(
+		0.16 +
+		component_ratio * 0.46 +
+		component_compactness * 0.22 +
+		climb_hint * 0.10,
+		0.0,
+		0.92
+	)
+
+	vision_corridor_local = vision_corridor_local.lerp(candidate, 0.30).normalized()
+	vision_corridor_confidence = lerpf(vision_corridor_confidence, confidence, 0.24)
 
 	if vision_corridor_confidence >= min_corridor_confidence_for_commit:
 		stable_vision_corridor_local = stable_vision_corridor_local.lerp(
 			vision_corridor_local,
-			0.26
+			0.24
 		).normalized()
 
 func rebuild_path_box_from_plan(img: Image, cell_weights: Array, cols: int, rows: int, best_weight: float) -> void:
@@ -1180,7 +1461,11 @@ func lidar_avoidance_update() -> void:
 
 		if not (left < 1.5 and right < 1.5):
 			var diff: float = left - right
-			if abs(diff) > lidar_dir_deadband:
+			var switch_deadband: float = lidar_dir_deadband
+			if avoid_dir_lidar != 0.0:
+				switch_deadband *= lidar_dir_switch_mult
+
+			if abs(diff) > switch_deadband:
 				avoid_dir_lidar = -1.0 if diff > 0.0 else 1.0
 	else:
 		avoid_strength_lidar = 0.0
@@ -1252,34 +1537,48 @@ func plan_visible_motion() -> void:
 				vision_upper_blockage < vision_ceiling_block_threshold
 			)
 
-			var corridor_commit: float = clamp(0.30 + vision_corridor_confidence * 1.00, 0.0, 0.95)
+			var committed_climb_route: bool = visual_up_route or climb_commit_timer > 0.0
 
-			# Commit earlier to a valid upper route, even before the goal is fully occluded.
-			if visual_up_route:
-				corridor_commit = max(corridor_commit, 0.76)
+			var assess_blend: float = clamp(
+				route_assess_timer / max(route_assess_time * 1.35, 0.001),
+				0.0,
+				1.0
+			)
+
+			var corridor_commit: float = clamp(0.42 + vision_corridor_confidence * 1.05, 0.0, 0.98)
+
+			if committed_climb_route:
+				corridor_commit = max(corridor_commit, lerp(0.88, 0.98, assess_blend))
+
+			if route_assess_timer > 0.0 and committed_climb_route:
+				corridor_commit = max(corridor_commit, 0.92)
 
 			if avoid_active_vision or not target_visible_now:
-				corridor_commit = max(corridor_commit, 0.66)
+				corridor_commit = max(corridor_commit, 0.76)
 
-			if near_goal and target_visible_now and not visual_up_route:
+			if near_goal and target_visible_now and not committed_climb_route:
 				corridor_commit *= vision_corridor_near_goal_scale
 
 			var route_local: Vector3 = stable_vision_corridor_local
 
-			# Give camera-only mode a little more proactive climb authority when the
-			# visual corridor is clearly above the blocked lower region.
-			if visual_up_route:
+			if committed_climb_route:
 				route_local = Vector3(
 					route_local.x,
-					max(route_local.y, 0.18),
-					min(route_local.z, -0.70)
+					max(route_local.y, lerp(0.30, 0.46, assess_blend)),
+					max(route_local.z, -0.50)
 				).normalized()
 
 			fallback_local = goal_local.lerp(route_local, corridor_commit).normalized()
 
+			if committed_climb_route:
+				fallback_local = fallback_local.lerp(
+					route_local,
+					lerp(0.68, 0.84, assess_blend)
+				).normalized()
+
 		var follow_smooth: float = planner_direction_smooth
 		if vision_corridor_confidence > 0.20 and (abs(fallback_local.x) > 0.12 or fallback_local.y > 0.10):
-			follow_smooth = max(follow_smooth, 0.52)
+			follow_smooth = max(follow_smooth, 0.68)
 
 		planned_motion_local = planned_motion_local.lerp(fallback_local, follow_smooth).normalized()
 		planned_motion_world = (transform.basis * planned_motion_local).normalized()
@@ -1331,6 +1630,17 @@ func plan_visible_motion() -> void:
 			var climb_t: float = clamp(climb_bias / 0.72, 0.0, 1.0)
 			var vertical_clear_for_candidate: float = lerpf(clear_mid, clear_up, climb_t)
 			var vertical_escape_gain: float = max(clear_up - clear_mid, 0.0)
+			
+			var roof_penalty: float = 0.0
+			
+			if climb_bias > 0.08:
+				var roof_needed: float = ceiling_clearance_margin + climb_headroom_margin
+
+				if clear_up < roof_needed:
+					roof_penalty += (roof_needed - clear_up) * planner_roof_penalty_gain
+
+				elif clear_up < roof_needed + 0.45:
+					roof_penalty += (roof_needed + 0.45 - clear_up) * planner_roof_penalty_gain * 0.35
 
 			var desired_climb_bias: float = clamp(
 				0.18 + vertical_offset * 0.55 + planner_vertical_center_bias * 0.18,
@@ -1385,24 +1695,31 @@ func plan_visible_motion() -> void:
 				corridor_reward -
 				turn_penalty * planner_turn_weight -
 				blocked_penalty -
-				climb_penalty
+				climb_penalty -
+				roof_penalty
 			)
 
 			if climb_bias > 0.08:
+				var climb_reward_scale: float = 1.0
+				if lidar_enabled and lidar_up != null:
+					var roof_needed: float = ceiling_clearance_margin + climb_headroom_margin
+					if clear_up < roof_needed + 0.25:
+						climb_reward_scale = 0.30
+
 				score += clamp(
 					vertical_clear_for_candidate / max(planner_vertical_safe_distance, 0.001),
 					0.0,
 					1.5
-				) * 0.8
+				) * 0.8 * climb_reward_scale
 
 				score += clamp(
 					vertical_escape_gain / max(planner_vertical_safe_distance, 0.001),
 					0.0,
 					1.0
-				) * 0.6
+				) * 0.6 * climb_reward_scale
 
 				if abs(angle - goal_angle_deg) < 16.0 and vertical_clear_for_candidate > planner_body_margin:
-					score += 0.6
+					score += 0.6 * climb_reward_scale
 
 			if planner_vision_enabled and vision_corridor_confidence > 0.10:
 				var vision_align: float = clamp(dir_local.dot(stable_vision_corridor_local), -1.0, 1.0)
@@ -1438,20 +1755,31 @@ func vertical_avoidance_update(delta: float) -> void:
 	var vertical_goal_error: float = target_position.y - global_position.y
 	var target_visible_now: bool = is_target_visible()
 
+	var target_hover_y: float = get_target_hover_y()
+	var hover_vertical_error: float = abs(global_position.y - target_hover_y)
+
 	var at_goal_now: bool = (
 		flat_dist <= stop_radius and
-		abs(vertical_goal_error) <= vertical_stop_radius
+		hover_vertical_error <= final_vertical_reach_radius
 	)
 
 	if at_goal_now:
 		corridor_locked = false
 		corridor_lock_timer = 0.0
+		climb_commit_timer = 0.0
 
-		var reached_h: float = clamp(target_position.y, hover_height - 1.0, max_hover_height)
-		desired_hover_height = move_toward(desired_hover_height, reached_h, high_return_rate * delta)
+		desired_hover_height = move_toward(desired_hover_height, target_hover_y, high_return_rate * delta)
+		return
+
+	if vision_reassess_timer > 0.0 and not lidar_enabled:
+		corridor_locked = false
+		corridor_lock_timer = 0.0
+		climb_commit_timer = 0.0
+		desired_hover_height = move_toward(desired_hover_height, hover_height, high_return_rate * delta)
 		return
 
 	var direct_height_match: bool = (
+		climb_commit_timer <= 0.0 and
 		flat_dist <= settle_radius and
 		max(planned_motion_local.y, 0.0) < 0.10 and
 		(not lidar_enabled or lidar_center_latest > climb_clear_dist) and
@@ -1480,46 +1808,36 @@ func vertical_avoidance_update(delta: float) -> void:
 	var upward_bonus: float = 0.0
 	var downward_push: float = 0.0
 
-	var front_tight: bool = false
 	var more_room_above_lidar: bool = false
 	var upper_tight: bool = false
-
 	var more_open_above_vis: bool = false
 	var upper_visually_blocked: bool = false
 	var conf: float = clamp(vision_corridor_confidence, 0.0, 1.0)
 
-	# -----------------------
-	# LiDAR-based vertical reasoning
-	# -----------------------
 	if lidar_enabled and lidar_up != null and lidar_down != null:
 		var clear_up: float = lidar_up.get_sector_percentile(-10.0, 10.0, 0.25)
 		var clear_down: float = lidar_down.get_sector_percentile(-10.0, 10.0, 0.25)
 		var clear_mid: float = lidar_center_latest
 
 		var vertical_min: float = min(clear_up, clear_down)
-		front_tight = clear_mid < climb_clear_dist
+		var front_tight: bool = clear_mid < climb_clear_dist
 		more_room_above_lidar = clear_up > clear_down + 0.20
 		upper_tight = clear_up < ceiling_clearance_margin
 
 		if route_commit_up > min_up_intent_for_climb and more_room_above_lidar and not upper_tight:
-			var climb_amount: float = pow(route_commit_up, 0.50)
-			upward_bonus += climb_amount * climb_target_offset * (climb_assist_gain + 0.28)
-
-			var goal_height_error: float = max(vertical_goal_error, 0.0)
-			upward_bonus += min(goal_height_error, climb_target_offset) * 0.65
+			var climb_amount: float = pow(route_commit_up, 0.48)
+			upward_bonus += climb_amount * climb_target_offset * (climb_assist_gain + 0.35)
+			upward_bonus += min(max(vertical_goal_error, 0.0), climb_target_offset) * 0.70
 
 		if front_tight and more_room_above_lidar and not upper_tight:
-			upward_bonus += max(climb_target_offset * 0.38, planner_body_margin + window_clearance_margin)
+			upward_bonus += climb_target_offset * 0.55
 
 			var vertical_pressure: float = clamp(
 				(planner_vertical_safe_distance - vertical_min) / max(planner_vertical_safe_distance, 0.001),
 				0.0,
 				1.0
 			)
-			upward_bonus += vertical_pressure * climb_target_offset * 1.00
-
-		if corridor_locked and locked_up > min_up_intent_for_climb and not target_visible_now and not upper_tight:
-			upward_bonus += climb_target_offset * 0.28
+			upward_bonus += vertical_pressure * climb_target_offset * 1.05
 
 		if upper_tight:
 			var ceiling_pressure: float = clamp(
@@ -1529,9 +1847,6 @@ func vertical_avoidance_update(delta: float) -> void:
 			)
 			downward_push += ceiling_pressure * climb_target_offset
 
-	# -----------------------
-	# Camera-based vertical reasoning
-	# -----------------------
 	if planner_vision_enabled:
 		var lower_visually_blocked: bool = vision_lower_blockage > 0.12
 		more_open_above_vis = vision_upper_blockage < vision_lower_blockage * 0.90
@@ -1546,26 +1861,32 @@ func vertical_avoidance_update(delta: float) -> void:
 		)
 
 		if not lidar_enabled:
+			var assess_blend: float = clamp(
+				route_assess_timer / max(route_assess_time * 1.35, 0.001),
+				0.0,
+				1.0
+			)
+
 			var visual_up_commit: float = max(route_commit_up, visual_corridor_up)
 
 			if early_visual_climb:
-				upward_bonus += climb_target_offset * 0.55 * max(conf, 0.45)
+				upward_bonus += climb_target_offset * lerp(0.85, 1.10, assess_blend) * max(conf, 0.45)
+				visual_up_commit = max(visual_up_commit, lerp(0.22, 0.38, assess_blend))
 
 			if visual_up_commit > min_up_intent_for_climb and more_open_above_vis and not upper_visually_blocked:
-				upward_bonus += pow(visual_up_commit, 0.50) * climb_target_offset * 1.25 * max(conf, 0.45)
+				upward_bonus += pow(visual_up_commit, 0.46) * climb_target_offset * 1.55 * max(conf, 0.45)
 
 			if lower_visually_blocked and more_open_above_vis and conf > 0.12 and not upper_visually_blocked:
-				upward_bonus += climb_target_offset * max(vision_climb_bonus_scale, 0.45) * max(conf, 0.45)
+				upward_bonus += climb_target_offset * 0.60 * max(conf, 0.45)
 
-			# Allow early climb even before the target is fully hidden.
 			if early_visual_climb and target_visible_now:
-				upward_bonus += climb_target_offset * 0.22 * max(conf, 0.45)
+				upward_bonus += climb_target_offset * 0.32 * max(conf, 0.45)
 
 			if not target_visible_now and more_open_above_vis and not upper_visually_blocked:
-				upward_bonus += climb_target_offset * 0.24 * max(conf, 0.45)
+				upward_bonus += climb_target_offset * 0.30 * max(conf, 0.45)
 
-			if corridor_locked and locked_up > min_up_intent_for_climb and not target_visible_now and more_open_above_vis and not upper_visually_blocked:
-				upward_bonus += climb_target_offset * 0.24 * max(conf, 0.45)
+			if corridor_locked and locked_up > min_up_intent_for_climb and more_open_above_vis and not upper_visually_blocked:
+				upward_bonus += climb_target_offset * 0.30 * max(conf, 0.45)
 
 			if upper_visually_blocked:
 				var ceiling_vis_pressure: float = clamp(
@@ -1577,10 +1898,10 @@ func vertical_avoidance_update(delta: float) -> void:
 
 		else:
 			if route_commit_up > min_up_intent_for_climb and more_open_above_vis and not upper_visually_blocked and conf > 0.12:
-				upward_bonus += climb_target_offset * 0.18 * conf
+				upward_bonus += climb_target_offset * 0.22 * conf
 
 			if lower_visually_blocked and more_open_above_vis and conf > 0.12 and not upper_visually_blocked:
-				upward_bonus += climb_target_offset * 0.14 * conf
+				upward_bonus += climb_target_offset * 0.18 * conf
 
 			if upper_visually_blocked:
 				var ceiling_vis_pressure_fused: float = clamp(
@@ -1594,20 +1915,47 @@ func vertical_avoidance_update(delta: float) -> void:
 	target_h -= downward_push
 
 	var committed_climb: bool = (
-		route_commit_up > min_up_intent_for_climb and (
-			(lidar_enabled and more_room_above_lidar and not upper_tight) or
-			((not lidar_enabled) and more_open_above_vis and not upper_visually_blocked)
+		climb_commit_timer > 0.0 or
+		(
+			route_commit_up > min_up_intent_for_climb and (
+				(lidar_enabled and more_room_above_lidar and not upper_tight) or
+				((not lidar_enabled) and more_open_above_vis and not upper_visually_blocked)
+			)
 		)
 	)
+	
+	var headroom_ok_for_commit: bool = (
+	(lidar_enabled and more_room_above_lidar and not upper_tight) or
+	((not lidar_enabled) and more_open_above_vis and not upper_visually_blocked)
+	)
 
+	if climb_commit_timer > 0.0 and not headroom_ok_for_commit:
+		climb_commit_timer = max(climb_commit_timer - delta * climb_commit_release_speed, 0.0)
+		committed_climb = climb_commit_timer > 0.0
+
+	if committed_climb and headroom_ok_for_commit:
+		var commit_height: float = hover_height + climb_target_offset * climb_commit_height_frac
+
+		if lidar_enabled and more_room_above_lidar and not upper_tight:
+			commit_height += window_clearance_margin
+
+		if not lidar_enabled and more_open_above_vis and not upper_visually_blocked:
+			commit_height += window_clearance_margin * 0.5
+
+		target_h = max(target_h, min(commit_height, max_hover_height))
+		
 	var climb_cap: float = hover_height + max_extra_climb_above_hover
+	
 	if committed_climb:
 		climb_cap = max_hover_height
 
 	target_h = clamp(target_h, hover_height - 1.0, climb_cap)
 	target_h = min(target_h, max_hover_height)
 
-	if committed_climb and target_h < desired_hover_height:
+	# Do not give altitude back while a climb route is still committed.
+	if climb_commit_timer > 0.0 and target_h < desired_hover_height:
+		target_h = desired_hover_height
+	elif committed_climb and target_h < desired_hover_height:
 		target_h = max(target_h, desired_hover_height)
 
 	if desired_hover_height > hover_height and target_h < desired_hover_height:
@@ -1670,8 +2018,13 @@ func update_corridor_lock(delta: float, candidate_motion_local: Vector3) -> void
 	var goal_align_threshold: float = corridor_lock_goal_align
 
 	if visual_up_route:
-		detour_threshold = min(detour_threshold, 0.10)
-		goal_align_threshold = min(goal_align_threshold, 0.42)
+		var assess_blend: float = clamp(
+			route_assess_timer / max(route_assess_time, 0.001),
+			0.0,
+			1.0
+		)
+		detour_threshold = min(detour_threshold, lerp(0.10, 0.06, assess_blend))
+		goal_align_threshold = min(goal_align_threshold, lerp(0.42, 0.34, assess_blend))
 
 	var candidate_is_gap_route: bool = (
 		detour_amount > detour_threshold and
@@ -1808,7 +2161,7 @@ func steer_toward_goal(dist: float, delta: float, settling: bool) -> void:
 		var yaw_override_scale: float = lerp(1.0, 0.25, corridor_blend)
 		var roll_override_scale: float = lerp(1.0, 0.30, corridor_blend)
 
-		rotation.y += avoid_yaw_dir * avoid_yaw_speed * yaw_scale * delta * 0.55 * yaw_override_scale
+		rotation.y += avoid_yaw_dir * avoid_yaw_speed * yaw_scale * delta * 0.35 * yaw_override_scale
 
 		if lidar_enabled and c < no_forward_dist:
 			var soften: float = clamp(c / max(no_forward_dist, 0.001), 0.35, 1.0)

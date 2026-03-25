@@ -8,9 +8,9 @@ data = PackedVector3Array(0.9518, 4.1936, -1.152, 0.9117, 4.1712, -1.1695, 0.973
 [node name="Tree" type="StaticBody3D"]
 
 [node name="Tree1-col" type="MeshInstance3D" parent="."]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.141481, -0.239031, -0.0424027)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -0.141481, -0.239031, -0.0424027)
 mesh = ExtResource("1_7bkc4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -0.141481, -0.239031, -0.0424027)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -0.141481, -0.239031, -0.0424027)
 shape = SubResource("ConcavePolygonShape3D_7bkc4")
