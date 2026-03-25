@@ -72,6 +72,7 @@ emitting = false
 
 [node name="Target" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.28225, 1.48308, -0.213132)
+collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Target"]
 shape = SubResource("SphereShape3D_4eioo")

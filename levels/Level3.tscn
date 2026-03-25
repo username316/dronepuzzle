@@ -1,9 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://bax82uyjvwls4"]
+[gd_scene load_steps=6 format=3 uid="uid://bax82uyjvwls4"]
 
 [ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_gq8fh"]
+[ext_resource type="Script" uid="uid://b41w2p2mo3gvt" path="res://levels/tree_scatter.gd" id="2_11ac5"]
+[ext_resource type="PackedScene" uid="uid://bbnmtiib4336j" path="res://assets/Tree/Tree.tscn" id="3_r8psn"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gq8fh"]
-albedo_color = Color(0.328067, 0.242298, 0.115459, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_11ac5"]
+albedo_color = Color(2.25613e-08, 0.157041, 9.62615e-08, 1)
+heightmap_scale = 9.915
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_11ac5"]
 
@@ -11,247 +14,1500 @@ albedo_color = Color(0.328067, 0.242298, 0.115459, 1)
 fog_density = -3.06
 
 [node name="Drone" parent="." index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -88.5637, 0, -79.526)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -88.5637, -0.685079, -79.526)
 
 [node name="Ground" parent="." index="1"]
-transform = Transform3D(19.7646, 0, 0, 0, 1, 0, 0, 0, 19.0102, 0.006, -1, 0.012)
+transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 20, 0.006, -1, 0.012)
+surface_material_override/0 = SubResource("StandardMaterial3D_11ac5")
+
+[node name="DirectionalLight3D" parent="." index="2"]
+transform = Transform3D(1, 0, 0, 0, -0.240787, 0.970578, 0, -0.970578, -0.240787, 0, 39.7695, 0)
+light_energy = 2.799
 
 [node name="Rain" parent="." index="5"]
 visible = false
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Obstacles" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -76.5686, 6.92084, -62.6775)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="Tree Scatter" type="Node3D" parent="Obstacles" index="0"]
+script = ExtResource("2_11ac5")
+tree_scene = ExtResource("3_r8psn")
+tree_count = 500
+area_size = Vector2(200, 200)
+random_seed = 11045
 
-[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="Obstacles" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.4618, 6.92084, -55.1522)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="GeneratedTrees" type="Node3D" parent="Obstacles/Tree Scatter" index="0"]
 
-[node name="CSGCylinder3D3" type="CSGCylinder3D" parent="Obstacles" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.8003, 6.92084, -73.0877)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="Tree" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="0" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.553546, 0, -0.954464, 0, 1.10337, 0, 0.954464, 0, 0.553546, -20.198, -1.19867, -13.4429)
 
-[node name="CSGCylinder3D4" type="CSGCylinder3D" parent="Obstacles" index="3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.5153, 6.92084, -61.7354)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83318" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="1" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.05804, 0, -0.361634, 0, 1.11814, 0, 0.361634, 0, 1.05804, -60.6402, -1.19867, -32.0494)
 
-[node name="CSGCylinder3D5" type="CSGCylinder3D" parent="Obstacles" index="4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.3306, 6.92084, -42.1055)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83319" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="2" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.739733, 0, 0.917768, 0, 1.17877, 0, -0.917768, 0, -0.739733, -36.6448, -1.19867, 24.7384)
 
-[node name="CSGCylinder3D6" type="CSGCylinder3D" parent="Obstacles" index="5"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.886, 6.92084, -38.9441)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83320" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="3" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.04767, 0, -0.274066, 0, 1.08292, 0, 0.274066, 0, -1.04767, 14.5252, -1.19867, -22.7327)
 
-[node name="CSGCylinder3D7" type="CSGCylinder3D" parent="Obstacles" index="6"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.7185, 6.92084, -47.0468)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83321" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="4" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.494024, 0, -0.752965, 0, 0.900565, 0, 0.752965, 0, -0.494024, 5.78252, -1.19867, -80.2189)
 
-[node name="CSGCylinder3D8" type="CSGCylinder3D" parent="Obstacles" index="7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -38.7281, 6.92084, -66.8726)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83322" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="5" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0780017, 0, -0.965095, 0, 0.968242, 0, 0.965095, 0, -0.0780017, -82.1125, -1.19867, 77.5931)
 
-[node name="CSGCylinder3D9" type="CSGCylinder3D" parent="Obstacles" index="8"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -67.3231, 6.92084, -20.1376)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83323" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="6" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.639493, 0, -0.755342, 0, 0.989693, 0, 0.755342, 0, -0.639493, -83.075, -1.19867, -87.439)
 
-[node name="CSGCylinder3D10" type="CSGCylinder3D" parent="Obstacles" index="9"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -47.0715, 6.92084, -24.8529)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83324" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="7" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.775528, 0, -0.460748, 0, 0.902071, 0, 0.460748, 0, -0.775528, 21.255, -1.19867, -79.9048)
 
-[node name="CSGCylinder3D11" type="CSGCylinder3D" parent="Obstacles" index="10"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.3094, 6.92084, -48.9044)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83325" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="8" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.054302, 0, 0.904258, 0, 0.905887, 0, -0.904258, 0, -0.054302, 66.3688, -1.19867, -12.596)
 
-[node name="CSGCylinder3D12" type="CSGCylinder3D" parent="Obstacles" index="11"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.3628, 6.09854, -61.3647)
-use_collision = true
-radius = 2.77783
-height = 17.4863
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83326" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="9" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.542273, 0, -0.872641, 0, 1.02741, 0, 0.872641, 0, -0.542273, -10.0761, -1.19867, 3.2709)
 
-[node name="CSGCylinder3D13" type="CSGCylinder3D" parent="Obstacles" index="12"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.8357, 6.09854, -31.9071)
-use_collision = true
-radius = 2.77783
-height = 17.4863
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83327" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="10" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.604231, 0, -0.754244, 0, 0.966426, 0, 0.754244, 0, -0.604231, 82.3919, -1.19867, -56.5659)
 
-[node name="CSGCylinder3D14" type="CSGCylinder3D" parent="Obstacles" index="13"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.6115, 6.76514, -11.6043)
-use_collision = true
-radius = 2.77783
-height = 16.1531
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83328" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="11" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.976162, 0, 0.294698, 0, 1.01968, 0, -0.294698, 0, 0.976162, 78.5862, -1.19867, -10.7506)
 
-[node name="CSGCylinder3D15" type="CSGCylinder3D" parent="Obstacles" index="14"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21.5541, 6.76514, -14.4101)
-use_collision = true
-radius = 2.77783
-height = 16.1531
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83329" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="12" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.883249, 0, 0.802124, 0, 1.19312, 0, -0.802124, 0, -0.883249, 50.2984, -1.19867, -7.53674)
 
-[node name="CSGCylinder3D16" type="CSGCylinder3D" parent="Obstacles" index="15"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -76.3852, 6.92084, 20.9493)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83330" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="13" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.16276, 0, -0.254772, 0, 1.19035, 0, 0.254772, 0, -1.16276, 32.9664, -1.19867, -51.7376)
 
-[node name="CSGCylinder3D17" type="CSGCylinder3D" parent="Obstacles" index="16"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -62.2177, 6.92084, 12.8466)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83331" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="14" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.314155, 0, -0.985363, 0, 1.03423, 0, 0.985363, 0, 0.314155, 80.9575, -1.19867, 11.7601)
 
-[node name="CSGCylinder3D18" type="CSGCylinder3D" parent="Obstacles" index="17"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80.8223, 6.92084, 39.7558)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83332" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="15" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.00083, 0, -0.0770511, 0, 1.00379, 0, 0.0770511, 0, -1.00083, 6.21262, -1.19867, 90.4803)
 
-[node name="CSGCylinder3D19" type="CSGCylinder3D" parent="Obstacles" index="18"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -60.5707, 6.92084, 35.0404)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83333" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="16" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.144199, 0, -1.15991, 0, 1.16884, 0, 1.15991, 0, -0.144199, 1.07497, -1.19867, 77.438)
 
-[node name="CSGCylinder3D20" type="CSGCylinder3D" parent="Obstacles" index="19"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41.8086, 6.92084, 10.989)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83335" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="17" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.131381, 0, -1.14914, 0, 1.15663, 0, 1.14914, 0, -0.131381, -42.901, -1.19867, -76.7424)
 
-[node name="CSGCylinder3D21" type="CSGCylinder3D" parent="Obstacles" index="20"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.862, 6.09854, -1.47132)
-use_collision = true
-radius = 2.77783
-height = 17.4863
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83336" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="18" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.272026, 0, -0.924498, 0, 0.963688, 0, 0.924498, 0, -0.272026, 10.017, -1.19867, -80.9013)
 
-[node name="CSGCylinder3D22" type="CSGCylinder3D" parent="Obstacles" index="21"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.3349, 6.09854, 27.9862)
-use_collision = true
-radius = 2.77783
-height = 17.4863
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83337" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="19" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0138712, 0, -1.18088, 0, 1.18097, 0, 1.18088, 0, 0.0138712, -65.5252, -1.19867, -2.51542)
 
-[node name="CSGCylinder3D23" type="CSGCylinder3D" parent="Obstacles" index="22"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -54.1107, 6.76514, 48.289)
-use_collision = true
-radius = 2.77783
-height = 16.1531
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83338" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="20" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.862085, 0, -0.732634, 0, 1.13135, 0, 0.732634, 0, -0.862085, -67.4001, -1.19867, 22.2062)
 
-[node name="CSGCylinder3D24" type="CSGCylinder3D" parent="Obstacles" index="23"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.0533, 6.76514, 45.4832)
-use_collision = true
-radius = 2.77783
-height = 16.1531
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83339" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="21" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.343264, 0, -1.06917, 0, 1.12292, 0, 1.06917, 0, -0.343264, -3.49451, -1.19867, -53.6351)
 
-[node name="CSGCylinder3D25" type="CSGCylinder3D" parent="Obstacles" index="24"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6116, 6.92084, -43.0746)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83340" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="22" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.493742, 0, 1.03265, 0, 1.14461, 0, -1.03265, 0, -0.493742, 56.4352, -1.19867, -94.0594)
 
-[node name="CSGCylinder3D26" type="CSGCylinder3D" parent="Obstacles" index="25"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.55597, 6.92084, -51.1773)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83341" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="23" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0542494, 0, 0.959329, 0, 0.960862, 0, -0.959329, 0, 0.0542494, 10.7268, -1.19867, -63.448)
 
-[node name="CSGCylinder3D27" type="CSGCylinder3D" parent="Obstacles" index="26"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0486, 6.92084, -24.2681)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83342" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="24" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.314679, 0, 0.927855, 0, 0.979764, 0, -0.927855, 0, -0.314679, 67.5089, -1.19867, -19.8263)
 
-[node name="CSGCylinder3D28" type="CSGCylinder3D" parent="Obstacles" index="27"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.20299, 6.92084, -28.9835)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83343" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="25" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.1799, 0, 0.00249987, 0, 1.1799, 0, -0.00249987, 0, 1.1799, -51.6616, -1.19867, -80.8779)
 
-[node name="CSGCylinder3D29" type="CSGCylinder3D" parent="Obstacles" index="28"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.965, 6.92084, -53.0349)
-use_collision = true
-radius = 2.77783
-height = 15.8417
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83344" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="26" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.998286, 0, -0.402387, 0, 1.07633, 0, 0.402387, 0, 0.998286, 14.1122, -1.19867, 34.3423)
 
-[node name="CSGCylinder3D30" type="CSGCylinder3D" parent="Obstacles" index="29"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.9117, 6.09854, -65.4952)
-use_collision = true
-radius = 2.77783
-height = 17.4863
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83345" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="27" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.14036, 0, -0.0762112, 0, 1.1429, 0, 0.0762112, 0, 1.14036, -6.67284, -1.19867, 52.3275)
 
-[node name="CSGCylinder3D31" type="CSGCylinder3D" parent="Obstacles" index="30"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.4388, 6.09854, -36.0377)
-use_collision = true
-radius = 2.77783
-height = 17.4863
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83346" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="28" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.604882, 0, -0.767502, 0, 0.977211, 0, 0.767502, 0, 0.604882, -36.1022, -1.19867, -1.36281)
 
-[node name="CSGCylinder3D32" type="CSGCylinder3D" parent="Obstacles" index="31"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6629, 6.76514, -15.7349)
-use_collision = true
-radius = 2.77783
-height = 16.1531
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83347" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="29" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.847096, 0, -0.84357, 0, 1.19548, 0, 0.84357, 0, 0.847096, -14.3374, -1.19867, 13.4188)
 
-[node name="CSGCylinder3D33" type="CSGCylinder3D" parent="Obstacles" index="32"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.7204, 6.76514, -18.5407)
-use_collision = true
-radius = 2.77783
-height = 16.1531
-material = SubResource("StandardMaterial3D_gq8fh")
+[node name="@StaticBody3D@83348" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="30" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.82281, 0, -0.462814, 0, 0.94404, 0, 0.462814, 0, -0.82281, 40.2464, -1.19867, 0.956215)
+
+[node name="@StaticBody3D@83349" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="31" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.957631, 0, 0.133332, 0, 0.966868, 0, -0.133332, 0, 0.957631, 31.965, -1.19867, 45.6883)
+
+[node name="@StaticBody3D@83350" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="32" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.518826, 0, -0.941281, 0, 1.0748, 0, 0.941281, 0, -0.518826, -13.1446, -1.19867, -38.5523)
+
+[node name="@StaticBody3D@83351" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="33" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.10108, 0, -0.230224, 0, 1.1249, 0, 0.230224, 0, -1.10108, -43.6768, -1.19867, -7.42636)
+
+[node name="@StaticBody3D@83353" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="34" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.02892, 0, -0.494856, 0, 1.14174, 0, 0.494856, 0, 1.02892, -45.1113, -1.19867, 26.3736)
+
+[node name="@StaticBody3D@83354" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="35" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.09779, 0, 0.272679, 0, 1.13115, 0, -0.272679, 0, -1.09779, 28.6742, -1.19867, -91.1474)
+
+[node name="@StaticBody3D@83355" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="36" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.02769, 0, -0.0178002, 0, 1.02785, 0, 0.0178002, 0, -1.02769, -7.72066, -1.19867, -77.9607)
+
+[node name="@StaticBody3D@83356" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="37" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.183986, 0, -0.94985, 0, 0.967505, 0, 0.94985, 0, 0.183986, -54.2614, -1.19867, -84.8591)
+
+[node name="@StaticBody3D@83357" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="38" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0979048, 0, 0.915599, 0, 0.920818, 0, -0.915599, 0, 0.0979048, -2.9495, -1.19867, -18.2719)
+
+[node name="@StaticBody3D@83358" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="39" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.242662, 0, -0.88592, 0, 0.918553, 0, 0.88592, 0, -0.242662, -28.5663, -1.19867, 21.5189)
+
+[node name="@StaticBody3D@83359" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="40" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.530317, 0, -0.923035, 0, 1.06453, 0, 0.923035, 0, 0.530317, -54.2702, -1.19867, -33.4626)
+
+[node name="@StaticBody3D@83360" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="41" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.917643, 0, 0.383207, 0, 0.994443, 0, -0.383207, 0, 0.917643, 67.4667, -1.19867, 15.4214)
+
+[node name="@StaticBody3D@83361" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="42" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.864275, 0, 0.522218, 0, 1.00979, 0, -0.522218, 0, 0.864275, 6.52467, -1.19867, -83.233)
+
+[node name="@StaticBody3D@83362" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="43" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.570321, 0, 0.773925, 0, 0.961366, 0, -0.773925, 0, -0.570321, -90.1856, -1.19867, -61.378)
+
+[node name="@StaticBody3D@83363" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="44" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.541985, 0, 1.06152, 0, 1.19188, 0, -1.06152, 0, 0.541985, 58.875, -1.19867, -7.1721)
+
+[node name="@StaticBody3D@83364" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="45" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.0436, 0, 0.587914, 0, 1.19781, 0, -0.587914, 0, -1.0436, 56.4164, -1.19867, 33.3999)
+
+[node name="@StaticBody3D@83365" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="46" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.01879, 0, 0.336706, 0, 1.07299, 0, -0.336706, 0, 1.01879, 79.1828, -1.19867, -31.567)
+
+[node name="@StaticBody3D@83366" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="47" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.736627, 0, -0.580123, 0, 0.937636, 0, 0.580123, 0, 0.736627, -25.1651, -1.19867, 18.2245)
+
+[node name="@StaticBody3D@83367" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="48" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.942629, 0, -0.205013, 0, 0.964665, 0, 0.205013, 0, 0.942629, -19.9278, -1.19867, 45.086)
+
+[node name="@StaticBody3D@83368" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="49" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.480055, 0, -1.0116, 0, 1.11972, 0, 1.0116, 0, 0.480055, -47.5312, -1.19867, -84.6432)
+
+[node name="@StaticBody3D@83369" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="50" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.16375, 0, -0.180142, 0, 1.17761, 0, 0.180142, 0, 1.16375, -72.4199, -1.19867, 70.255)
+
+[node name="@StaticBody3D@83370" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="51" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.483126, 0, 0.870648, 0, 0.99571, 0, -0.870648, 0, -0.483126, 15.6881, -1.19867, 85.0802)
+
+[node name="@StaticBody3D@83371" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="52" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.15701, 0, -0.223236, 0, 1.17835, 0, 0.223236, 0, 1.15701, 68.2927, -1.19867, -19.7334)
+
+[node name="@StaticBody3D@83372" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="53" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.936023, 0, -0.0370655, 0, 0.936756, 0, 0.0370655, 0, -0.936023, -55.8992, -1.19867, -53.2016)
+
+[node name="@StaticBody3D@83373" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="54" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.180984, 0, 1.1208, 0, 1.13531, 0, -1.1208, 0, -0.180984, -43.3775, -1.19867, -45.3847)
+
+[node name="@StaticBody3D@83374" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="55" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.977825, 0, 0.599433, 0, 1.14694, 0, -0.599433, 0, -0.977825, -86.9893, -1.19867, -33.1214)
+
+[node name="@StaticBody3D@83375" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="56" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.733915, 0, -0.665369, 0, 0.99063, 0, 0.665369, 0, 0.733915, 67.4852, -1.19867, 26.0459)
+
+[node name="@StaticBody3D@83376" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="57" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.893478, 0, 0.610389, 0, 1.08207, 0, -0.610389, 0, -0.893478, 2.11388, -1.19867, 53.3914)
+
+[node name="@StaticBody3D@83377" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="58" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.855529, 0, 0.548291, 0, 1.01615, 0, -0.548291, 0, 0.855529, -75.0361, -1.19867, 91.0341)
+
+[node name="@StaticBody3D@83378" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="59" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0582348, 0, -1.18523, 0, 1.18666, 0, 1.18523, 0, 0.0582348, -11.0205, -1.19867, 39.6128)
+
+[node name="@StaticBody3D@83379" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="60" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.921925, 0, -0.416992, 0, 1.01184, 0, 0.416992, 0, -0.921925, -43.4537, -1.19867, -83.3726)
+
+[node name="@StaticBody3D@83380" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="61" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0148272, 0, 0.938898, 0, 0.939015, 0, -0.938898, 0, 0.0148272, -28.8912, -1.19867, 65.542)
+
+[node name="@StaticBody3D@83381" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="62" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.766222, 0, 0.645771, 0, 1.00206, 0, -0.645771, 0, -0.766222, 32.786, -1.19867, -3.99137)
+
+[node name="@StaticBody3D@83383" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="63" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.1054, 0, 0.250841, 0, 1.1335, 0, -0.250841, 0, -1.1054, -38.0615, -1.19867, 88.4848)
+
+[node name="@StaticBody3D@83384" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="64" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.341096, 0, -0.921263, 0, 0.982381, 0, 0.921263, 0, 0.341096, 90.4734, -1.19867, 66.6932)
+
+[node name="@StaticBody3D@83385" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="65" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.839726, 0, -0.436319, 0, 0.946316, 0, 0.436319, 0, -0.839726, 10.4272, -1.19867, 7.06213)
+
+[node name="@StaticBody3D@83386" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="66" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.946972, 0, 0.442276, 0, 1.04516, 0, -0.442276, 0, 0.946972, -55.2491, -1.19867, -31.6628)
+
+[node name="@StaticBody3D@83387" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="67" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.190742, 0, -0.900739, 0, 0.920714, 0, 0.900739, 0, -0.190742, 25.7284, -1.19867, -51.0778)
+
+[node name="@StaticBody3D@83388" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="68" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.09326, 0, -0.470601, 0, 1.19024, 0, 0.470601, 0, -1.09326, 27.6222, -1.19867, -21.6673)
+
+[node name="@StaticBody3D@83389" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="69" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.558351, 0, 0.757984, 0, 0.941433, 0, -0.757984, 0, -0.558351, -37.8983, -1.19867, 4.06515)
+
+[node name="@StaticBody3D@83390" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="70" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.222219, 0, 1.06851, 0, 1.09137, 0, -1.06851, 0, 0.222219, -68.4484, -1.19867, 11.324)
+
+[node name="@StaticBody3D@83391" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="71" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.905162, 0, 0.307057, 0, 0.955825, 0, -0.307057, 0, -0.905162, -25.4132, -1.19867, 77.9902)
+
+[node name="@StaticBody3D@83392" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="72" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.792107, 0, -0.450358, 0, 0.911184, 0, 0.450358, 0, 0.792107, 0.108864, -1.19867, -50.7464)
+
+[node name="@StaticBody3D@83393" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="73" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.817595, 0, 0.683455, 0, 1.06563, 0, -0.683455, 0, 0.817595, 95.5376, -1.19867, -9.95947)
+
+[node name="@StaticBody3D@83394" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="74" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.993397, 0, 0.666894, 0, 1.19649, 0, -0.666894, 0, 0.993397, -97.5416, -1.19867, -57.4467)
+
+[node name="@StaticBody3D@83395" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="75" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.534971, 0, 0.983011, 0, 1.11915, 0, -0.983011, 0, 0.534971, 67.178, -1.19867, 31.5973)
+
+[node name="@StaticBody3D@83396" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="76" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.914346, 0, 0.0464508, 0, 0.915525, 0, -0.0464508, 0, 0.914346, 58.32, -1.19867, -64.6929)
+
+[node name="@StaticBody3D@83397" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="77" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.517612, 0, 0.843903, 0, 0.989997, 0, -0.843903, 0, 0.517612, 72.4923, -1.19867, -72.1749)
+
+[node name="@StaticBody3D@83398" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="78" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.10023, 0, -0.0180261, 0, 1.10038, 0, 0.0180261, 0, 1.10023, 42.3595, -1.19867, -17.2613)
+
+[node name="@StaticBody3D@83399" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="79" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.110385, 0, -0.893432, 0, 0.900225, 0, 0.893432, 0, 0.110385, -3.40668, -1.19867, 71.3584)
+
+[node name="@StaticBody3D@83400" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="80" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0771187, 0, -0.960392, 0, 0.963483, 0, 0.960392, 0, 0.0771187, -2.53553, -1.19867, -57.5533)
+
+[node name="@StaticBody3D@83401" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="81" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.666357, 0, 0.809706, 0, 1.04865, 0, -0.809706, 0, 0.666357, -64.2279, -1.19867, -73.4987)
+
+[node name="@StaticBody3D@83402" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="82" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.316265, 0, -0.901344, 0, 0.95522, 0, 0.901344, 0, 0.316265, 52.4, -1.19867, -14.9401)
+
+[node name="@StaticBody3D@83403" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="83" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.03725, 0, -0.455979, 0, 1.13305, 0, 0.455979, 0, 1.03725, 21.807, -1.19867, 2.3754)
+
+[node name="@StaticBody3D@83405" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="84" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.02201, 0, -0.290795, 0, 1.06258, 0, 0.290795, 0, -1.02201, -7.36616, 8.62451, -2.41494)
+
+[node name="@StaticBody3D@83406" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="85" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0801023, 0, 0.901146, 0, 0.904699, 0, -0.901146, 0, -0.0801023, -61.1982, -1.19867, -48.6708)
+
+[node name="@StaticBody3D@83407" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="86" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.343324, 0, 0.837582, 0, 0.905216, 0, -0.837582, 0, 0.343324, 6.35641, -1.19867, 19.8132)
+
+[node name="@StaticBody3D@83408" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="87" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.613625, 0, -0.851344, 0, 1.04944, 0, 0.851344, 0, -0.613625, -63.999, -1.19867, -19.6272)
+
+[node name="@StaticBody3D@83409" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="88" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.807356, 0, -0.665243, 0, 1.04612, 0, 0.665243, 0, -0.807356, 12.4413, -1.19867, -33.3671)
+
+[node name="@StaticBody3D@83410" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="89" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.486853, 0, 0.928292, 0, 1.04821, 0, -0.928292, 0, 0.486853, 64.4721, -1.19867, -89.0883)
+
+[node name="@StaticBody3D@83411" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="90" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.725868, 0, 0.93494, 0, 1.18364, 0, -0.93494, 0, 0.725868, -42.207, -1.19867, -58.5455)
+
+[node name="@StaticBody3D@83412" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="91" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.431144, 0, -0.963281, 0, 1.05536, 0, 0.963281, 0, -0.431144, 80.1732, -1.19867, -13.772)
+
+[node name="@StaticBody3D@83413" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="92" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.877692, 0, -0.793149, 0, 1.18297, 0, 0.793149, 0, -0.877692, 47.98, -1.19867, 0.0261078)
+
+[node name="@StaticBody3D@83414" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="93" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.151142, 0, 0.930921, 0, 0.943111, 0, -0.930921, 0, -0.151142, -47.5106, -1.19867, 22.9509)
+
+[node name="@StaticBody3D@83415" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="94" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.951648, 0, -0.163292, 0, 0.965556, 0, 0.163292, 0, -0.951648, 39.8358, -1.19867, -46.9279)
+
+[node name="@StaticBody3D@83416" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="95" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.881462, 0, -0.375527, 0, 0.958121, 0, 0.375527, 0, -0.881462, -38.2136, -1.19867, 15.7936)
+
+[node name="@StaticBody3D@83417" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="96" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.11029, 0, 0.34893, 0, 1.16383, 0, -0.34893, 0, -1.11029, 13.1596, -1.19867, -69.9112)
+
+[node name="@StaticBody3D@83418" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="97" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.756443, 0, 0.803196, 0, 1.10333, 0, -0.803196, 0, 0.756443, -76.7297, -1.19867, 9.41223)
+
+[node name="@StaticBody3D@83419" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="98" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.584213, 0, 0.774857, 0, 0.970416, 0, -0.774857, 0, -0.584213, 23.1184, -1.19867, -57.827)
+
+[node name="@StaticBody3D@83420" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="99" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.80226, 0, -0.726678, 0, 1.08244, 0, 0.726678, 0, -0.80226, 53.2226, -1.19867, -70.3356)
+
+[node name="@StaticBody3D@83421" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="100" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.861168, 0, 0.494863, 0, 0.993227, 0, -0.494863, 0, -0.861168, -70.3113, -1.19867, -23.1594)
+
+[node name="@StaticBody3D@83422" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="101" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.932744, 0, 0.278469, 0, 0.973425, 0, -0.278469, 0, 0.932744, -31.8301, -1.19867, -59.6486)
+
+[node name="@StaticBody3D@83423" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="102" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.278801, 0, -0.933799, 0, 0.974531, 0, 0.933799, 0, -0.278801, 6.98469, -1.19867, 32.0532)
+
+[node name="@StaticBody3D@83424" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="103" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.427165, 0, -1.10216, 0, 1.18205, 0, 1.10216, 0, 0.427165, 14.9738, -1.19867, 2.71345)
+
+[node name="@StaticBody3D@83425" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="104" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.08099, 0, -0.470703, 0, 1.17903, 0, 0.470703, 0, -1.08099, 29.0139, -1.19867, -26.3792)
+
+[node name="@StaticBody3D@83427" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="105" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.495817, 0, -0.87271, 0, 1.00372, 0, 0.87271, 0, 0.495817, 40.1293, -1.19867, 78.8999)
+
+[node name="@StaticBody3D@83428" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="106" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.626773, 0, -0.859746, 0, 1.06396, 0, 0.859746, 0, 0.626773, 9.69077, -1.19867, -92.1341)
+
+[node name="@StaticBody3D@83429" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="107" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.963348, 0, 0.177831, 0, 0.979624, 0, -0.177831, 0, -0.963348, 64.6206, -1.19867, 28.805)
+
+[node name="@StaticBody3D@83430" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="108" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.530282, 0, -0.881544, 0, 1.02875, 0, 0.881544, 0, 0.530282, 17.4772, -1.19867, 63.0497)
+
+[node name="@StaticBody3D@83431" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="109" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.955811, 0, -0.3286, 0, 1.01072, 0, 0.3286, 0, 0.955811, -41.0283, -1.19867, 69.6197)
+
+[node name="@StaticBody3D@83432" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="110" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.953347, 0, 0.155551, 0, 0.965954, 0, -0.155551, 0, -0.953347, -67.2816, -1.19867, 96.9389)
+
+[node name="@StaticBody3D@83433" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="111" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.033591, 0, -0.980451, 0, 0.981026, 0, 0.980451, 0, -0.033591, 11.8573, -1.19867, 75.9967)
+
+[node name="@StaticBody3D@83434" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="112" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.357317, 0, 1.13629, 0, 1.19115, 0, -1.13629, 0, 0.357317, -51.6395, -1.19867, 29.133)
+
+[node name="@StaticBody3D@83435" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="113" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.300994, 0, 1.10466, 0, 1.14494, 0, -1.10466, 0, -0.300994, -3.87534, -1.19867, -24.5589)
+
+[node name="@StaticBody3D@83436" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="114" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0170468, 0, 0.998792, 0, 0.998938, 0, -0.998792, 0, 0.0170468, -63.0329, -1.19867, 48.3055)
+
+[node name="@StaticBody3D@83437" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="115" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.81257, 0, -0.461224, 0, 0.934343, 0, 0.461224, 0, -0.81257, -18.1455, -1.19867, -27.142)
+
+[node name="@StaticBody3D@83438" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="116" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.124608, 0, -1.05047, 0, 1.05784, 0, 1.05047, 0, -0.124608, 75.9653, -1.19867, -93.8861)
+
+[node name="@StaticBody3D@83439" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="117" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.306264, 0, 1.12108, 0, 1.16216, 0, -1.12108, 0, 0.306264, -73.676, -1.19867, -70.8595)
+
+[node name="@StaticBody3D@83440" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="118" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.717257, 0, -0.761731, 0, 1.04628, 0, 0.761731, 0, 0.717257, -44.3864, -1.19867, -42.5349)
+
+[node name="@StaticBody3D@83441" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="119" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.282369, 0, 0.97389, 0, 1.014, 0, -0.97389, 0, -0.282369, 79.0051, -1.19867, 17.1318)
+
+[node name="@StaticBody3D@83442" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="120" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.870673, 0, 0.333064, 0, 0.932203, 0, -0.333064, 0, 0.870673, 97.4126, -1.19867, -37.3906)
+
+[node name="@StaticBody3D@83443" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="121" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.75544, 0, 0.541046, 0, 0.929204, 0, -0.541046, 0, 0.75544, 58.7803, -1.19867, 96.0587)
+
+[node name="@StaticBody3D@83444" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="122" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.963258, 0, 0.308641, 0, 1.0115, 0, -0.308641, 0, 0.963258, 97.3044, -1.19867, -15.0588)
+
+[node name="@StaticBody3D@83445" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="123" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.955211, 0, 0.130422, 0, 0.964073, 0, -0.130422, 0, -0.955211, 15.1725, -1.19867, -54.527)
+
+[node name="@StaticBody3D@83446" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="124" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.11495, 0, -0.0371643, 0, 1.11557, 0, 0.0371643, 0, 1.11495, 12.6075, -1.19867, -58.4383)
+
+[node name="@StaticBody3D@83447" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="125" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.08901, 0, -0.200893, 0, 1.10738, 0, 0.200893, 0, 1.08901, 85.9888, -1.19867, 85.2602)
+
+[node name="@StaticBody3D@83448" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="126" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.948675, 0, 0.119543, 0, 0.956177, 0, -0.119543, 0, -0.948675, 90.7182, -1.19867, 32.4019)
+
+[node name="@StaticBody3D@83449" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="127" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.808602, 0, -0.806406, 0, 1.14198, 0, 0.806406, 0, -0.808602, -95.0484, -1.19867, 42.1)
+
+[node name="@StaticBody3D@83450" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="128" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.886973, 0, -0.495561, 0, 1.01602, 0, 0.495561, 0, 0.886973, 16.2252, -1.19867, 26.2409)
+
+[node name="@StaticBody3D@83451" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="129" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.987264, 0, -0.420465, 0, 1.07307, 0, 0.420465, 0, 0.987264, -17.862, -1.19867, -34.9496)
+
+[node name="@StaticBody3D@83452" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="130" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.618935, 0, 0.743622, 0, 0.967499, 0, -0.743622, 0, 0.618935, -33.0847, -1.19867, 90.6637)
+
+[node name="@StaticBody3D@83453" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="131" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.839157, 0, 0.416293, 0, 0.936741, 0, -0.416293, 0, 0.839157, -32.8215, -1.19867, 89.4277)
+
+[node name="@StaticBody3D@83454" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="132" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.375739, 0, -0.920324, 0, 0.994071, 0, 0.920324, 0, -0.375739, 88.9191, -1.19867, 64.1553)
+
+[node name="@StaticBody3D@83456" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="133" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.706678, 0, 0.847041, 0, 1.10312, 0, -0.847041, 0, 0.706678, -63.2024, -1.19867, -18.7663)
+
+[node name="@StaticBody3D@83457" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="134" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.784544, 0, 0.516772, 0, 0.939447, 0, -0.516772, 0, -0.784544, -68.8997, -1.19867, 31.6095)
+
+[node name="@StaticBody3D@83458" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="135" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.565844, 0, -0.844192, 0, 1.01629, 0, 0.844192, 0, 0.565844, -37.4698, -1.19867, 13.834)
+
+[node name="@StaticBody3D@83459" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="136" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.06906, 0, 0.124037, 0, 1.07623, 0, -0.124037, 0, -1.06906, -23.256, -1.19867, -97.6894)
+
+[node name="@StaticBody3D@83460" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="137" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.05419, 0, -0.444023, 0, 1.14389, 0, 0.444023, 0, -1.05419, -77.6524, -1.19867, -71.5514)
+
+[node name="@StaticBody3D@83461" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="138" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.635137, 0, -0.826735, 0, 1.04254, 0, 0.826735, 0, 0.635137, -59.4824, -1.19867, 7.20522)
+
+[node name="@StaticBody3D@83462" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="139" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.600916, 0, 0.704803, 0, 0.9262, 0, -0.704803, 0, 0.600916, 14.7939, -1.19867, 62.175)
+
+[node name="@StaticBody3D@83463" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="140" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.12708, 0, -0.250335, 0, 1.15455, 0, 0.250335, 0, 1.12708, 33.1045, -1.19867, -54.9807)
+
+[node name="@StaticBody3D@83464" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="141" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.813416, 0, -0.642795, 0, 1.03674, 0, 0.642795, 0, -0.813416, -90.8649, -1.19867, -89.9925)
+
+[node name="@StaticBody3D@83465" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="142" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.384231, 0, -0.9354, 0, 1.01124, 0, 0.9354, 0, -0.384231, 79.916, -1.19867, 31.2919)
+
+[node name="@StaticBody3D@83466" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="143" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.524118, 0, 0.808297, 0, 0.96335, 0, -0.808297, 0, 0.524118, -31.0749, -1.19867, -42.4772)
+
+[node name="@StaticBody3D@83467" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="144" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.795942, 0, -0.530591, 0, 0.956583, 0, 0.530591, 0, -0.795942, -50.2985, -1.19867, 1.5803)
+
+[node name="@StaticBody3D@83468" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="145" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.12851, 0, 0.285641, 0, 1.1641, 0, -0.285641, 0, 1.12851, -77.5451, -1.19867, -49.3272)
+
+[node name="@StaticBody3D@83469" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="146" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.298224, 0, -0.906145, 0, 0.953958, 0, 0.906145, 0, -0.298224, 10.4218, -1.19867, -78.1018)
+
+[node name="@StaticBody3D@83470" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="147" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.91498, 0, -0.744723, 0, 1.17975, 0, 0.744723, 0, -0.91498, 78.1198, -1.19867, -63.7317)
+
+[node name="@StaticBody3D@83472" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="148" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.835209, 0, -0.578764, 0, 1.01614, 0, 0.578764, 0, -0.835209, -0.690628, -1.19867, -68.9263)
+
+[node name="@StaticBody3D@83473" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="149" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.739245, 0, -0.777705, 0, 1.07299, 0, 0.777705, 0, 0.739245, -98.328, -1.19867, 28.8384)
+
+[node name="@StaticBody3D@83474" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="150" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.10259, 0, 1.03879, 0, 1.04385, 0, -1.03879, 0, 0.10259, 44.0822, -1.19867, 37.2643)
+
+[node name="@StaticBody3D@83475" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="151" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.59283, 0, -1.0379, 0, 1.19528, 0, 1.0379, 0, 0.59283, 26.8503, -1.19867, 42.7504)
+
+[node name="@StaticBody3D@83476" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="152" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.956062, 0, -0.554297, 0, 1.10512, 0, 0.554297, 0, 0.956062, -68.9511, -1.19867, -75.8881)
+
+[node name="@StaticBody3D@83477" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="153" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.968324, 0, -0.480952, 0, 1.08119, 0, 0.480952, 0, 0.968324, 71.205, -1.19867, -11.68)
+
+[node name="@StaticBody3D@83478" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="154" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.331368, 0, 1.13844, 0, 1.18568, 0, -1.13844, 0, 0.331368, -60.9243, -1.19867, 48.3232)
+
+[node name="@StaticBody3D@83479" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="155" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.11005, 0, -0.221526, 0, 1.13194, 0, 0.221526, 0, 1.11005, 86.7229, -1.19867, -5.00874)
+
+[node name="@StaticBody3D@83480" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="156" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.03171, 0, 0.481817, 0, 1.13868, 0, -0.481817, 0, 1.03171, -98.0728, -1.19867, 88.1518)
+
+[node name="@StaticBody3D@83481" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="157" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.02021, 0, -0.354656, 0, 1.0801, 0, 0.354656, 0, 1.02021, 0.162086, -1.19867, 31.9798)
+
+[node name="@StaticBody3D@83482" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="158" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.673213, 0, -0.865828, 0, 1.09676, 0, 0.865828, 0, 0.673213, -11.1469, -1.19867, 81.1624)
+
+[node name="@StaticBody3D@83483" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="159" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.661955, 0, 0.708282, 0, 0.969457, 0, -0.708282, 0, 0.661955, -68.5566, -1.19867, -28.7818)
+
+[node name="@StaticBody3D@83484" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="160" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.64018, 0, 0.650211, 0, 0.912472, 0, -0.650211, 0, 0.64018, -85.4396, -1.19867, -84.2684)
+
+[node name="@StaticBody3D@83485" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="161" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.409313, 0, -0.944976, 0, 1.02981, 0, 0.944976, 0, 0.409313, 81.4633, -1.19867, -44.6612)
+
+[node name="@StaticBody3D@83486" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="162" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.258368, 0, 0.875079, 0, 0.912424, 0, -0.875079, 0, -0.258368, -52.7821, -1.19867, -87.6542)
+
+[node name="@StaticBody3D@83487" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="163" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.353243, 0, 1.11833, 0, 1.17279, 0, -1.11833, 0, 0.353243, 69.1467, -1.19867, -10.0807)
+
+[node name="@StaticBody3D@83488" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="164" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.832388, 0, 0.5028, 0, 0.97246, 0, -0.5028, 0, 0.832388, -36.2377, -1.19867, 38.2311)
+
+[node name="@StaticBody3D@83489" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="165" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.566276, 0, -0.943115, 0, 1.10006, 0, 0.943115, 0, 0.566276, 15.2252, -1.19867, 6.45871)
+
+[node name="@StaticBody3D@83490" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="166" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.745346, 0, -0.646365, 0, 0.986574, 0, 0.646365, 0, -0.745346, -41.9663, -1.19867, 13.3372)
+
+[node name="@StaticBody3D@83491" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="167" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.1107, 0, -0.0429062, 0, 1.11153, 0, 0.0429062, 0, -1.1107, -89.5519, -1.19867, -30.234)
+
+[node name="@StaticBody3D@83492" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="168" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.929262, 0, -0.118659, 0, 0.936807, 0, 0.118659, 0, 0.929262, 92.8129, -1.19867, 19.1843)
+
+[node name="@StaticBody3D@83493" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="169" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.533689, 0, -1.0433, 0, 1.17188, 0, 1.0433, 0, -0.533689, -78.6703, -1.19867, 5.53712)
+
+[node name="@StaticBody3D@83494" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="170" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.781066, 0, -0.752475, 0, 1.08457, 0, 0.752475, 0, -0.781066, -71.343, -1.19867, -92.5532)
+
+[node name="@StaticBody3D@83496" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="171" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.54111, 0, 0.835295, 0, 0.995247, 0, -0.835295, 0, -0.54111, -32.0599, -1.19867, 58.7004)
+
+[node name="@StaticBody3D@83497" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="172" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.948763, 0, -0.125809, 0, 0.957068, 0, 0.125809, 0, -0.948763, 50.1503, -1.19867, -80.8636)
+
+[node name="@StaticBody3D@83498" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="173" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.801588, 0, 0.784405, 0, 1.12153, 0, -0.784405, 0, 0.801588, 18.6492, -1.19867, 60.0633)
+
+[node name="@StaticBody3D@83499" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="174" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0185615, 0, -1.04472, 0, 1.04489, 0, 1.04472, 0, 0.0185615, -80.5315, -1.19867, 16.0866)
+
+[node name="@StaticBody3D@83500" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="175" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.574337, 0, -0.854438, 0, 1.02953, 0, 0.854438, 0, -0.574337, -57.4058, -1.19867, 34.1632)
+
+[node name="@StaticBody3D@83501" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="176" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.550542, 0, 1.0288, 0, 1.16684, 0, -1.0288, 0, -0.550542, 29.9755, -1.19867, -77.1378)
+
+[node name="@StaticBody3D@83502" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="177" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.921055, 0, 0.453547, 0, 1.02667, 0, -0.453547, 0, 0.921055, 63.1172, -1.19867, 97.2908)
+
+[node name="@StaticBody3D@83503" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="178" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.941355, 0, 0.068651, 0, 0.943855, 0, -0.068651, 0, 0.941355, -53.0389, -1.19867, 40.0265)
+
+[node name="@StaticBody3D@83504" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="179" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.589151, 0, 0.694338, 0, 0.910606, 0, -0.694338, 0, 0.589151, -96.9227, -1.19867, -71.1769)
+
+[node name="@StaticBody3D@83505" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="180" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.919503, 0, -0.0744905, 0, 0.922515, 0, 0.0744905, 0, 0.919503, 59.908, -1.19867, 26.9371)
+
+[node name="@StaticBody3D@83506" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="181" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0714497, 0, -0.943867, 0, 0.946567, 0, 0.943867, 0, 0.0714497, 70.8506, -1.19867, 53.7926)
+
+[node name="@StaticBody3D@83507" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="182" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.795165, 0, 0.490062, 0, 0.934049, 0, -0.490062, 0, 0.795165, 24.9436, -1.19867, 89.6775)
+
+[node name="@StaticBody3D@83508" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="183" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.800034, 0, -0.512853, 0, 0.950301, 0, 0.512853, 0, 0.800034, -49.2458, -1.19867, -40.9598)
+
+[node name="@StaticBody3D@83509" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="184" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.809134, 0, 0.439731, 0, 0.920902, 0, -0.439731, 0, 0.809134, 63.8777, -1.19867, -60.4369)
+
+[node name="@StaticBody3D@83510" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="185" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.858281, 0, 0.462681, 0, 0.975049, 0, -0.462681, 0, 0.858281, -66.1896, -1.19867, -43.2335)
+
+[node name="@StaticBody3D@83511" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="186" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.683089, 0, 0.7835, 0, 1.03946, 0, -0.7835, 0, -0.683089, -60.9657, -1.19867, 38.2422)
+
+[node name="@StaticBody3D@83512" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="187" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.463769, 0, -0.947901, 0, 1.05527, 0, 0.947901, 0, -0.463769, -75.2696, -1.19867, 32.1522)
+
+[node name="@StaticBody3D@83513" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="188" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.336538, 0, -1.01455, 0, 1.06891, 0, 1.01455, 0, 0.336538, -97.4227, -1.19867, -3.76971)
+
+[node name="@StaticBody3D@83514" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="189" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.844406, 0, 0.441152, 0, 0.9527, 0, -0.441152, 0, 0.844406, -30.731, -1.19867, -48.7694)
+
+[node name="@StaticBody3D@83515" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="190" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.411907, 0, 0.834248, 0, 0.930397, 0, -0.834248, 0, -0.411907, 31.9779, -1.19867, -32.2115)
+
+[node name="@StaticBody3D@83516" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="191" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.588916, 0, -0.776531, 0, 0.974588, 0, 0.776531, 0, 0.588916, 20.3576, -1.19867, 2.2278)
+
+[node name="@StaticBody3D@83517" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="192" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.507653, 0, 0.916911, 0, 1.04806, 0, -0.916911, 0, -0.507653, -25.6308, -1.19867, -25.5713)
+
+[node name="@StaticBody3D@83518" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="193" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.503582, 0, 0.751719, 0, 0.904807, 0, -0.751719, 0, 0.503582, -48.4077, -1.19867, 27.7563)
+
+[node name="@StaticBody3D@83519" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="194" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.04737, 0, -0.0691782, 0, 1.04965, 0, 0.0691782, 0, -1.04737, 20.6018, -1.19867, 2.12133)
+
+[node name="@StaticBody3D@83520" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="195" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.78415, 0, -0.767785, 0, 1.09745, 0, 0.767785, 0, -0.78415, 42.4908, -1.19867, -45.4036)
+
+[node name="@StaticBody3D@83521" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="196" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.771924, 0, 0.520637, 0, 0.93109, 0, -0.520637, 0, -0.771924, -8.81918, -1.19867, 97.5383)
+
+[node name="@StaticBody3D@83522" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="197" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0503341, 0, 0.99503, 0, 0.996302, 0, -0.99503, 0, 0.0503341, 57.3647, -1.19867, -81.9034)
+
+[node name="@StaticBody3D@83523" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="198" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.724859, 0, -0.758816, 0, 1.04939, 0, 0.758816, 0, -0.724859, 21.1794, -1.19867, -66.1465)
+
+[node name="@StaticBody3D@83524" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="199" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.700416, 0, 0.569479, 0, 0.902712, 0, -0.569479, 0, -0.700416, -40.0306, -1.19867, 68.6779)
+
+[node name="@StaticBody3D@83525" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="200" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.915492, 0, 0.116357, 0, 0.922857, 0, -0.116357, 0, -0.915492, 17.1689, -1.19867, 38.5422)
+
+[node name="@StaticBody3D@83526" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="201" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.531726, 0, -0.771575, 0, 0.937049, 0, 0.771575, 0, -0.531726, -22.3166, -1.19867, -57.8992)
+
+[node name="@StaticBody3D@83527" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="202" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.885929, 0, 0.240374, 0, 0.917959, 0, -0.240374, 0, -0.885929, 24.5016, -1.19867, 74.0817)
+
+[node name="@StaticBody3D@83528" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="203" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.379564, 0, -0.86422, 0, 0.943899, 0, 0.86422, 0, 0.379564, 84.2553, -1.19867, 6.70847)
+
+[node name="@StaticBody3D@83529" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="204" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0198907, 0, 1.07945, 0, 1.07964, 0, -1.07945, 0, 0.0198907, 66.989, -1.19867, -15.8881)
+
+[node name="@StaticBody3D@83530" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="205" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.358303, 0, 0.839284, 0, 0.912567, 0, -0.839284, 0, 0.358303, -49.8098, -1.19867, -77.1387)
+
+[node name="@StaticBody3D@83531" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="206" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.386445, 0, 1.09644, 0, 1.16255, 0, -1.09644, 0, 0.386445, -9.7438, -1.19867, 89.9399)
+
+[node name="@StaticBody3D@83532" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="207" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.913122, 0, 0.776795, 0, 1.19883, 0, -0.776795, 0, -0.913122, -36.56, -1.19867, -47.2693)
+
+[node name="@StaticBody3D@83533" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="208" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.392439, 0, -0.881995, 0, 0.965362, 0, 0.881995, 0, 0.392439, -48.1761, -1.19867, -63.56)
+
+[node name="@StaticBody3D@83534" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="209" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.636852, 0, 0.663464, 0, 0.919655, 0, -0.663464, 0, -0.636852, 14.7219, -1.19867, -94.8298)
+
+[node name="@StaticBody3D@83535" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="210" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.903653, 0, -0.583774, 0, 1.07582, 0, 0.583774, 0, 0.903653, -56.7472, -1.19867, 11.5415)
+
+[node name="@StaticBody3D@83536" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="211" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.05253, 0, 0.415812, 0, 1.13169, 0, -0.415812, 0, 1.05253, -3.84148, -1.19867, -71.73)
+
+[node name="@StaticBody3D@83537" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="212" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.351964, 0, 0.911353, 0, 0.976956, 0, -0.911353, 0, 0.351964, 91.0203, -1.19867, -26.4554)
+
+[node name="@StaticBody3D@83538" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="213" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.12542, 0, -0.382216, 0, 1.18855, 0, 0.382216, 0, 1.12542, 4.92675, -1.19867, 3.14569)
+
+[node name="@StaticBody3D@83539" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="214" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0241049, 0, 1.12009, 0, 1.12035, 0, -1.12009, 0, 0.0241049, -31.7444, -1.19867, 35.3632)
+
+[node name="@StaticBody3D@83540" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="215" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0214437, 0, -1.15912, 0, 1.15931, 0, 1.15912, 0, -0.0214437, -23.7815, -1.19867, -82.4528)
+
+[node name="@StaticBody3D@83541" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="216" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.778455, 0, 0.720252, 0, 1.06054, 0, -0.720252, 0, 0.778455, -14.5189, -1.19867, 40.8012)
+
+[node name="@StaticBody3D@83542" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="217" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.465193, 0, 0.981135, 0, 1.08583, 0, -0.981135, 0, 0.465193, 7.35571, -1.19867, 97.2084)
+
+[node name="@StaticBody3D@83543" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="218" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.624643, 0, 0.889377, 0, 1.08682, 0, -0.889377, 0, 0.624643, -27.8017, -1.19867, 24.5429)
+
+[node name="@StaticBody3D@83544" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="219" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.15877, 0, -0.159299, 0, 1.16967, 0, 0.159299, 0, 1.15877, 43.542, -1.19867, -74.4772)
+
+[node name="@StaticBody3D@83545" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="220" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.505131, 0, -0.753262, 0, 0.906951, 0, 0.753262, 0, 0.505131, -35.9772, -1.19867, 49.2711)
+
+[node name="@StaticBody3D@83546" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="221" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0636842, 0, -1.04664, 0, 1.04857, 0, 1.04664, 0, 0.0636842, 3.64059, -1.19867, -31.1112)
+
+[node name="@StaticBody3D@83547" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="222" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.978752, 0, -0.356958, 0, 1.04181, 0, 0.356958, 0, -0.978752, 21.7779, -1.19867, -71.6422)
+
+[node name="@StaticBody3D@83548" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="223" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.211826, 0, 0.906221, 0, 0.930649, 0, -0.906221, 0, 0.211826, -26.0402, -1.19867, 12.4569)
+
+[node name="@StaticBody3D@83549" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="224" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.988939, 0, -0.590233, 0, 1.15168, 0, 0.590233, 0, 0.988939, -69.0163, -1.19867, 88.1377)
+
+[node name="@StaticBody3D@83550" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="225" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0689614, 0, 1.1855, 0, 1.18751, 0, -1.1855, 0, -0.0689614, 5.78667, -1.19867, -53.4835)
+
+[node name="@StaticBody3D@83551" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="226" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.326132, 0, -1.1011, 0, 1.14839, 0, 1.1011, 0, 0.326132, 3.75281, -1.19867, 81.0911)
+
+[node name="@StaticBody3D@83552" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="227" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.00039, 0, -0.00958493, 0, 1.00043, 0, 0.00958493, 0, 1.00039, 86.6368, -1.19867, -78.5907)
+
+[node name="@StaticBody3D@83553" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="228" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.939283, 0, 0.0952028, 0, 0.944096, 0, -0.0952028, 0, -0.939283, 27.3962, -1.19867, 6.29851)
+
+[node name="@StaticBody3D@83554" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="229" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.708659, 0, -0.846756, 0, 1.10417, 0, 0.846756, 0, -0.708659, -43.007, -1.19867, 58.7284)
+
+[node name="@StaticBody3D@83555" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="230" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0396136, 0, 1.17765, 0, 1.17832, 0, -1.17765, 0, 0.0396136, -75.7097, -1.19867, -44.8772)
+
+[node name="@StaticBody3D@83556" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="231" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.798616, 0, 0.497296, 0, 0.940793, 0, -0.497296, 0, -0.798616, 42.2756, -1.19867, -2.16785)
+
+[node name="@StaticBody3D@83557" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="232" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.599123, 0, -1.03474, 0, 1.19568, 0, 1.03474, 0, 0.599123, 63.845, -1.19867, -9.92358)
+
+[node name="@StaticBody3D@83558" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="233" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.98713, 0, 0.536522, 0, 1.12351, 0, -0.536522, 0, -0.98713, 24.5173, -1.19867, 78.8671)
+
+[node name="@StaticBody3D@83559" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="234" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.806284, 0, 0.829874, 0, 1.15706, 0, -0.829874, 0, 0.806284, -88.9824, -1.19867, 31.1209)
+
+[node name="@StaticBody3D@83560" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="235" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.510945, 0, -1.07619, 0, 1.19132, 0, 1.07619, 0, -0.510945, 82.8103, -1.19867, 73.9607)
+
+[node name="@StaticBody3D@83561" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="236" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0160353, 0, 0.992528, 0, 0.992658, 0, -0.992528, 0, -0.0160353, 49.8951, -1.19867, 85.6615)
+
+[node name="@StaticBody3D@83562" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="237" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.466823, 0, -0.787711, 0, 0.915649, 0, 0.787711, 0, -0.466823, -48.85, -1.19867, 1.01416)
+
+[node name="@StaticBody3D@83563" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="238" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.574224, 0, 0.851309, 0, 1.02687, 0, -0.851309, 0, -0.574224, -15.9178, -1.19867, 74.016)
+
+[node name="@StaticBody3D@83564" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="239" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.379991, 0, 0.903622, 0, 0.980268, 0, -0.903622, 0, -0.379991, 14.5501, -1.19867, -7.30924)
+
+[node name="@StaticBody3D@83565" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="240" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.985785, 0, -0.632108, 0, 1.17104, 0, 0.632108, 0, 0.985785, 63.6984, -1.19867, -84.1686)
+
+[node name="@StaticBody3D@83566" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="241" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.963238, 0, -0.556082, 0, 1.11223, 0, 0.556082, 0, 0.963238, -75.7698, -1.19867, -3.97884)
+
+[node name="@StaticBody3D@83567" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="242" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.775012, 0, -0.705786, 0, 1.04823, 0, 0.705786, 0, -0.775012, -82.4275, -1.19867, -27.4767)
+
+[node name="@StaticBody3D@83568" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="243" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.891966, 0, 0.628892, 0, 1.09138, 0, -0.628892, 0, -0.891966, 19.6325, -1.19867, -55.4075)
+
+[node name="@StaticBody3D@83569" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="244" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.277477, 0, 0.954088, 0, 0.993619, 0, -0.954088, 0, 0.277477, -20.3281, -1.19867, -16.2903)
+
+[node name="@StaticBody3D@83570" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="245" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.791189, 0, 0.651033, 0, 1.02461, 0, -0.651033, 0, 0.791189, 28.7982, -1.19867, -79.0062)
+
+[node name="@StaticBody3D@83571" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="246" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.744396, 0, -0.633345, 0, 0.97737, 0, 0.633345, 0, -0.744396, 46.1631, -1.19867, 22.6327)
+
+[node name="@StaticBody3D@83572" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="247" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.224589, 0, -1.0409, 0, 1.06485, 0, 1.0409, 0, 0.224589, -3.49889, -1.19867, 62.446)
+
+[node name="@StaticBody3D@83573" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="248" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.1674, 0, -0.218063, 0, 1.1876, 0, 0.218063, 0, 1.1674, 81.4285, -1.19867, -82.0983)
+
+[node name="@StaticBody3D@83574" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="249" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.960116, 0, -0.443607, 0, 1.05764, 0, 0.443607, 0, -0.960116, -12.1474, -1.19867, 87.2967)
+
+[node name="@StaticBody3D@83575" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="250" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.85823, 0, -0.568732, 0, 1.02957, 0, 0.568732, 0, 0.85823, 39.057, -1.19867, 18.1488)
+
+[node name="@StaticBody3D@83576" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="251" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.790384, 0, 0.781432, 0, 1.11146, 0, -0.781432, 0, 0.790384, 47.2175, -1.19867, 27.5658)
+
+[node name="@StaticBody3D@83577" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="252" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.722226, 0, 0.838421, 0, 1.1066, 0, -0.838421, 0, 0.722226, -37.955, -1.19867, 52.1249)
+
+[node name="@StaticBody3D@83578" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="253" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.07875, 0, 0.426851, 0, 1.16013, 0, -0.426851, 0, 1.07875, 35.093, -1.19867, 22.7369)
+
+[node name="@StaticBody3D@83579" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="254" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.592936, 0, -0.902145, 0, 1.07956, 0, 0.902145, 0, 0.592936, 4.6598, -1.19867, 31.5789)
+
+[node name="@StaticBody3D@83580" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="255" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.528796, 0, -0.762869, 0, 0.928221, 0, 0.762869, 0, 0.528796, 72.8905, -1.19867, 49.212)
+
+[node name="@StaticBody3D@83581" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="256" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.824842, 0, -0.752904, 0, 1.11679, 0, 0.752904, 0, 0.824842, 46.0171, -1.19867, -92.4735)
+
+[node name="@StaticBody3D@83582" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="257" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.07103, 0, -0.262894, 0, 1.10282, 0, 0.262894, 0, -1.07103, 65.9949, -1.19867, -28.2231)
+
+[node name="@StaticBody3D@83583" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="258" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.363684, 0, 0.982862, 0, 1.04799, 0, -0.982862, 0, -0.363684, 72.2405, -1.19867, 9.86512)
+
+[node name="@StaticBody3D@83584" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="259" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.797474, 0, -0.606786, 0, 1.00207, 0, 0.606786, 0, -0.797474, 47.2644, -1.19867, 3.17245)
+
+[node name="@StaticBody3D@83585" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="260" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.940404, 0, -0.521811, 0, 1.07547, 0, 0.521811, 0, -0.940404, -87.6446, -1.19867, -27.5499)
+
+[node name="@StaticBody3D@83586" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="261" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.976063, 0, 0.00296234, 0, 0.976068, 0, -0.00296234, 0, -0.976063, 46.9309, -1.19867, 94.8197)
+
+[node name="@StaticBody3D@83587" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="262" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.56635, 0, -0.891165, 0, 1.0559, 0, 0.891165, 0, 0.56635, -53.0649, -1.19867, 34.2322)
+
+[node name="@StaticBody3D@83588" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="263" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.238723, 0, -0.880916, 0, 0.91269, 0, 0.880916, 0, -0.238723, 74.9285, -1.19867, 19.5787)
+
+[node name="@StaticBody3D@83589" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="264" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.947541, 0, -0.0555358, 0, 0.949167, 0, 0.0555358, 0, 0.947541, 81.6163, -1.19867, 18.4253)
+
+[node name="@StaticBody3D@83590" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="265" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.890992, 0, 0.784938, 0, 1.18743, 0, -0.784938, 0, 0.890992, 40.0904, -1.19867, -60.2959)
+
+[node name="@StaticBody3D@83591" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="266" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.665601, 0, 0.638214, 0, 0.92214, 0, -0.638214, 0, -0.665601, 18.5459, -1.19867, 81.4553)
+
+[node name="@StaticBody3D@83592" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="267" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.520928, 0, -0.796185, 0, 0.95146, 0, 0.796185, 0, 0.520928, -68.5665, -1.19867, -1.87994)
+
+[node name="@StaticBody3D@83593" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="268" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.232777, 0, -0.93732, 0, 0.965792, 0, 0.93732, 0, 0.232777, 47.7929, -1.19867, -45.7266)
+
+[node name="@StaticBody3D@83594" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="269" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.952879, 0, 0.581395, 0, 1.11624, 0, -0.581395, 0, -0.952879, -52.4851, -1.19867, 68.8527)
+
+[node name="@StaticBody3D@83595" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="270" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.112255, 0, -1.05241, 0, 1.05838, 0, 1.05241, 0, 0.112255, -84.6391, -1.19867, -12.9387)
+
+[node name="@StaticBody3D@83596" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="271" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.03402, 0, 0.256856, 0, 1.06545, 0, -0.256856, 0, 1.03402, -91.6986, -1.19867, 18.8911)
+
+[node name="@StaticBody3D@83597" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="272" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0600056, 0, 1.16456, 0, 1.16611, 0, -1.16456, 0, -0.0600056, 70.0084, -1.19867, -44.6691)
+
+[node name="@StaticBody3D@83598" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="273" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.15622, 0, 0.105562, 0, 1.16102, 0, -0.105562, 0, 1.15622, 67.8882, -1.19867, -0.761726)
+
+[node name="@StaticBody3D@83599" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="274" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.743107, 0, 0.632501, 0, 0.975841, 0, -0.632501, 0, -0.743107, 14.3782, -1.19867, 55.1353)
+
+[node name="@StaticBody3D@83600" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="275" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.334705, 0, 1.09184, 0, 1.14199, 0, -1.09184, 0, 0.334705, -43.9883, -1.19867, -81.4216)
+
+[node name="@StaticBody3D@83601" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="276" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.283306, 0, -1.02528, 0, 1.0637, 0, 1.02528, 0, -0.283306, 80.6137, -1.19867, -98.7193)
+
+[node name="@StaticBody3D@83602" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="277" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.165922, 0, 0.92779, 0, 0.94251, 0, -0.92779, 0, 0.165922, -46.7631, -1.19867, 81.5865)
+
+[node name="@StaticBody3D@83603" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="278" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.95379, 0, -0.232669, 0, 0.981758, 0, 0.232669, 0, 0.95379, 48.7973, -1.19867, -25.5032)
+
+[node name="@StaticBody3D@83604" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="279" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.218251, 0, -0.927135, 0, 0.952477, 0, 0.927135, 0, -0.218251, -41.1015, -1.19867, -49.9039)
+
+[node name="@StaticBody3D@83605" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="280" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.981529, 0, 0.497536, 0, 1.10043, 0, -0.497536, 0, 0.981529, 5.2914, -1.19867, 73.5343)
+
+[node name="@StaticBody3D@83606" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="281" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.0445, 0, 0.447779, 0, 1.13644, 0, -0.447779, 0, -1.0445, -27.5394, -1.19867, -82.944)
+
+[node name="@StaticBody3D@83607" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="282" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.11032, 0, 0.0526991, 0, 1.11157, 0, -0.0526991, 0, 1.11032, 65.8975, -1.19867, -2.53133)
+
+[node name="@StaticBody3D@83608" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="283" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.046275, 0, 0.946448, 0, 0.947578, 0, -0.946448, 0, 0.046275, 33.9806, -1.19867, 61.673)
+
+[node name="@StaticBody3D@83609" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="284" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.898758, 0, -0.431666, 0, 0.997046, 0, 0.431666, 0, -0.898758, 86.7295, -1.19867, -33.6966)
+
+[node name="@StaticBody3D@83610" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="285" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.622228, 0, 1.02367, 0, 1.19794, 0, -1.02367, 0, 0.622228, -34.1144, -1.19867, -89.8342)
+
+[node name="@StaticBody3D@83611" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="286" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0749558, 0, -1.02547, 0, 1.02821, 0, 1.02547, 0, -0.0749558, 14.4884, -1.19867, 19.5621)
+
+[node name="@StaticBody3D@83612" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="287" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.19374, 0, -0.987603, 0, 1.00643, 0, 0.987603, 0, 0.19374, 19.8487, -1.19867, 72.3182)
+
+[node name="@StaticBody3D@83613" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="288" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.773666, 0, 0.587362, 0, 0.971367, 0, -0.587362, 0, -0.773666, 93.7542, -1.19867, -43.5785)
+
+[node name="@StaticBody3D@83614" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="289" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.199323, 0, -1.04984, 0, 1.0686, 0, 1.04984, 0, 0.199323, 34.6, -1.19867, -59.865)
+
+[node name="@StaticBody3D@83615" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="290" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.13033, 0, 0.252071, 0, 1.1581, 0, -0.252071, 0, -1.13033, 24.9737, -1.19867, 59.8863)
+
+[node name="@StaticBody3D@83616" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="291" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.508169, 0, -0.826115, 0, 0.969898, 0, 0.826115, 0, 0.508169, 95.3683, -1.19867, 7.1908)
+
+[node name="@StaticBody3D@83617" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="292" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.02442, 0, 0.303015, 0, 1.0683, 0, -0.303015, 0, 1.02442, 31.4357, -1.19867, 51.1943)
+
+[node name="@StaticBody3D@83618" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="293" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0891898, 0, 0.93183, 0, 0.936089, 0, -0.93183, 0, 0.0891898, 46.9399, -1.19867, -73.5045)
+
+[node name="@StaticBody3D@83619" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="294" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0832136, 0, -1.15623, 0, 1.15922, 0, 1.15623, 0, -0.0832136, -39.7705, -1.19867, 45.4598)
+
+[node name="@StaticBody3D@83620" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="295" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.744417, 0, 0.687645, 0, 1.01342, 0, -0.687645, 0, 0.744417, -95.4238, -1.19867, 72.3325)
+
+[node name="@StaticBody3D@83621" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="296" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.8495, 0, -0.418116, 0, 0.946821, 0, 0.418116, 0, -0.8495, 32.2738, -1.19867, -92.0687)
+
+[node name="@StaticBody3D@83622" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="297" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.07879, 0, -0.395175, 0, 1.14889, 0, 0.395175, 0, 1.07879, 40.1693, -1.19867, -47.5787)
+
+[node name="@StaticBody3D@83623" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="298" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.231976, 0, -1.00422, 0, 1.03067, 0, 1.00422, 0, 0.231976, -66.5577, -1.19867, -47.1984)
+
+[node name="@StaticBody3D@83624" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="299" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.49529, 0, -0.979153, 0, 1.09729, 0, 0.979153, 0, -0.49529, 23.5457, -1.19867, 92.9046)
+
+[node name="@StaticBody3D@83625" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="300" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.17734, 0, 0.0289473, 0, 1.1777, 0, -0.0289473, 0, 1.17734, 31.072, -1.19867, -88.4087)
+
+[node name="@StaticBody3D@83626" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="301" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.712461, 0, 0.782564, 0, 1.0583, 0, -0.782564, 0, 0.712461, 80.3157, -1.19867, -31.2753)
+
+[node name="@StaticBody3D@83627" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="302" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.906152, 0, 0.27495, 0, 0.946947, 0, -0.27495, 0, -0.906152, -51.6951, -1.19867, -65.1663)
+
+[node name="@StaticBody3D@83628" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="303" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.03385, 0, -0.371905, 0, 1.09871, 0, 0.371905, 0, 1.03385, 54.5003, -1.19867, 26.1166)
+
+[node name="@StaticBody3D@83629" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="304" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.884447, 0, 0.366765, 0, 0.957477, 0, -0.366765, 0, 0.884447, 8.01657, -1.19867, -60.2883)
+
+[node name="@StaticBody3D@83630" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="305" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.991652, 0, 0.250946, 0, 1.02291, 0, -0.250946, 0, 0.991652, -12.9094, -1.19867, 79.5673)
+
+[node name="@StaticBody3D@83631" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="306" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.13848, 0, -0.341469, 0, 1.18859, 0, 0.341469, 0, -1.13848, -95.6974, -1.19867, 3.07206)
+
+[node name="@StaticBody3D@83632" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="307" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0820078, 0, -1.08351, 0, 1.08661, 0, 1.08351, 0, -0.0820078, -45.4876, -1.19867, 18.6358)
+
+[node name="@StaticBody3D@83633" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="308" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.943994, 0, -0.395231, 0, 1.02339, 0, 0.395231, 0, -0.943994, -20.1927, -1.19867, 10.4478)
+
+[node name="@StaticBody3D@83634" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="309" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.259637, 0, 1.06714, 0, 1.09827, 0, -1.06714, 0, 0.259637, -33.8589, -1.19867, -49.1283)
+
+[node name="@StaticBody3D@83635" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="310" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.827074, 0, -0.45119, 0, 0.942138, 0, 0.45119, 0, -0.827074, -27.926, -1.19867, -18.136)
+
+[node name="@StaticBody3D@83636" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="311" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0421342, 0, 1.09486, 0, 1.09567, 0, -1.09486, 0, -0.0421342, -56.2727, -1.19867, 73.2075)
+
+[node name="@StaticBody3D@83637" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="312" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.527153, 0, -1.0359, 0, 1.16231, 0, 1.0359, 0, 0.527153, 76.1868, -1.19867, 21.4581)
+
+[node name="@StaticBody3D@83638" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="313" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.604995, 0, -1.00465, 0, 1.17275, 0, 1.00465, 0, 0.604995, 52.8576, -1.19867, -53.6301)
+
+[node name="@StaticBody3D@83639" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="314" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.791746, 0, 0.746229, 0, 1.08799, 0, -0.746229, 0, -0.791746, 73.6553, -1.19867, -5.46481)
+
+[node name="@StaticBody3D@83640" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="315" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.42552, 0, -1.01998, 0, 1.10518, 0, 1.01998, 0, 0.42552, 62.2785, -1.19867, -78.8202)
+
+[node name="@StaticBody3D@83641" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="316" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.904371, 0, -0.278752, 0, 0.946356, 0, 0.278752, 0, 0.904371, 72.5776, -1.19867, -34.804)
+
+[node name="@StaticBody3D@83642" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="317" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.107847, 0, 0.896415, 0, 0.902879, 0, -0.896415, 0, 0.107847, 7.56712, -1.19867, 13.3131)
+
+[node name="@StaticBody3D@83643" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="318" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.694355, 0, 0.822436, 0, 1.07635, 0, -0.822436, 0, -0.694355, -53.1182, -1.19867, 84.3547)
+
+[node name="@StaticBody3D@83644" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="319" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.804217, 0, 0.7384, 0, 1.09179, 0, -0.7384, 0, -0.804217, -38.38, -1.19867, 38.7562)
+
+[node name="@StaticBody3D@83645" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="320" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.603927, 0, 0.697967, 0, 0.922977, 0, -0.697967, 0, -0.603927, 17.576, -1.19867, -75.1679)
+
+[node name="@StaticBody3D@83647" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="321" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.515071, 0, -0.823078, 0, 0.970956, 0, 0.823078, 0, 0.515071, 57.799, -1.19867, 49.6603)
+
+[node name="@StaticBody3D@83648" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="322" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.903897, 0, -0.0342515, 0, 0.904545, 0, 0.0342515, 0, 0.903897, 66.2178, -1.19867, -64.4245)
+
+[node name="@StaticBody3D@83649" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="323" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.466788, 0, -0.959355, 0, 1.06689, 0, 0.959355, 0, -0.466788, -44.493, -1.19867, 43.9264)
+
+[node name="@StaticBody3D@83650" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="324" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0984837, 0, 1.09131, 0, 1.09574, 0, -1.09131, 0, -0.0984837, -42.1961, -1.19867, 25.9126)
+
+[node name="@StaticBody3D@83651" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="325" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.342133, 0, -0.872379, 0, 0.93707, 0, 0.872379, 0, -0.342133, -32.8284, -1.19867, 36.0927)
+
+[node name="@StaticBody3D@83652" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="326" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.96876, 0, -0.104817, 0, 0.974414, 0, 0.104817, 0, -0.96876, 51.226, -1.19867, -96.0927)
+
+[node name="@StaticBody3D@83653" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="327" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.277071, 0, -0.882883, 0, 0.925338, 0, 0.882883, 0, 0.277071, 8.95102, -1.19867, -64.5942)
+
+[node name="@StaticBody3D@83654" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="328" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.872907, 0, 0.2754, 0, 0.91532, 0, -0.2754, 0, 0.872907, -73.9266, -1.19867, -85.3659)
+
+[node name="@StaticBody3D@83655" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="329" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.705583, 0, 0.914853, 0, 1.15534, 0, -0.914853, 0, 0.705583, 46.8724, -1.19867, 20.8047)
+
+[node name="@StaticBody3D@83656" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="330" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.710079, 0, 0.944591, 0, 1.18172, 0, -0.944591, 0, 0.710079, -32.8436, -1.19867, 63.5613)
+
+[node name="@StaticBody3D@83657" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="331" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.621562, 0, 0.737743, 0, 0.964678, 0, -0.737743, 0, -0.621562, -9.66525, -1.19867, -97.9879)
+
+[node name="@StaticBody3D@83658" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="332" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.991388, 0, -0.0373535, 0, 0.992092, 0, 0.0373535, 0, -0.991388, -11.8986, -1.19867, 95.0032)
+
+[node name="@StaticBody3D@83659" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="333" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.971177, 0, 0.000290738, 0, 0.971177, 0, -0.000290738, 0, -0.971177, -78.411, -1.19867, 10.5001)
+
+[node name="@StaticBody3D@83660" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="334" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.00942, 0, -0.519818, 0, 1.1354, 0, 0.519818, 0, 1.00942, 93.3402, -1.19867, -43.1806)
+
+[node name="@StaticBody3D@83661" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="335" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.15559, 0, 0.138328, 0, 1.16384, 0, -0.138328, 0, 1.15559, 52.12, -1.19867, 78.6977)
+
+[node name="@StaticBody3D@83662" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="336" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.927243, 0, -0.593532, 0, 1.10094, 0, 0.593532, 0, -0.927243, 84.9785, -1.19867, -52.0191)
+
+[node name="@StaticBody3D@83663" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="337" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.131579, 0, 0.91198, 0, 0.921423, 0, -0.91198, 0, -0.131579, 74.1272, -1.19867, 20.7643)
+
+[node name="@StaticBody3D@83664" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="338" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.805322, 0, -0.637301, 0, 1.02698, 0, 0.637301, 0, -0.805322, -17.2098, -1.19867, -71.8994)
+
+[node name="@StaticBody3D@83665" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="339" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.78228, 0, -0.588656, 0, 0.979019, 0, 0.588656, 0, -0.78228, -48.0858, -1.19867, -21.0705)
+
+[node name="@StaticBody3D@83666" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="340" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.387677, 0, 0.865637, 0, 0.948484, 0, -0.865637, 0, -0.387677, 67.2951, -1.19867, -33.4782)
+
+[node name="@StaticBody3D@83667" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="341" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.458162, 0, -1.00735, 0, 1.10665, 0, 1.00735, 0, -0.458162, -0.58284, -1.19867, 51.953)
+
+[node name="@StaticBody3D@83668" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="342" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.53821, 0, 0.869404, 0, 1.02251, 0, -0.869404, 0, 0.53821, 50.9924, -1.19867, 73.6423)
+
+[node name="@StaticBody3D@83669" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="343" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.95188, 0, -0.132177, 0, 0.961013, 0, 0.132177, 0, -0.95188, -99.0475, -1.19867, 60.8927)
+
+[node name="@StaticBody3D@83670" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="344" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0107914, 0, 1.1735, 0, 1.17355, 0, -1.1735, 0, 0.0107914, -50.7073, -1.19867, 7.13354)
+
+[node name="@StaticBody3D@83671" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="345" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.955679, 0, -0.670712, 0, 1.16755, 0, 0.670712, 0, 0.955679, -84.8243, -1.19867, -34.0945)
+
+[node name="@StaticBody3D@83673" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="346" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.09625, 0, 0.0381176, 0, 1.09692, 0, -0.0381176, 0, 1.09625, -23.3229, -1.19867, 28.2151)
+
+[node name="@StaticBody3D@83674" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="347" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.738964, 0, -0.935852, 0, 1.19243, 0, 0.935852, 0, 0.738964, -92.936, -1.19867, 64.8503)
+
+[node name="@StaticBody3D@83675" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="348" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0212098, 0, 1.08473, 0, 1.08494, 0, -1.08473, 0, -0.0212098, 13.3753, -1.19867, 89.1846)
+
+[node name="@StaticBody3D@83676" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="349" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.04076, 0, -0.204137, 0, 1.06059, 0, 0.204137, 0, -1.04076, 62.1087, -1.19867, 24.4163)
+
+[node name="@StaticBody3D@83677" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="350" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.214366, 0, -0.883798, 0, 0.909424, 0, 0.883798, 0, 0.214366, -4.29694, -1.19867, 92.3332)
+
+[node name="@StaticBody3D@83678" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="351" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.04205, 0, 0.173342, 0, 1.05637, 0, -0.173342, 0, -1.04205, 0.410805, -1.19867, -62.6157)
+
+[node name="@StaticBody3D@83679" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="352" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.240918, 0, 1.12959, 0, 1.15499, 0, -1.12959, 0, 0.240918, -88.4474, -1.19867, -7.29788)
+
+[node name="@StaticBody3D@83680" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="353" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.960529, 0, -0.708191, 0, 1.19338, 0, 0.708191, 0, 0.960529, -49.9793, -1.19867, -4.95569)
+
+[node name="@StaticBody3D@83681" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="354" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.73939, 0, -0.933916, 0, 1.19117, 0, 0.933916, 0, -0.73939, -50.2211, -1.19867, 82.8133)
+
+[node name="@StaticBody3D@83682" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="355" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.969442, 0, -0.471553, 0, 1.07804, 0, 0.471553, 0, 0.969442, 79.1987, -1.19867, 40.6044)
+
+[node name="@StaticBody3D@83683" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="356" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.714331, 0, -0.751992, 0, 1.03719, 0, 0.751992, 0, -0.714331, 39.4473, -1.19867, -38.5818)
+
+[node name="@StaticBody3D@83684" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="357" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.773498, 0, 0.666453, 0, 1.02101, 0, -0.666453, 0, 0.773498, 36.0738, -1.19867, 73.913)
+
+[node name="@StaticBody3D@83685" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="358" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.00183, 0, 0.630435, 0, 1.18369, 0, -0.630435, 0, -1.00183, 23.43, -1.19867, -10.5903)
+
+[node name="@StaticBody3D@83686" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="359" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.472344, 0, 0.862889, 0, 0.98371, 0, -0.862889, 0, -0.472344, -18.6459, -1.19867, 98.0342)
+
+[node name="@StaticBody3D@83687" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="360" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.956309, 0, -0.475547, 0, 1.06802, 0, 0.475547, 0, 0.956309, -21.6725, -1.19867, -67.7346)
+
+[node name="@StaticBody3D@83688" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="361" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.04118, 0, 0.0813043, 0, 1.04435, 0, -0.0813043, 0, -1.04118, -9.82565, -1.19867, 59.6283)
+
+[node name="@StaticBody3D@83689" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="362" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.0329, 0, 0.519765, 0, 1.1563, 0, -0.519765, 0, 1.0329, 1.66145, -1.19867, -67.0009)
+
+[node name="@StaticBody3D@83690" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="363" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.916266, 0, -0.529027, 0, 1.05802, 0, 0.529027, 0, -0.916266, 66.5408, -1.19867, -20.3177)
+
+[node name="@StaticBody3D@83691" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="364" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0615502, 0, 0.92811, 0, 0.930149, 0, -0.92811, 0, -0.0615502, 47.0014, -1.19867, -78.0489)
+
+[node name="@StaticBody3D@83692" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="365" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.995482, 0, -0.034246, 0, 0.996071, 0, 0.034246, 0, 0.995482, -37.2368, -1.19867, 84.2518)
+
+[node name="@StaticBody3D@83693" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="366" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.589738, 0, -0.759197, 0, 0.961338, 0, 0.759197, 0, 0.589738, -9.34943, -1.19867, 96.298)
+
+[node name="@StaticBody3D@83694" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="367" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.03176, 0, -0.0722711, 0, 1.03429, 0, 0.0722711, 0, 1.03176, -29.5209, -1.19867, -9.92529)
+
+[node name="@StaticBody3D@83695" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="368" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.082789, 0, -0.97986, 0, 0.983351, 0, 0.97986, 0, -0.082789, -57.4147, -1.19867, 71.9262)
+
+[node name="@StaticBody3D@83696" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="369" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.00189445, 0, 1.18947, 0, 1.18948, 0, -1.18947, 0, -0.00189445, 33.794, -1.19867, 69.2549)
+
+[node name="@StaticBody3D@83697" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="370" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.12533, 0, 0.316841, 0, 1.16908, 0, -0.316841, 0, -1.12533, -72.3218, -1.19867, -32.2482)
+
+[node name="@StaticBody3D@83698" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="371" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.08629, 0, -0.0223606, 0, 1.08652, 0, 0.0223606, 0, 1.08629, 27.8666, -1.19867, 14.3089)
+
+[node name="@StaticBody3D@83699" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="372" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.877159, 0, -0.254276, 0, 0.913271, 0, 0.254276, 0, 0.877159, -4.8331, -1.19867, -12.1702)
+
+[node name="@StaticBody3D@83700" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="373" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.137778, 0, -1.03756, 0, 1.04667, 0, 1.03756, 0, 0.137778, 50.674, -1.19867, -61.1915)
+
+[node name="@StaticBody3D@83701" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="374" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.926045, 0, -0.0187184, 0, 0.926234, 0, 0.0187184, 0, 0.926045, 68.2727, -1.19867, 68.101)
+
+[node name="@StaticBody3D@83702" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="375" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.968275, 0, 0.118823, 0, 0.975539, 0, -0.118823, 0, 0.968275, -37.4494, -1.19867, 69.4844)
+
+[node name="@StaticBody3D@83703" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="376" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.817803, 0, 0.42529, 0, 0.921777, 0, -0.42529, 0, 0.817803, -25.3184, -1.19867, 72.3297)
+
+[node name="@StaticBody3D@83704" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="377" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0123971, 0, -0.918751, 0, 0.918835, 0, 0.918751, 0, 0.0123971, 35.99, -1.19867, 68.7161)
+
+[node name="@StaticBody3D@83705" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="378" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.835828, 0, 0.637206, 0, 1.05102, 0, -0.637206, 0, 0.835828, 84.0197, -1.19867, -30.2571)
+
+[node name="@StaticBody3D@83706" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="379" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.438038, 0, -0.881953, 0, 0.984743, 0, 0.881953, 0, 0.438038, 51.1061, -1.19867, -29.7967)
+
+[node name="@StaticBody3D@83707" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="380" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.383624, 0, -0.870419, 0, 0.951208, 0, 0.870419, 0, -0.383624, -0.459938, -1.19867, 31.219)
+
+[node name="@StaticBody3D@83708" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="381" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.729349, 0, -0.580636, 0, 0.932248, 0, 0.580636, 0, 0.729349, 40.0415, -1.19867, 45.9237)
+
+[node name="@StaticBody3D@83709" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="382" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.16642, 0, -0.980058, 0, 0.994088, 0, 0.980058, 0, 0.16642, 31.0661, -1.19867, -76.0029)
+
+[node name="@StaticBody3D@83710" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="383" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.335481, 0, -0.835709, 0, 0.900531, 0, 0.835709, 0, -0.335481, 54.8506, -1.19867, -72.557)
+
+[node name="@StaticBody3D@83711" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="384" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.682527, 0, 0.821358, 0, 1.06793, 0, -0.821358, 0, -0.682527, -55.42, -1.19867, -42.0065)
+
+[node name="@StaticBody3D@83712" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="385" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.117087, 0, -1.04381, 0, 1.05035, 0, 1.04381, 0, -0.117087, -73.3241, -1.19867, -25.8547)
+
+[node name="@StaticBody3D@83713" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="386" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.81801, 0, 0.70051, 0, 1.07697, 0, -0.70051, 0, -0.81801, -67.6901, -1.19867, -30.4303)
+
+[node name="@StaticBody3D@83714" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="387" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.569651, 0, -0.740805, 0, 0.934502, 0, 0.740805, 0, -0.569651, 28.9086, -1.19867, -3.1061)
+
+[node name="@StaticBody3D@83715" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="388" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.833583, 0, 0.674206, 0, 1.07211, 0, -0.674206, 0, -0.833583, 45.5329, -1.19867, -14.4711)
+
+[node name="@StaticBody3D@83716" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="389" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.973103, 0, -0.368692, 0, 1.04061, 0, 0.368692, 0, -0.973103, -44.4355, -1.19867, 49.3689)
+
+[node name="@StaticBody3D@83717" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="390" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.17824, 0, 0.0535166, 0, 1.17946, 0, -0.0535166, 0, 1.17824, 65.1912, -1.19867, 28.7693)
+
+[node name="@StaticBody3D@83718" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="391" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.538106, 0, -0.809659, 0, 0.972166, 0, 0.809659, 0, 0.538106, -96.1618, -1.19867, -76.5014)
+
+[node name="@StaticBody3D@83719" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="392" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.02562, 0, 0.315753, 0, 1.07312, 0, -0.315753, 0, -1.02562, 91.2397, -1.19867, -34.9283)
+
+[node name="@StaticBody3D@83720" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="393" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.795246, 0, 0.804222, 0, 1.13101, 0, -0.804222, 0, -0.795246, 75.5748, -1.19867, 28.1539)
+
+[node name="@StaticBody3D@83721" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="394" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.04609, 0, -0.111022, 0, 1.05196, 0, 0.111022, 0, 1.04609, 64.9796, -1.19867, 25.0102)
+
+[node name="@StaticBody3D@83722" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="395" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0723567, 0, 1.01636, 0, 1.01894, 0, -1.01636, 0, -0.0723567, -21.5815, -1.19867, 59.6566)
+
+[node name="@StaticBody3D@83723" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="396" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.10329, 0, 0.218726, 0, 1.12476, 0, -0.218726, 0, 1.10329, -30.9533, -1.19867, -83.9296)
+
+[node name="@StaticBody3D@83724" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="397" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.50207, 0, 0.848945, 0, 0.986297, 0, -0.848945, 0, 0.50207, -61.0768, -1.19867, 22.0828)
+
+[node name="@StaticBody3D@83725" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="398" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.149797, 0, 1.1016, 0, 1.11173, 0, -1.1016, 0, -0.149797, 90.8211, -1.19867, -18.6025)
+
+[node name="@StaticBody3D@83726" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="399" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.03001, 0, -0.29756, 0, 1.07213, 0, 0.29756, 0, -1.03001, -69.2552, -1.19867, -79.9969)
+
+[node name="@StaticBody3D@83727" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="400" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.299818, 0, 1.13035, 0, 1.16943, 0, -1.13035, 0, 0.299818, 46.6896, -1.19867, -47.7795)
+
+[node name="@StaticBody3D@83728" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="401" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.01003, 0, -0.106359, 0, 1.01561, 0, 0.106359, 0, 1.01003, -83.1545, -1.19867, -77.7456)
+
+[node name="@StaticBody3D@83729" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="402" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.988363, 0, -0.0350062, 0, 0.988983, 0, 0.0350062, 0, 0.988363, -66.3728, -1.19867, 11.6356)
+
+[node name="@StaticBody3D@83730" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="403" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.461769, 0, 0.901172, 0, 1.01259, 0, -0.901172, 0, 0.461769, -67.329, -1.19867, 91.3091)
+
+[node name="@StaticBody3D@83731" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="404" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.485356, 0, 0.777971, 0, 0.916956, 0, -0.777971, 0, -0.485356, 39.6701, -1.19867, 10.9455)
+
+[node name="@StaticBody3D@83732" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="405" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.93553, 0, -0.661228, 0, 1.14562, 0, 0.661228, 0, -0.93553, 91.5784, -1.19867, -50.8563)
+
+[node name="@StaticBody3D@83733" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="406" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.92831, 0, 0.166282, 0, 0.943085, 0, -0.166282, 0, 0.92831, 99.2568, -1.19867, 83.5879)
+
+[node name="@StaticBody3D@83734" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="407" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.905213, 0, -0.229352, 0, 0.933817, 0, 0.229352, 0, -0.905213, -21.6622, -1.19867, 79.8174)
+
+[node name="@StaticBody3D@83735" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="408" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.186777, 0, 0.899691, 0, 0.918874, 0, -0.899691, 0, 0.186777, -3.64928, -1.19867, 3.36287)
+
+[node name="@StaticBody3D@83736" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="409" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.0234864, 0, 1.16467, 0, 1.16491, 0, -1.16467, 0, -0.0234864, -47.6085, -1.19867, -34.3905)
+
+[node name="@StaticBody3D@83737" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="410" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.03154, 0, -0.0686204, 0, 1.03382, 0, 0.0686204, 0, 1.03154, 68.352, -1.19867, 0.130653)
+
+[node name="@StaticBody3D@83738" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="411" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.93488, 0, 0.591708, 0, 1.1064, 0, -0.591708, 0, -0.93488, 44.5056, -1.19867, -41.5806)
+
+[node name="@StaticBody3D@83739" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="412" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.833057, 0, -0.456161, 0, 0.949772, 0, 0.456161, 0, -0.833057, -90.6329, -1.19867, 34.2408)
+
+[node name="@StaticBody3D@83740" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="413" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.900745, 0, -0.299841, 0, 0.949339, 0, 0.299841, 0, -0.900745, -16.8802, -1.19867, -73.5101)
+
+[node name="@StaticBody3D@83741" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="414" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.1004, 0, 0.403432, 0, 1.17202, 0, -0.403432, 0, 1.1004, 60.4302, -1.19867, 88.0931)
+
+[node name="@StaticBody3D@83742" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="415" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.11517, 0, 0.127604, 0, 1.12245, 0, -0.127604, 0, 1.11517, 33.6312, -1.19867, -45.1397)
+
+[node name="@StaticBody3D@83743" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="416" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.504454, 0, -0.765907, 0, 0.917108, 0, 0.765907, 0, 0.504454, -60.5806, -1.19867, 74.7995)
+
+[node name="@StaticBody3D@83744" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="417" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.288732, 0, 0.942312, 0, 0.985555, 0, -0.942312, 0, 0.288732, 71.7396, -1.19867, 30.4489)
+
+[node name="@StaticBody3D@83745" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="418" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.459372, 0, 0.92443, 0, 1.03228, 0, -0.92443, 0, 0.459372, 72.7832, -1.19867, 97.7138)
+
+[node name="@StaticBody3D@83746" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="419" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.942279, 0, -0.145252, 0, 0.953408, 0, 0.145252, 0, 0.942279, -92.1699, -1.19867, 23.5476)
+
+[node name="@StaticBody3D@83747" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="420" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.02604, 0, 0.416279, 0, 1.10727, 0, -0.416279, 0, 1.02604, 57.0843, -1.19867, 77.6131)
+
+[node name="@StaticBody3D@83748" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="421" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.02146, 0, -0.110481, 0, 1.02742, 0, 0.110481, 0, -1.02146, -47.0836, -1.19867, 20.9345)
+
+[node name="@StaticBody3D@83749" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="422" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.299845, 0, 1.07439, 0, 1.11544, 0, -1.07439, 0, -0.299845, -25.5537, -1.19867, 17.4509)
+
+[node name="@StaticBody3D@83750" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="423" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.333948, 0, 0.989211, 0, 1.04406, 0, -0.989211, 0, -0.333948, 84.3905, -1.19867, 34.0287)
+
+[node name="@StaticBody3D@83751" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="424" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.00227, 0, -0.349685, 0, 1.06152, 0, 0.349685, 0, 1.00227, 62.9343, -1.19867, -13.9997)
+
+[node name="@StaticBody3D@83752" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="425" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.783498, 0, 0.47205, 0, 0.914714, 0, -0.47205, 0, 0.783498, -61.8437, -1.19867, 34.0103)
+
+[node name="@StaticBody3D@83753" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="426" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.920028, 0, -0.716747, 0, 1.16627, 0, 0.716747, 0, -0.920028, 43.8018, -1.19867, -75.3865)
+
+[node name="@StaticBody3D@83754" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="427" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.159932, 0, -0.995564, 0, 1.00833, 0, 0.995564, 0, 0.159932, 41.6122, -1.19867, 43.5797)
+
+[node name="@StaticBody3D@83755" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="428" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.432319, 0, 1.00427, 0, 1.09337, 0, -1.00427, 0, 0.432319, 4.90936, 9.49666, -3.91856)
+
+[node name="@StaticBody3D@83756" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="429" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.567806, 0, 1.00807, 0, 1.15699, 0, -1.00807, 0, -0.567806, -12.8685, -1.19867, -72.1659)
+
+[node name="@StaticBody3D@83757" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="430" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.168012, 0, -1.15847, 0, 1.17059, 0, 1.15847, 0, 0.168012, -76.4688, -1.19867, -54.0933)
+
+[node name="@StaticBody3D@83758" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="431" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.612647, 0, 0.792524, 0, 1.00171, 0, -0.792524, 0, -0.612647, 43.2991, -1.19867, 97.87)
+
+[node name="@StaticBody3D@83759" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="432" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.962807, 0, -0.477657, 0, 1.07478, 0, 0.477657, 0, 0.962807, -74.846, -1.19867, 13.8347)
+
+[node name="@StaticBody3D@83760" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="433" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.951634, 0, 0.177531, 0, 0.968051, 0, -0.177531, 0, -0.951634, -9.33414, -1.19867, -72.6957)
+
+[node name="@StaticBody3D@83761" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="434" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.0311, 0, -0.255664, 0, 1.06232, 0, 0.255664, 0, 1.0311, -5.11026, -1.19867, 72.3804)
+
+[node name="@StaticBody3D@83762" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="435" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.919111, 0, -0.0060752, 0, 0.919131, 0, 0.0060752, 0, -0.919111, 9.97795, -1.19867, 35.6176)
+
+[node name="@StaticBody3D@83763" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="436" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.835691, 0, 0.404042, 0, 0.92824, 0, -0.404042, 0, -0.835691, -44.2033, -1.19867, 7.45328)
+
+[node name="@StaticBody3D@83764" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="437" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.677223, 0, 0.770637, 0, 1.02592, 0, -0.770637, 0, -0.677223, -40.3514, -1.19867, -32.0854)
+
+[node name="@StaticBody3D@83765" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="438" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.228949, 0, 1.02202, 0, 1.04735, 0, -1.02202, 0, 0.228949, -17.8519, -1.19867, -83.6308)
+
+[node name="@StaticBody3D@83766" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="439" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.01165, 0, 0.561299, 0, 1.15693, 0, -0.561299, 0, 1.01165, -12.3902, -1.19867, 85.1458)
+
+[node name="@StaticBody3D@83767" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="440" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.236864, 0, 1.14943, 0, 1.17358, 0, -1.14943, 0, 0.236864, -44.9196, -1.19867, 83.3837)
+
+[node name="@StaticBody3D@83768" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="441" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.738852, 0, -0.640831, 0, 0.978043, 0, 0.640831, 0, -0.738852, 60.6236, -1.19867, 47.2993)
+
+[node name="@StaticBody3D@83769" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="442" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.364496, 0, 1.02943, 0, 1.09205, 0, -1.02943, 0, -0.364496, 66.1858, -1.19867, 74.9175)
+
+[node name="@StaticBody3D@83770" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="443" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.01552, 0, -0.0359573, 0, 1.01615, 0, 0.0359573, 0, 1.01552, -52.5656, -1.19867, 46.0495)
+
+[node name="@StaticBody3D@83771" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="444" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.331759, 0, -0.850412, 0, 0.912833, 0, 0.850412, 0, -0.331759, -31.7633, -1.19867, 72.7106)
+
+[node name="@StaticBody3D@83772" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="445" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.437196, 0, -0.81453, 0, 0.924446, 0, 0.81453, 0, 0.437196, 66.1152, -1.19867, 29.2964)
+
+[node name="@StaticBody3D@83773" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="446" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.287367, 0, 1.10223, 0, 1.13907, 0, -1.10223, 0, 0.287367, 23.6326, -1.19867, 73.2992)
+
+[node name="@StaticBody3D@83774" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="447" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.247215, 0, 1.07828, 0, 1.10625, 0, -1.07828, 0, -0.247215, 49.1636, -1.19867, -26.0506)
+
+[node name="@StaticBody3D@83775" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="448" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.6654, 0, 0.607724, 0, 0.901158, 0, -0.607724, 0, -0.6654, -84.0629, -1.19867, 11.0842)
+
+[node name="@StaticBody3D@83776" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="449" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.925618, 0, 0.437835, 0, 1.02395, 0, -0.437835, 0, -0.925618, 78.1521, -1.19867, 90.1154)
+
+[node name="@StaticBody3D@83777" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="450" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.864255, 0, 0.552327, 0, 1.02567, 0, -0.552327, 0, -0.864255, 37.849, -1.19867, 5.53192)
+
+[node name="@StaticBody3D@83778" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="451" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.870671, 0, 0.45774, 0, 0.983663, 0, -0.45774, 0, 0.870671, -65.8311, -1.19867, 5.43537)
+
+[node name="@StaticBody3D@83779" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="452" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.586992, 0, -0.829347, 0, 1.01606, 0, 0.829347, 0, 0.586992, 18.7263, -1.19867, -32.5567)
+
+[node name="@StaticBody3D@83780" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="453" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.5117, 0, 0.846939, 0, 0.989517, 0, -0.846939, 0, 0.5117, 99.0409, -1.19867, -13.0198)
+
+[node name="@StaticBody3D@83781" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="454" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.214256, 0, 0.914827, 0, 0.939582, 0, -0.914827, 0, -0.214256, 18.2511, -1.19867, 40.9868)
+
+[node name="@StaticBody3D@83782" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="455" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.897833, 0, 0.467872, 0, 1.01243, 0, -0.467872, 0, -0.897833, 93.5473, -1.19867, -63.2544)
+
+[node name="@StaticBody3D@83783" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="456" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.256896, 0, -0.95118, 0, 0.985261, 0, 0.95118, 0, 0.256896, 74.5409, -1.19867, -90.046)
+
+[node name="@StaticBody3D@83784" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="457" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.925241, 0, 0.197735, 0, 0.946134, 0, -0.197735, 0, -0.925241, 61.9429, -1.19867, -63.6131)
+
+[node name="@StaticBody3D@83785" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="458" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.18978, 0, -0.147145, 0, 1.19884, 0, 0.147145, 0, -1.18978, -18.1946, -1.19867, -82.6915)
+
+[node name="@StaticBody3D@83786" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="459" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.521387, 0, 1.06608, 0, 1.18675, 0, -1.06608, 0, 0.521387, -78.1044, -1.19867, -14.8587)
+
+[node name="@StaticBody3D@83787" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="460" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.918319, 0, 0.455592, 0, 1.02512, 0, -0.455592, 0, -0.918319, -68.5083, -1.19867, 89.7233)
+
+[node name="@StaticBody3D@83788" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="461" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.969061, 0, 0.313068, 0, 1.01838, 0, -0.313068, 0, -0.969061, 38.8844, -1.19867, 56.958)
+
+[node name="@StaticBody3D@83789" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="462" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.08696, 0, -0.0315065, 0, 1.08742, 0, 0.0315065, 0, 1.08696, 64.8812, -1.19867, -22.8525)
+
+[node name="@StaticBody3D@83790" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="463" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.933896, 0, -0.590753, 0, 1.10506, 0, 0.590753, 0, 0.933896, 96.183, -1.19867, 58.8643)
+
+[node name="@StaticBody3D@83791" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="464" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.453848, 0, 1.05223, 0, 1.14593, 0, -1.05223, 0, -0.453848, -32.9867, -1.19867, -24.6663)
+
+[node name="@StaticBody3D@83792" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="465" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.230325, 0, 0.899641, 0, 0.928657, 0, -0.899641, 0, 0.230325, -0.596146, -1.19867, 79.9456)
+
+[node name="@StaticBody3D@83793" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="466" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.663481, 0, -0.738007, 0, 0.992402, 0, 0.738007, 0, 0.663481, -23.2339, -1.19867, -63.7153)
+
+[node name="@StaticBody3D@83794" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="467" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.921349, 0, 0.311516, 0, 0.972587, 0, -0.311516, 0, -0.921349, 24.753, -1.19867, -57.3681)
+
+[node name="@StaticBody3D@83795" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="468" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.759084, 0, 0.871566, 0, 1.15578, 0, -0.871566, 0, 0.759084, 71.3328, -1.19867, -87.5832)
+
+[node name="@StaticBody3D@83796" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="469" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.18503, 0, 0.150689, 0, 1.19458, 0, -0.150689, 0, 1.18503, 83.775, -1.19867, 9.97005)
+
+[node name="@StaticBody3D@83797" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="470" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.796205, 0, -0.779038, 0, 1.11393, 0, 0.779038, 0, -0.796205, 59.6212, -1.19867, -63.2318)
+
+[node name="@StaticBody3D@83798" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="471" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.802276, 0, -0.511387, 0, 0.951401, 0, 0.511387, 0, 0.802276, -12.6541, -1.19867, 70.3804)
+
+[node name="@StaticBody3D@83799" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="472" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.746293, 0, -0.858309, 0, 1.13739, 0, 0.858309, 0, 0.746293, 31.4342, -1.19867, 56.5905)
+
+[node name="@StaticBody3D@83800" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="473" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.365055, 0, -0.846401, 0, 0.92177, 0, 0.846401, 0, 0.365055, -68.6041, -1.19867, -37.0945)
+
+[node name="@StaticBody3D@83801" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="474" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-1.01641, 0, -0.0724079, 0, 1.01898, 0, 0.0724079, 0, -1.01641, -57.8051, -1.19867, 59.0299)
+
+[node name="@StaticBody3D@83802" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="475" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.0495899, 0, 1.01322, 0, 1.01444, 0, -1.01322, 0, 0.0495899, -47.9735, -1.19867, 80.7948)
+
+[node name="@StaticBody3D@83803" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="476" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.479279, 0, 0.980734, 0, 1.09158, 0, -0.980734, 0, -0.479279, 99.2743, -1.19867, 57.2175)
+
+[node name="@StaticBody3D@83804" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="477" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.349309, 0, 0.837771, 0, 0.907677, 0, -0.837771, 0, -0.349309, -74.2542, -1.19867, -48.0521)
+
+[node name="@StaticBody3D@83805" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="478" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.96638, 0, -0.13623, 0, 0.975935, 0, 0.13623, 0, -0.96638, -92.9896, -1.19867, -25.4126)
+
+[node name="@StaticBody3D@83806" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="479" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.904116, 0, 0.417918, 0, 0.996033, 0, -0.417918, 0, 0.904116, 50.8999, -1.19867, -59.7116)
+
+[node name="@StaticBody3D@83807" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="480" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.592359, 0, -0.723441, 0, 0.935016, 0, 0.723441, 0, 0.592359, 27.5023, -1.19867, 7.99895)
+
+[node name="@StaticBody3D@83808" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="481" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.740985, 0, -0.822864, 0, 1.10732, 0, 0.822864, 0, -0.740985, 5.7063, -1.19867, 84.7936)
+
+[node name="@StaticBody3D@83809" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="482" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.376438, 0, 1.09714, 0, 1.15992, 0, -1.09714, 0, -0.376438, 36.3052, -1.19867, -46.7736)
+
+[node name="@StaticBody3D@83810" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="483" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.497652, 0, -0.949312, 0, 1.07184, 0, 0.949312, 0, -0.497652, 81.2633, -1.19867, 61.8944)
+
+[node name="@StaticBody3D@83811" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="484" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.316175, 0, -1.02144, 0, 1.06925, 0, 1.02144, 0, 0.316175, -10.1803, -1.19867, 7.42099)
+
+[node name="@StaticBody3D@83812" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="485" instance=ExtResource("3_r8psn")]
+transform = Transform3D(0.775829, 0, -0.894085, 0, 1.18376, 0, 0.894085, 0, 0.775829, -63.1325, -1.19867, -26.8772)
+
+[node name="@StaticBody3D@83813" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="486" instance=ExtResource("3_r8psn")]
+transform = Transform3D(1.00829, 0, 0.444198, 0, 1.10179, 0, -0.444198, 0, 1.00829, -59.1625, -1.19867, 88.5427)
+
+[node name="@StaticBody3D@83814" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="487" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.89741, 0, -0.488678, 0, 1.02184, 0, 0.488678, 0, -0.89741, 93.5462, -1.19867, -22.2913)
+
+[node name="@StaticBody3D@83815" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="488" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.734489, 0, 0.83259, 0, 1.11026, 0, -0.83259, 0, -0.734489, 60.9095, -1.19867, -14.4749)
+
+[node name="@StaticBody3D@83816" type="StaticBody3D" parent="Obstacles/Tree Scatter/GeneratedTrees" index="489" instance=ExtResource("3_r8psn")]
+transform = Transform3D(-0.916267, 0, -0.511409, 0, 1.04933, 0, 0.511409, 0, -0.916267, -91.5595, -1.19867, 6.02042)
 
 [node name="Target" parent="." index="7"]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 87.7345, -0.0207542, 72.2515)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 87.7345, 1.33189, 72.2515)
 
 [node name="TextureRect" parent="LevelUI/CameraVeiwer" index="0"]
 texture = SubResource("ViewportTexture_11ac5")
