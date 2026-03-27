@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://bvitibvhvmelw" path="res://ui/start_menu.gd" id="1_ufv5y"]
 [ext_resource type="FontFile" uid="uid://dn0y4mgxjrhu" path="res://ui/Robot Crush.ttf" id="2_0d5ky"]
 [ext_resource type="Texture2D" uid="uid://c3dait4iwtn1l" path="res://ui/gradient.png" id="2_g1ph5"]
+[ext_resource type="Texture2D" uid="uid://bcl8fxfsn6dei" path="res://ui/drone.png" id="4_tb71d"]
+[ext_resource type="Texture2D" uid="uid://bv15u2wanq2r3" path="res://ui/drone2.png" id="5_8mr4u"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tb71d"]
 texture = ExtResource("2_g1ph5")
@@ -36,6 +38,12 @@ shadow_size = 5
 shadow_offset = Vector2(0, 3.41)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7htnq"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8mr4u"]
+texture = ExtResource("4_tb71d")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cu6oi"]
+texture = ExtResource("5_8mr4u")
 
 [node name="StartMenu" type="Control" unique_id=1937831929]
 layout_mode = 3
@@ -132,6 +140,22 @@ Vinayak Bains
 Jennifer Tan
 John Millar"
 horizontal_alignment = 1
+
+[node name="Panel2" type="Panel" parent="." unique_id=308261896]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 193.0
+offset_right = 426.0
+offset_bottom = 458.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_8mr4u")
+
+[node name="Panel3" type="Panel" parent="." unique_id=1778021716]
+layout_mode = 0
+offset_left = 726.0
+offset_top = 193.0
+offset_right = 1137.0
+offset_bottom = 458.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_cu6oi")
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Button2" to="." method="_on_exit_pressed"]
