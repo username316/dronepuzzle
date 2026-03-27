@@ -302,11 +302,12 @@ func _ready() -> void:
 	#Basic parts menu
 	vision_enabled = Global.vision_enabled
 	lidar_enabled = Global.lidar_enabled
-	min_thrust = Global.minThrust
-	max_thrust = Global.maxThrust
-	brake_strength = Global.brakeStrength
-	lidar_trigger_dist = Global.lidarStopRange
-	tilt_speed = Global.tiltSpeed
+	
+	#speed = Global.speed
+	#handling = Global.handling
+	#caution = Global.caution
+	#climb_bias = Global.climbBias
+	#precision = Global.precision
 	
 	#Advanced parts menu (1)
 	#Movement
