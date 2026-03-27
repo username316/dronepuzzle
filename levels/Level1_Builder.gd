@@ -73,53 +73,9 @@ func _build_layout(parent: Node3D):
 	wall.use_collision = true
 	wall.size = Vector3(30, 15, 1)
 	wall.position = Vector3(0, 7.5, 0)
-	
-	var wall2 = CSGBox3D.new()
-	wall2.use_collision = true
-	wall2.size = Vector3(0.5, 15, 30)
-	wall2.position = Vector3(15, 7.5, -15)
-	parent.add_child(wall2)
-	
-	var wall3 = CSGBox3D.new()
-	wall3.use_collision = true
-	wall3.size = Vector3(0.5, 15, 30)
-	wall3.position = Vector3(-15, 7.5, -15)
-	parent.add_child(wall3)
-	
-	var wall4 = CSGBox3D.new()
-	wall4.use_collision = true
-	wall4.size = Vector3(30, 15, 1)
-	wall4.position = Vector3(0, 7.5, -30)
-	parent.add_child(wall4)
-	
-	var roof = CSGBox3D.new()
-	roof.use_collision = true
-	roof.size = Vector3(33, 2, 33)
-	roof.position = Vector3(0, 15, -15)
-	parent.add_child(wall4)
-	
-	roof.material = _get_mat(Color(0.3, 0.3, 0)) 
-	parent.add_child(roof)
-	
-	
-	var paint = StandardMaterial3D.new()
-	paint.albedo_color = Color(0,0.7,0.9)
-	wall.material = paint
-	wall2.material = paint
-	wall3.material = paint
-	wall4.material = paint
-	
-	var skybox = CSGSphere3D.new()
-	var city = StandardMaterial3D.new()
-	skybox.radius = 100
-	skybox.flip_faces = true
-	city.albedo_texture = load("res://levels/wal_172619-sea-7394353.jpg")
-	skybox.material = city
-	parent.add_child(skybox)
+	wall.material = _get_mat(Color(0.9, 0.4, 0.1)) # Orange
 	
 	var hole = CSGBox3D.new()
-	
-	
 	hole.operation = CSGShape3D.OPERATION_SUBTRACTION
 	hole.size = Vector3(10, 8, 4)
 	wall.add_child(hole)
@@ -132,7 +88,6 @@ func _build_layout(parent: Node3D):
 func _get_mat(color: Color) -> StandardMaterial3D:
 	var mat = StandardMaterial3D.new()
 	mat.albedo_color = color
-	
 	mat.roughness = 0.5
 	return mat
 
@@ -143,8 +98,6 @@ func _create_pad(pos: Vector3, color: Color) -> CSGBox3D:
 	p.position = pos
 	p.material = _get_mat(color)
 	return p
-
-
 
 func _on_target_body_entered(body: Node3D) -> void:
 	stopwatch.stop()
