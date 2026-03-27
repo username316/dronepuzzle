@@ -1,22 +1,28 @@
-[gd_scene load_steps=4 format=3 uid="uid://bpooynlgj3ygo"]
+[gd_scene format=3 uid="uid://bpooynlgj3ygo"]
 
 [ext_resource type="PackedScene" uid="uid://d05r7jbw752k3" path="res://levels/0LevelBase.tscn" id="1_b84ys"]
 [ext_resource type="Script" uid="uid://bmww6phrn2hrs" path="res://levels/Level1_Builder.gd" id="2_32mhh"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_32mhh"]
 
-[node name="Level2" instance=ExtResource("1_b84ys")]
+[node name="Level2" unique_id=739773933 instance=ExtResource("1_b84ys")]
 script = ExtResource("2_32mhh")
 refresh_level = false
 
-[node name="Drone" parent="." index="0"]
+[node name="Drone" parent="." index="0" unique_id=282426668]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 15)
 
-[node name="Target" parent="." index="7"]
-transform = Transform3D(0.86, 0, 0, 0, 0.86, 0, 0, 0, 0.86, -0.0292425, 1.41532, -19.9666)
+[node name="CameraTop" parent="." index="3" unique_id=656459111]
+fov = 48.413002
 
-[node name="TextureRect" parent="LevelUI/CameraVeiwer" index="0"]
+[node name="Target" parent="." index="7" unique_id=977160323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0292425, 1.41532, -19.9666)
+
+[node name="PauseMenu" parent="LevelUI" parent_id_path=PackedInt32Array(2095549826) index="0" unique_id=514204660]
+visible = true
+
+[node name="TextureRect" parent="LevelUI/CameraVeiwer" parent_id_path=PackedInt32Array(1460449196) index="0" unique_id=293707473]
 texture = SubResource("ViewportTexture_32mhh")
 
-[node name="Goal" parent="." index="9"]
+[node name="Goal" parent="." index="9" unique_id=1155614024]
 transform = Transform3D(1.1914, 0, 0, 0, 1.7402, 0, 0, 0, 1, -0.0369129, 0.223201, -19.9758)
