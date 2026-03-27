@@ -176,6 +176,15 @@ signal send_message(msg: String)
 @export var roi_top_frac: float = 0.28
 @export var roi_bottom_frac: float = 0.82
 
+@export var planner_wrong_way_penalty: float = 7.5
+@export var planner_reverse_block_threshold: float = -0.08
+@export var planner_safety_override_margin: float = 1.10
+@export var planner_goal_pull_when_clear: float = 1.8
+@export var direct_goal_safe_clearance: float = 2.4
+@export var direct_goal_safe_margin: float = 1.0
+@export var direct_goal_camera_conf_allow: float = 0.30
+@export var assess_goal_blend: float = 0.30
+
 # Corridor memory
 @export var corridor_lock_time: float = 0.65
 @export var corridor_lock_retain_dist: float = 2.5
@@ -334,8 +343,9 @@ func _ready() -> void:
 		# -----------------------
 		max_forward_tilt = map_simple(s, 0.08, 0.25, 0.60)
 		cruise_tilt = map_simple(s, 0.04, 0.12, 0.28)
-		planner_progress_weight = map_simple(s, 0.50, 2.80, 5.00)
-		planner_forward_gain = map_simple(s, 0.30, 1.60, 3.00)
+		planner_progress_weight = map_simple(s, 2.20, 3.60, 9.00)
+		planner_forward_gain = map_simple(s, 1.10, 2.00, 4.20)
+		planner_goal_pull_when_clear = map_simple(s, 2.4, 3.2, 5.0)
 
 		# -----------------------
 		# Handling
@@ -351,8 +361,9 @@ func _ready() -> void:
 		# -----------------------
 		# Caution
 		# -----------------------
-		planner_clearance_weight = map_simple(c, 0.20, 2.60, 6.00)
-		planner_min_margin_weight = map_simple(c, 0.20, 2.80, 6.00)
+		planner_clearance_weight = map_simple(c, 0.20, 2.20, 3.40)
+		planner_min_margin_weight = map_simple(c, 0.20, 2.30, 3.60)
+		planner_wrong_way_penalty = map_simple(c, 10.0, 14.0, 20.0)
 
 		lidar_trigger_dist = map_simple(c, 1.00, 9.00, 18.00)
 		lidar_clear_dist = map_simple(c, 1.50, 11.00, 22.00)
@@ -377,40 +388,14 @@ func _ready() -> void:
 		descend_rate = map_simple(1.0 - cb, 0.80, 4.00, 10.00)
 
 		max_hover_height = map_simple(cb, 2.00, 8.00, 16.00)
-		planner_climb_weight = map_simple(cb, 0.00, 0.05, 1.00)
+
+		# This is a penalty term, so higher climb bias should reduce it.
+		planner_climb_weight = map_simple(1.0 - cb, 0.02, 0.05, 0.55)
+
 		planner_upward_gain = map_simple(cb, 0.00, 0.65, 2.00)
 		climb_clear_dist = map_simple(cb, 1.00, 5.00, 10.00)
 
-		# -----------------------
-		# Precision
-		# -----------------------
-		# Higher precision = smaller radii, stronger hold, sharper stopping
-		arrive_radius = map_simple(1.0 - p, 1.00, 8.00, 16.00)
-		settle_radius = map_simple(1.0 - p, 0.50, 5.00, 10.00)
-		stop_radius = map_simple(1.0 - p, 0.30, 2.80, 6.00)
-		final_vertical_reach_radius = map_simple(1.0 - p, 0.05, 0.35, 1.00)
-
-		hold_kp = map_simple(p, 0.00, 10.00, 22.00)
-		hold_kd = map_simple(p, 0.00, 6.00, 14.00)
-		max_hold_force = map_simple(p, 0.00, 40.00, 90.00)
-
-		reached_level_speed = map_simple(p, 1.00, 12.00, 25.00)
-		reached_stop_speed = map_simple(p, 1.00, 12.00, 25.00)
-
-		# -----------------------
-		# Shared braking
-		# -----------------------
-		# More speed = less brake
-		# More caution = more brake
-		# More precision = more brake
-		brake_strength = clamp(
-			8.0
-			- 2.0 * s_signed
-			+ 2.5 * c_signed
-			+ 3.0 * p_signed,
-			0.5,
-			30.0
-		)
+		camera_only_progress_scale = 1.0
 	
 	if Global.mode == 1:
 		#Advanced parts menu (1)
@@ -849,7 +834,19 @@ func _physics_process(delta: float) -> void:
 				target_roll = 0.0
 
 		elif route_assess_timer > 0.0 and dist > stop_radius:
+			var goal_assess_world: Vector3 = planned_motion_world.normalized()
+			if to_target_flat.length() > 0.001:
+				goal_assess_world = to_target_flat.normalized()
+
 			var assess_dir_world: Vector3 = planned_motion_world.normalized()
+
+			# During assessment, bias back toward the goal instead of reinforcing
+			# whatever detour the planner happened to pick last frame.
+			if direct_goal_ready:
+				assess_dir_world = goal_assess_world
+			else:
+				assess_dir_world = goal_assess_world.lerp(assess_dir_world, assess_goal_blend).normalized()
+
 			var assess_flat: Vector3 = assess_dir_world
 			assess_flat.y = 0.0
 
@@ -859,6 +856,10 @@ func _physics_process(delta: float) -> void:
 			var creep_scale: float = blind_creep_scale
 			if route_evidence:
 				creep_scale *= 0.55
+
+			var goal_assess_local: Vector3 = (transform.basis.inverse() * goal_assess_world).normalized()
+			if planned_motion_local.dot(goal_assess_local) < 0.0:
+				creep_scale *= 0.35
 
 			target_pitch = -cruise_tilt * creep_scale
 			target_roll = clamp(planned_motion_local.x, -1.0, 1.0) * max_side_tilt * 0.10
@@ -1694,9 +1695,9 @@ func plan_visible_motion() -> void:
 
 	var goal_world: Vector3 = to_target.normalized()
 	var goal_local: Vector3 = (transform.basis.inverse() * goal_world).normalized()
-	
+	var goal_angle_deg: float = rad_to_deg(atan2(goal_local.x, -goal_local.z))
 	var target_visible_now: bool = is_target_visible()
-	
+
 	var effective_progress_weight: float = planner_progress_weight
 	var effective_clearance_weight: float = planner_clearance_weight
 	var effective_min_margin_weight: float = planner_min_margin_weight
@@ -1708,6 +1709,62 @@ func plan_visible_motion() -> void:
 		effective_min_margin_weight *= camera_only_min_margin_scale
 		effective_vision_weight *= camera_only_vision_weight_scale
 
+	# ----------------------------------------
+	# Local planner constants for goal priority
+	# ----------------------------------------
+	var direct_goal_safe_clearance_local: float = 2.4
+	var direct_goal_safe_margin_local: float = 1.0
+	var direct_goal_camera_conf_allow_local: float = 0.30
+	var planner_wrong_way_penalty_local: float = 14.0
+	var planner_reverse_block_threshold_local: float = -0.08
+	var planner_safety_override_margin_local: float = 1.10
+	var planner_goal_pull_when_clear_local: float = 3.0
+
+	# ----------------------------------------
+	# HARD GOAL-FIRST RULE
+	# If goal direction is safe enough, use it.
+	# ----------------------------------------
+	var direct_goal_safe: bool = false
+	var direct_goal_clear_mid: float = 999.0
+	var direct_goal_combined_margin: float = 999.0
+
+	if lidar_enabled and lidar != null:
+		var direct_sample: Dictionary = _sample_margin_score(goal_angle_deg, lidar, 12.0, 0.25)
+		direct_goal_clear_mid = direct_sample["center"]
+		direct_goal_combined_margin = direct_sample["min_margin"]
+
+		if lidar_up != null:
+			var direct_up: Dictionary = _sample_margin_score(goal_angle_deg, lidar_up, 12.0, 0.25)
+			direct_goal_combined_margin = min(direct_goal_combined_margin, direct_up["center"])
+
+		if lidar_down != null:
+			var direct_down: Dictionary = _sample_margin_score(goal_angle_deg, lidar_down, 12.0, 0.25)
+			direct_goal_combined_margin = min(direct_goal_combined_margin, direct_down["center"])
+
+		direct_goal_safe = (
+			not avoid_active_lidar and
+			direct_goal_clear_mid > direct_goal_safe_clearance_local and
+			direct_goal_combined_margin > direct_goal_safe_margin_local
+		)
+	else:
+		direct_goal_safe = (
+			target_visible_now and
+			not avoid_active_vision and
+			(
+				vision_corridor_confidence < direct_goal_camera_conf_allow_local or
+				stable_vision_corridor_local.dot(goal_local) > 0.55
+			)
+		)
+
+	if direct_goal_safe:
+		var follow_smooth_direct: float = max(planner_direction_smooth, 0.42)
+		planned_motion_local = planned_motion_local.lerp(goal_local, follow_smooth_direct).normalized()
+		planned_motion_world = (transform.basis * planned_motion_local).normalized()
+		return
+
+	# ----------------------------------------
+	# CAMERA-ONLY FALLBACK
+	# ----------------------------------------
 	if not lidar_enabled or lidar == null:
 		var fallback_local: Vector3 = goal_local
 
@@ -1758,6 +1815,10 @@ func plan_visible_motion() -> void:
 					lerp(0.68, 0.84, assess_blend)
 				).normalized()
 
+		# Never let camera-only drive away from a visible goal unless vision is actively blocking it.
+		if fallback_local.dot(goal_local) < 0.20 and target_visible_now and not avoid_active_vision:
+			fallback_local = goal_local.lerp(fallback_local, 0.20).normalized()
+
 		var follow_smooth: float = planner_direction_smooth
 		if vision_corridor_confidence > 0.20 and (abs(fallback_local.x) > 0.12 or fallback_local.y > 0.10):
 			follow_smooth = max(follow_smooth, 0.68)
@@ -1766,8 +1827,9 @@ func plan_visible_motion() -> void:
 		planned_motion_world = (transform.basis * planned_motion_local).normalized()
 		return
 
-	var goal_angle_deg: float = rad_to_deg(atan2(goal_local.x, -goal_local.z))
-
+	# ----------------------------------------
+	# LIDAR / FUSED SCORING
+	# ----------------------------------------
 	var best_score: float = -1e20
 	var best_dir_local: Vector3 = Vector3(0.0, 0.0, -1.0)
 
@@ -1807,20 +1869,16 @@ func plan_visible_motion() -> void:
 			var vertical_balance: float = 1.0 - clamp(abs(clear_up - clear_down) / 4.0, 0.0, 1.0)
 			var vertical_offset: float = clamp((clear_up - clear_down) / 4.0, -1.0, 1.0)
 
-			# For upward candidates, score using upward clearance instead of punishing
-			# them because the drone is close to the floor.
 			var climb_t: float = clamp(climb_bias / 0.72, 0.0, 1.0)
 			var vertical_clear_for_candidate: float = lerpf(clear_mid, clear_up, climb_t)
 			var vertical_escape_gain: float = max(clear_up - clear_mid, 0.0)
-			
+
 			var roof_penalty: float = 0.0
-			
 			if climb_bias > 0.08:
 				var roof_needed: float = ceiling_clearance_margin + climb_headroom_margin
 
 				if clear_up < roof_needed:
 					roof_penalty += (roof_needed - clear_up) * planner_roof_penalty_gain
-
 				elif clear_up < roof_needed + 0.45:
 					roof_penalty += (roof_needed + 0.45 - clear_up) * planner_roof_penalty_gain * 0.35
 
@@ -1867,6 +1925,16 @@ func plan_visible_motion() -> void:
 			if clear_mid < climb_clear_dist and combined_min_margin > planner_body_margin:
 				corridor_reward = 1.0 + vertical_balance * 0.7 + lateral_balance * 0.5
 
+			var safer_than_direct_goal: bool = (
+				combined_min_margin > direct_goal_combined_margin + planner_safety_override_margin_local or
+				clear_mid > direct_goal_clear_mid + planner_safety_override_margin_local
+			)
+
+			var direct_goal_reasonably_safe: bool = (
+				direct_goal_combined_margin > planner_body_margin and
+				direct_goal_clear_mid > max(no_forward_dist, planner_body_margin)
+			)
+
 			var score: float = (
 				goal_align * effective_progress_weight +
 				forwardness * planner_forward_gain +
@@ -1881,12 +1949,26 @@ func plan_visible_motion() -> void:
 				roof_penalty
 			)
 
+			if direct_goal_reasonably_safe:
+				score += max(goal_align, -0.15) * planner_goal_pull_when_clear_local
+
+			if goal_align < planner_reverse_block_threshold_local and not safer_than_direct_goal:
+				score -= planner_wrong_way_penalty_local * (planner_reverse_block_threshold_local - goal_align + 0.35)
+
+			if goal_align < -0.35 and not safer_than_direct_goal:
+				score -= planner_wrong_way_penalty_local * 1.25
+
+			if direct_goal_reasonably_safe and goal_align < 0.0 and not safer_than_direct_goal:
+				score = -1e9
+			
+			if goal_align < -0.20 and clear_mid < direct_goal_clear_mid + planner_safety_override_margin_local:
+				score = -1e9
+			
 			if climb_bias > 0.08:
 				var climb_reward_scale: float = 1.0
-				if lidar_enabled and lidar_up != null:
-					var roof_needed: float = ceiling_clearance_margin + climb_headroom_margin
-					if clear_up < roof_needed + 0.25:
-						climb_reward_scale = 0.30
+				var roof_needed2: float = ceiling_clearance_margin + climb_headroom_margin
+				if clear_up < roof_needed2 + 0.25:
+					climb_reward_scale = 0.30
 
 				score += clamp(
 					vertical_clear_for_candidate / max(planner_vertical_safe_distance, 0.001),
