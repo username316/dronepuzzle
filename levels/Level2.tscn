@@ -103,7 +103,7 @@ use_collision = true
 size = Vector3(6, 4.70459, 1)
 
 [node name="Target" parent="." index="8"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.6762, 1.66361, 3.27275)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -22.6762, 2.86153, 3.27275)
 
 [node name="Stopwatch" parent="LevelUI" index="2"]
 metadata/_edit_use_anchors_ = true
