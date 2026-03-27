@@ -1,0 +1,986 @@
+[gd_scene format=3 uid="uid://crakx03mayleo"]
+
+[ext_resource type="Texture2D" uid="uid://c3dait4iwtn1l" path="res://ui/gradient.png" id="1_i7ewp"]
+[ext_resource type="Script" uid="uid://qpbksx1261wl" path="res://ui/advanced_parts_menu.gd" id="1_k6gqc"]
+[ext_resource type="FontFile" uid="uid://dn0y4mgxjrhu" path="res://ui/Robot Crush.ttf" id="2_k6gqc"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_d2qys"]
+texture = ExtResource("1_i7ewp")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d2qys"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_aiu68"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aiu68"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a25oo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i7ewp"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 6
+border_width_top = 6
+border_width_right = 6
+border_width_bottom = 6
+border_color = Color(0.7987912, 0.7987912, 0.79879117, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 4.0
+expand_margin_top = 5.0
+expand_margin_right = 4.0
+expand_margin_bottom = 5.0
+shadow_size = 1
+shadow_offset = Vector2(1.9, 2.1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k6gqc"]
+bg_color = Color(0.31764707, 0.64705884, 0.7882353, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a25oo"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fkkqj"]
+bg_color = Color(0.63529414, 0.63529414, 0.63529414, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hk2e4"]
+bg_color = Color(0.8235294, 0.8235294, 0.8235294, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vth66"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6jko3"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bou7l"]
+bg_color = Color(0.63529414, 0.63529414, 0.63529414, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g3j1x"]
+bg_color = Color(0.8235294, 0.8235294, 0.8235294, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pdg78"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t6r5c"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42y7u"]
+bg_color = Color(0.63529414, 0.63529414, 0.63529414, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cok1n"]
+bg_color = Color(0.8235294, 0.8235294, 0.8235294, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vrgvq"]
+
+[node name="AdvancedPartsMenu" type="Control" unique_id=501306405]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_k6gqc")
+
+[node name="Panel" type="Panel" parent="." unique_id=847149442]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_d2qys")
+
+[node name="Label" type="Label" parent="." unique_id=2116153694]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -397.0
+offset_right = 397.0
+offset_bottom = 87.0
+grow_horizontal = 2
+theme_override_constants/outline_size = 20
+theme_override_fonts/font = ExtResource("2_k6gqc")
+theme_override_font_sizes/font_size = 80
+text = "advanced Parts Menu"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="." unique_id=1067108020]
+layout_mode = 0
+offset_left = 203.0
+offset_top = 88.0
+offset_right = 386.0
+offset_bottom = 126.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_d2qys")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_aiu68")
+text = "Movement"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="." unique_id=1364049081]
+layout_mode = 0
+offset_left = 695.0
+offset_top = 89.0
+offset_right = 1019.0
+offset_bottom = 127.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_d2qys")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_aiu68")
+text = "Hover/Vertical Control"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=773563925]
+layout_mode = 0
+offset_left = 23.0
+offset_top = 137.0
+offset_right = 567.0
+offset_bottom = 547.0
+theme_override_constants/separation = 5
+
+[node name="Label4" type="Label" parent="VBoxContainer" unique_id=1731768094]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Tilt Speed (0.0 - 20.0)"
+
+[node name="Label5" type="Label" parent="VBoxContainer" unique_id=851221380]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Min Thrust (0.0 - 100.0)"
+
+[node name="Label6" type="Label" parent="VBoxContainer" unique_id=2002323507]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Max Thrust (0.0 - 200.0)"
+
+[node name="Label7" type="Label" parent="VBoxContainer" unique_id=2107999769]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Max Forward Tilt (0.0 - 1.2)"
+
+[node name="Label8" type="Label" parent="VBoxContainer" unique_id=2024949398]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Max Side Tilt (0.0 - 1.2)"
+
+[node name="Label9" type="Label" parent="VBoxContainer" unique_id=2118721463]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Cruise Tilt (0.0 - 1.0)"
+
+[node name="Label10" type="Label" parent="VBoxContainer" unique_id=1294222376]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Yaw Speed (0.0 - 20.0)"
+
+[node name="Label11" type="Label" parent="VBoxContainer" unique_id=1879850441]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Settle Yaw Speed (0.0 - 25.0)"
+
+[node name="Label12" type="Label" parent="VBoxContainer" unique_id=1985439236]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Settle Pitch Scale (0.0 - 2.0)"
+
+[node name="Label13" type="Label" parent="VBoxContainer" unique_id=2123710720]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Settle Avoid Scale (0.0 - 2.0)"
+
+[node name="Label14" type="Label" parent="VBoxContainer" unique_id=1252869834]
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Brake Strength (0.0 - 60.0)"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="." unique_id=1484482571]
+layout_mode = 0
+offset_left = 508.0
+offset_top = 137.0
+offset_right = 565.0
+offset_bottom = 547.0
+
+[node name="Label5" type="Label" parent="VBoxContainer2" unique_id=1004097648]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label6" type="Label" parent="VBoxContainer2" unique_id=841145560]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label7" type="Label" parent="VBoxContainer2" unique_id=2011588433]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label8" type="Label" parent="VBoxContainer2" unique_id=1885150070]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label9" type="Label" parent="VBoxContainer2" unique_id=653655816]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label10" type="Label" parent="VBoxContainer2" unique_id=1743121544]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label11" type="Label" parent="VBoxContainer2" unique_id=471351016]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label12" type="Label" parent="VBoxContainer2" unique_id=896609012]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label13" type="Label" parent="VBoxContainer2" unique_id=1801874711]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label14" type="Label" parent="VBoxContainer2" unique_id=1987997007]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label15" type="Label" parent="VBoxContainer2" unique_id=451923466]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="." unique_id=479926370]
+layout_mode = 0
+offset_left = 249.0
+offset_top = 144.0
+offset_right = 500.0
+offset_bottom = 160.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 20.0
+step = 0.01
+value = 3.0
+
+[node name="HSlider2" type="HSlider" parent="." unique_id=639439532]
+layout_mode = 0
+offset_left = 272.0
+offset_top = 181.0
+offset_right = 501.0
+offset_bottom = 197.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+step = 0.01
+
+[node name="HSlider3" type="HSlider" parent="." unique_id=1622207266]
+layout_mode = 0
+offset_left = 276.0
+offset_top = 219.0
+offset_right = 499.0
+offset_bottom = 235.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 200.0
+step = 0.01
+value = 60.0
+
+[node name="HSlider4" type="HSlider" parent="." unique_id=1989331888]
+layout_mode = 0
+offset_left = 303.0
+offset_top = 257.0
+offset_right = 499.0
+offset_bottom = 273.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 1.2
+step = 0.01
+value = 0.25
+
+[node name="HSlider5" type="HSlider" parent="." unique_id=1044870839]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 294.0
+offset_right = 499.0
+offset_bottom = 310.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 1.2
+step = 0.01
+value = 0.25
+
+[node name="HSlider6" type="HSlider" parent="." unique_id=1382898501]
+layout_mode = 0
+offset_left = 242.0
+offset_top = 332.0
+offset_right = 496.0
+offset_bottom = 348.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 1.0
+step = 0.01
+value = 0.12
+
+[node name="HSlider7" type="HSlider" parent="." unique_id=441544296]
+layout_mode = 0
+offset_left = 257.0
+offset_top = 370.0
+offset_right = 495.0
+offset_bottom = 386.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 20.0
+step = 0.01
+value = 3.0
+
+[node name="HSlider8" type="HSlider" parent="." unique_id=2128915415]
+layout_mode = 0
+offset_left = 317.0
+offset_top = 408.0
+offset_right = 496.0
+offset_bottom = 424.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 25.0
+step = 0.01
+value = 4.5
+
+[node name="HSlider9" type="HSlider" parent="." unique_id=480501886]
+layout_mode = 0
+offset_left = 306.0
+offset_top = 445.0
+offset_right = 497.0
+offset_bottom = 461.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 2.0
+step = 0.01
+value = 0.45
+
+[node name="HSlider10" type="HSlider" parent="." unique_id=1656615320]
+layout_mode = 0
+offset_left = 312.0
+offset_top = 483.0
+offset_right = 495.0
+offset_bottom = 499.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 2.0
+step = 0.01
+value = 0.2
+
+[node name="HSlider11" type="HSlider" parent="." unique_id=1230046792]
+layout_mode = 0
+offset_left = 305.0
+offset_top = 521.0
+offset_right = 498.0
+offset_bottom = 537.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 60.0
+step = 0.01
+value = 8.0
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="." unique_id=1940814072]
+layout_mode = 0
+offset_left = 585.0
+offset_top = 137.0
+offset_right = 1129.0
+offset_bottom = 508.0
+theme_override_constants/separation = 5
+
+[node name="Label4" type="Label" parent="VBoxContainer3" unique_id=1621911645]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Hover Height (0.0 - 20.0)"
+
+[node name="Label5" type="Label" parent="VBoxContainer3" unique_id=260247842]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Height Strength (0.0 - 80.0)"
+
+[node name="Label6" type="Label" parent="VBoxContainer3" unique_id=2114645665]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Height Damping (0.0 - 40.0)"
+
+[node name="Label7" type="Label" parent="VBoxContainer3" unique_id=34737914]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Climb Rate (0.0 - 20.0)"
+
+[node name="Label8" type="Label" parent="VBoxContainer3" unique_id=2102089695]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Climb Target Offset (0.0 - 20.0)"
+
+[node name="Label9" type="Label" parent="VBoxContainer3" unique_id=2108759917]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Max Hover Height (0.0 - 40.0)"
+
+[node name="Label10" type="Label" parent="VBoxContainer3" unique_id=1346107226]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Descend Rate (0.0 - 20.0)"
+
+[node name="Label11" type="Label" parent="VBoxContainer3" unique_id=1475403632]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   High Return Rate (0.0 - 25.0)"
+
+[node name="Label12" type="Label" parent="VBoxContainer3" unique_id=2003928736]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Target Height Offset (-10.0 - 10.0)"
+
+[node name="Label13" type="Label" parent="VBoxContainer3" unique_id=1354982904]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_aiu68")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_a25oo")
+text = "   Final Vertical Reach Radius (0.0 - 5.0)"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="." unique_id=398546263]
+layout_mode = 0
+offset_left = 1079.0
+offset_top = 136.0
+offset_right = 1115.0
+offset_bottom = 508.0
+
+[node name="Label5" type="Label" parent="VBoxContainer4" unique_id=1337127988]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label6" type="Label" parent="VBoxContainer4" unique_id=1980864871]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label7" type="Label" parent="VBoxContainer4" unique_id=445776743]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label8" type="Label" parent="VBoxContainer4" unique_id=1741379980]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label9" type="Label" parent="VBoxContainer4" unique_id=517989632]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label10" type="Label" parent="VBoxContainer4" unique_id=560592065]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label11" type="Label" parent="VBoxContainer4" unique_id=1594200656]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label12" type="Label" parent="VBoxContainer4" unique_id=2017861533]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label13" type="Label" parent="VBoxContainer4" unique_id=1521258927]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label14" type="Label" parent="VBoxContainer4" unique_id=1915784158]
+layout_mode = 2
+size_flags_vertical = 7
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSlider12" type="HSlider" parent="." unique_id=569850758]
+layout_mode = 0
+offset_left = 841.0
+offset_top = 144.0
+offset_right = 1065.0
+offset_bottom = 160.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 20.0
+step = 0.01
+value = 1.0
+
+[node name="HSlider13" type="HSlider" parent="." unique_id=39678802]
+layout_mode = 0
+offset_left = 862.0
+offset_top = 181.0
+offset_right = 1066.0
+offset_bottom = 197.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 80.0
+step = 0.01
+value = 15.0
+
+[node name="HSlider14" type="HSlider" parent="." unique_id=1384719819]
+layout_mode = 0
+offset_left = 867.0
+offset_top = 219.0
+offset_right = 1064.0
+offset_bottom = 235.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 40.0
+step = 0.01
+value = 8.0
+
+[node name="HSlider15" type="HSlider" parent="." unique_id=2003356788]
+layout_mode = 0
+offset_left = 820.0
+offset_top = 256.0
+offset_right = 1064.0
+offset_bottom = 272.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 20.0
+step = 0.01
+value = 5.0
+
+[node name="HSlider16" type="HSlider" parent="." unique_id=851575939]
+layout_mode = 0
+offset_left = 897.0
+offset_top = 294.0
+offset_right = 1064.0
+offset_bottom = 310.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 20.0
+step = 0.01
+value = 4.0
+
+[node name="HSlider17" type="HSlider" parent="." unique_id=1050050679]
+layout_mode = 0
+offset_left = 882.0
+offset_top = 331.0
+offset_right = 1061.0
+offset_bottom = 347.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 40.0
+step = 0.01
+value = 8.0
+
+[node name="HSlider18" type="HSlider" parent="." unique_id=1424930596]
+layout_mode = 0
+offset_left = 846.0
+offset_top = 369.0
+offset_right = 1060.0
+offset_bottom = 385.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 20.0
+step = 0.01
+value = 4.0
+
+[node name="HSlider19" type="HSlider" parent="." unique_id=213009326]
+layout_mode = 0
+offset_left = 874.0
+offset_top = 406.0
+offset_right = 1061.0
+offset_bottom = 422.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 25.0
+step = 0.01
+value = 6.0
+
+[node name="HSlider20" type="HSlider" parent="." unique_id=439944925]
+layout_mode = 0
+offset_left = 923.0
+offset_top = 444.0
+offset_right = 1062.0
+offset_bottom = 460.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+min_value = -10.0
+max_value = 10.0
+step = 0.01
+value = -0.5
+
+[node name="HSlider21" type="HSlider" parent="." unique_id=723470553]
+layout_mode = 0
+offset_left = 956.0
+offset_top = 482.0
+offset_right = 1060.0
+offset_bottom = 498.0
+theme_override_constants/center_grabber = 1
+theme_override_styles/slider = SubResource("StyleBoxFlat_i7ewp")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_k6gqc")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_k6gqc")
+max_value = 5.0
+step = 0.01
+value = 0.35
+
+[node name="Button" type="Button" parent="." unique_id=1362781582]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 23.0
+offset_top = -90.0
+offset_right = 227.0
+offset_bottom = -14.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleBoxFlat_a25oo")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_fkkqj")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hk2e4")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vth66")
+text = "Exit"
+
+[node name="Button2" type="Button" parent="." unique_id=930761634]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 253.0
+offset_top = -90.0
+offset_right = 457.0
+offset_bottom = -14.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleBoxFlat_6jko3")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_bou7l")
+theme_override_styles/hover = SubResource("StyleBoxFlat_g3j1x")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_pdg78")
+text = "Reset"
+
+[node name="Button3" type="Button" parent="." unique_id=677119464]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -227.0
+offset_top = -90.0
+offset_right = -23.0
+offset_bottom = -14.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleBoxFlat_t6r5c")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_42y7u")
+theme_override_styles/hover = SubResource("StyleBoxFlat_cok1n")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vrgvq")
+text = "Next"
+
+[connection signal="value_changed" from="HSlider" to="." method="_on_tilt_speed_value_changed"]
+[connection signal="value_changed" from="HSlider2" to="." method="_on_min_thrust_value_changed"]
+[connection signal="value_changed" from="HSlider3" to="." method="_on_max_thrust_value_changed"]
+[connection signal="value_changed" from="HSlider4" to="." method="_on_max_forward_tilt_value_changed"]
+[connection signal="value_changed" from="HSlider5" to="." method="_on_max_side_tilt_value_changed"]
+[connection signal="value_changed" from="HSlider6" to="." method="_on_cruise_tilt_value_changed"]
+[connection signal="value_changed" from="HSlider7" to="." method="_on_yaw_speed_value_changed"]
+[connection signal="value_changed" from="HSlider8" to="." method="_on_settle_yaw_speed_value_changed"]
+[connection signal="value_changed" from="HSlider9" to="." method="_on_settle_pitch_scale_value_changed"]
+[connection signal="value_changed" from="HSlider10" to="." method="_on_settle_avoid_scale_value_changed"]
+[connection signal="value_changed" from="HSlider11" to="." method="_on_brake_strength_value_changed"]
+[connection signal="value_changed" from="HSlider12" to="." method="_on_hover_height_value_changed"]
+[connection signal="value_changed" from="HSlider13" to="." method="_on_height_strength_value_changed"]
+[connection signal="value_changed" from="HSlider14" to="." method="_on_height_damping_value_changed"]
+[connection signal="value_changed" from="HSlider15" to="." method="_on_climb_rate_value_changed"]
+[connection signal="value_changed" from="HSlider16" to="." method="_on_climb_target_offset_value_changed"]
+[connection signal="value_changed" from="HSlider17" to="." method="_on_max_hover_height_value_changed"]
+[connection signal="value_changed" from="HSlider18" to="." method="_on_descend_rate_value_changed"]
+[connection signal="value_changed" from="HSlider19" to="." method="_on_high_return_rate_value_changed"]
+[connection signal="value_changed" from="HSlider20" to="." method="_on_target_height_offset_value_changed"]
+[connection signal="value_changed" from="HSlider21" to="." method="_on_final_vertical_reach_radius_value_changed"]
+[connection signal="pressed" from="Button" to="." method="_on_exit_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="Button3" to="." method="_on_next_pressed"]
