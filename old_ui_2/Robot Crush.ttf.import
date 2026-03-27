@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://dn0y4mgxjrhu"
-path="res://.godot/imported/Robot Crush.ttf-638a1a988c0773f648ef9e74e2ef5c68.fontdata"
+path="res://.godot/imported/Robot Crush.ttf-7ca1fff3fff81bc5e32d9c637e7af158.fontdata"
 
 [deps]
 
-source_file="res://ui/Robot Crush.ttf"
-dest_files=["res://.godot/imported/Robot Crush.ttf-638a1a988c0773f648ef9e74e2ef5c68.fontdata"]
+source_file="res://old_ui_2/Robot Crush.ttf"
+dest_files=["res://.godot/imported/Robot Crush.ttf-7ca1fff3fff81bc5e32d9c637e7af158.fontdata"]
 
 [params]
 

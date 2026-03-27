@@ -29,6 +29,8 @@ func load_levels_from_dir(path: String):
 
 var selected_level: int = 0
 
+var mode: int = 0
+
 var vision_enabled: bool = true
 var lidar_enabled: bool = true
 

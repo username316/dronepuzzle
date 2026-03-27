@@ -66,6 +66,7 @@ func _on_next_pressed() -> void:
 	Global.caution = caution
 	Global.climbBias = climbBias
 	Global.precision = precision
+	Global.mode = 0
 	
 	Global.change_scene_to_path("res://ui/AdvancedPartsMenu.tscn")
 

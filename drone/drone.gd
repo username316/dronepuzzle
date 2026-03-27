@@ -303,88 +303,169 @@ func _ready() -> void:
 	vision_enabled = Global.vision_enabled
 	lidar_enabled = Global.lidar_enabled
 	
-	#speed = Global.speed
-	#handling = Global.handling
-	#caution = Global.caution
-	#climb_bias = Global.climbBias
-	#precision = Global.precision
-	
-	#Advanced parts menu (1)
-	#Movement
-	tilt_speed = Global.tiltSpeed
-	min_thrust = Global.minThrust
-	max_thrust = Global.maxThrust
-	max_forward_tilt = Global.maxForwardTilt
-	max_side_tilt = Global.maxSideTilt
-	cruise_tilt = Global.cruiseTilt
-	yaw_speed = Global.yawSpeed
-	settle_yaw_speed = Global.settleYawSpeed
-	settle_pitch_scale = Global.settlePitchScale
-	settle_avoid_scale = Global.settleAvoidScale
-	brake_strength = Global.brakeStrength
-	
-	#Hover/Vertical Control
-	hover_height = Global.hoverHeight
-	height_strength = Global.heightStrength
-	height_damping = Global.heightDamping
-	climb_rate = Global.climbRate
-	climb_target_offset = Global.climbTargetOffset
-	max_hover_height = Global.maxHoverHeight
-	descend_rate = Global.descendRate
-	high_return_rate = Global.highReturnRate
-	target_height_offset = Global.targetHeightOffset
-	final_vertical_reach_radius = Global.finalVerticalReachRadius
-	
-	#(2)
-	#Arrival/Precision
-	arrive_radius = Global.arriveRadius
-	settle_radius = Global.settleRadius
-	stop_radius = Global.stopRadius
-	vertical_stop_radius = Global.verticalStopRadius
-	hold_kp = Global.holdKP
-	hold_kd = Global.holdKD
-	max_hold_force = Global.maxHoldForce
-	reached_level_speed = Global.reachedLevelSpeed
-	reached_stop_speed = Global.reachedStopSpeed
+	if Global.mode == 0:
+		
+		#speed conversions
+		var s := simple_to_signed(Global.speed)
 
-	#Avoidance
-	avoid_force = Global.avoidForce
-	backoff_force = Global.backoffForce
-	forward_brake_gain = Global.forwardBrakeGain
-	brake_dist = Global.brakeDist
-	no_forward_dist = Global.noForwardDist
-	reverse_dist = Global.reverseDist
-	avoid_bank = Global.avoidBank
-	avoid_yaw_speed = Global.avoidYawSpeed
-	side_trigger_dist = Global.sideTriggerDist
-	side_push_force = Global.sidePushForce
-	rear_trigger_dist = Global.rearTriggerDist
-	rear_push_force = Global.rearPushForce
-	
-	#(3)
-	#Planner
-	planner_progress_weight = Global.plannerProgressWeight
-	planner_clearance_weight = Global.plannerClearanceWeight
-	planner_climb_weight = Global.plannerClimbWeight
-	planner_direction_smooth = Global.plannerDirectionSmooth
-	planner_upward_gain = Global.plannerUpwardGain
-	planner_forward_gain = Global.plannerForwardGain
-	planner_blocked_penalty_gain = Global.plannerBlockedPenaltyGain
-	planner_centering_weight = Global.plannerCenteringWeight
-	planner_min_margin_weight = Global.plannerMinMarginWeight
-	planner_vertical_balance_weight = Global.plannerVerticalBalanceWeight
-	planner_lateral_balance_weight = Global.plannerLateralBalanceWeight
-	planner_vertical_safe_distance = Global.plannerVerticalSafeDistance
-	planner_body_margin = Global.plannerBodyMargin
-	planner_lookahead_time = Global.plannerLookaheadTime
+		max_forward_tilt      = clamp(0.25 + 0.12 * s, 0.0, 1.2)
+		cruise_tilt           = clamp(0.12 + 0.08 * s, 0.0, 1.0)
+		planner_progress_weight = clamp(2.8 + 1.8 * s, -2.0, 10.0)
+		planner_forward_gain  = clamp(1.6 + 0.9 * s, -2.0, 5.0)
+		max_thrust            = clamp(60.0 + 10.0 * s, 0.0, 200.0)
+		
+		
+		#handling conversions
+		var h := simple_to_signed(Global.handling)
 
-	#Sensors
-	lidar_trigger_dist = Global.lidarTriggerDist
-	lidar_clear_dist = Global.lidarClearDist
-	lidar_min_avoid_time = Global.lidarMinAvoidTime
-	lidar_dir_deadband = Global.lidarDirDeadband
-	lidar_smooth = Global.lidarSmooth
-	lidar_trigger_hold_time = Global.lidarTriggerHoldTime
+		tilt_speed            = clamp(3.0 + 2.5 * h, 0.0, 20.0)
+		yaw_speed             = clamp(3.0 + 2.0 * h, 0.0, 20.0)
+		settle_yaw_speed      = clamp(4.5 + 2.5 * h, 0.0, 25.0)
+		max_side_tilt         = clamp(0.25 + 0.12 * h, 0.0, 1.2)
+		planner_direction_smooth = clamp(0.28 - 0.14 * h, 0.0, 2.0)
+		
+		
+		#caution conversions
+		var c := simple_to_signed(Global.caution)
+
+		planner_clearance_weight   = clamp(2.6 + 1.6 * c, -2.0, 10.0)
+		planner_min_margin_weight  = clamp(2.8 + 1.8 * c, -2.0, 10.0)
+
+		lidar_trigger_dist         = clamp(9.0 + 4.0 * c, 0.0, 40.0)
+		lidar_clear_dist           = clamp(11.0 + 5.0 * c, 0.0, 50.0)
+
+		avoid_force                = clamp(18.0 + 10.0 * c, 0.0, 100.0)
+		forward_brake_gain         = clamp(22.0 + 12.0 * c, 0.0, 120.0)
+		backoff_force              = clamp(18.0 + 8.0 * c, 0.0, 100.0)
+
+		brake_dist                 = clamp(2.2 + 1.0 * c, 0.0, 10.0)
+		no_forward_dist            = clamp(1.8 + 0.8 * c, 0.0, 10.0)
+
+		side_push_force            = clamp(16.0 + 8.0 * c, 0.0, 100.0)
+		rear_push_force            = clamp(12.0 + 6.0 * c, 0.0, 100.0)
+		
+		
+		#Climb bias simple conversions
+		var cb := simple_to_signed(Global.climbBias)
+
+		climb_target_offset        = clamp(4.0 + 3.0 * cb, 0.0, 20.0)
+		climb_rate                 = clamp(5.0 + 2.5 * cb, 0.0, 20.0)
+		descend_rate               = clamp(4.0 - 1.5 * cb, 0.0, 20.0)
+		max_hover_height           = clamp(8.0 + 4.0 * cb, 0.0, 40.0)
+
+		planner_climb_weight       = clamp(0.05 + 0.55 * cb, -2.0, 5.0)
+		planner_upward_gain        = clamp(0.65 + 0.60 * cb, -2.0, 5.0)
+
+		climb_clear_dist           = clamp(5.0 + 1.8 * cb, 0.0, 20.0)
+		
+		
+		#Simple Menu precision conversions
+		var p := simple_to_signed(Global.precision)
+
+		arrive_radius              = clamp(8.0 - 3.0 * p, 0.0, 40.0)
+		settle_radius              = clamp(5.0 - 1.8 * p, 0.0, 30.0)
+		stop_radius                = clamp(2.8 - 1.0 * p, 0.0, 15.0)
+		final_vertical_reach_radius = clamp(0.35 - 0.12 * p, 0.0, 5.0)
+
+		hold_kp                    = clamp(10.0 + 5.0 * p, 0.0, 100.0)
+		hold_kd                    = clamp(6.0 + 3.0 * p, 0.0, 60.0)
+		max_hold_force             = clamp(40.0 + 18.0 * p, 0.0, 250.0)
+
+		reached_level_speed        = clamp(12.0 + 4.0 * p, 0.0, 60.0)
+		reached_stop_speed         = clamp(12.0 + 4.0 * p, 0.0, 60.0)
+		
+		
+		#brakes affected by multiple values
+		brake_strength = clamp(
+			8.0
+			- 2.0 * s      # more speed = less braking
+			+ 2.5 * c      # more caution = more braking
+			+ 3.0 * p,     # more precision = more braking
+			0.0,
+			60.0
+		)
+		#handling = Global.handling
+		#caution = Global.caution
+		#climb_bias = Global.climbBias
+		#precision = Global.precision
+	
+	if Global.mode == 1:
+		#Advanced parts menu (1)
+		#Movement
+		tilt_speed = Global.tiltSpeed
+		min_thrust = Global.minThrust
+		max_thrust = Global.maxThrust
+		max_forward_tilt = Global.maxForwardTilt
+		max_side_tilt = Global.maxSideTilt
+		cruise_tilt = Global.cruiseTilt
+		yaw_speed = Global.yawSpeed
+		settle_yaw_speed = Global.settleYawSpeed
+		settle_pitch_scale = Global.settlePitchScale
+		settle_avoid_scale = Global.settleAvoidScale
+		brake_strength = Global.brakeStrength
+		
+		#Hover/Vertical Control
+		hover_height = Global.hoverHeight
+		height_strength = Global.heightStrength
+		height_damping = Global.heightDamping
+		climb_rate = Global.climbRate
+		climb_target_offset = Global.climbTargetOffset
+		max_hover_height = Global.maxHoverHeight
+		descend_rate = Global.descendRate
+		high_return_rate = Global.highReturnRate
+		target_height_offset = Global.targetHeightOffset
+		final_vertical_reach_radius = Global.finalVerticalReachRadius
+		
+		#(2)
+		#Arrival/Precision
+		arrive_radius = Global.arriveRadius
+		settle_radius = Global.settleRadius
+		stop_radius = Global.stopRadius
+		vertical_stop_radius = Global.verticalStopRadius
+		hold_kp = Global.holdKP
+		hold_kd = Global.holdKD
+		max_hold_force = Global.maxHoldForce
+		reached_level_speed = Global.reachedLevelSpeed
+		reached_stop_speed = Global.reachedStopSpeed
+
+		#Avoidance
+		avoid_force = Global.avoidForce
+		backoff_force = Global.backoffForce
+		forward_brake_gain = Global.forwardBrakeGain
+		brake_dist = Global.brakeDist
+		no_forward_dist = Global.noForwardDist
+		reverse_dist = Global.reverseDist
+		avoid_bank = Global.avoidBank
+		avoid_yaw_speed = Global.avoidYawSpeed
+		side_trigger_dist = Global.sideTriggerDist
+		side_push_force = Global.sidePushForce
+		rear_trigger_dist = Global.rearTriggerDist
+		rear_push_force = Global.rearPushForce
+		
+		#(3)
+		#Planner
+		planner_progress_weight = Global.plannerProgressWeight
+		planner_clearance_weight = Global.plannerClearanceWeight
+		planner_climb_weight = Global.plannerClimbWeight
+		planner_direction_smooth = Global.plannerDirectionSmooth
+		planner_upward_gain = Global.plannerUpwardGain
+		planner_forward_gain = Global.plannerForwardGain
+		planner_blocked_penalty_gain = Global.plannerBlockedPenaltyGain
+		planner_centering_weight = Global.plannerCenteringWeight
+		planner_min_margin_weight = Global.plannerMinMarginWeight
+		planner_vertical_balance_weight = Global.plannerVerticalBalanceWeight
+		planner_lateral_balance_weight = Global.plannerLateralBalanceWeight
+		planner_vertical_safe_distance = Global.plannerVerticalSafeDistance
+		planner_body_margin = Global.plannerBodyMargin
+		planner_lookahead_time = Global.plannerLookaheadTime
+
+		#Sensors
+		lidar_trigger_dist = Global.lidarTriggerDist
+		lidar_clear_dist = Global.lidarClearDist
+		lidar_min_avoid_time = Global.lidarMinAvoidTime
+		lidar_dir_deadband = Global.lidarDirDeadband
+		lidar_smooth = Global.lidarSmooth
+		lidar_trigger_hold_time = Global.lidarTriggerHoldTime
 	
 	if target != null:
 		target_position = target.global_position
@@ -424,6 +505,9 @@ func _ready() -> void:
 
 func get_target_hover_y() -> float:
 	return clamp(target_position.y + target_height_offset, hover_height - 1.0, max_hover_height)
+
+func simple_to_signed(v: float) -> float:
+	return clamp(v, 0.0, 1.0) * 2.0 - 1.0
 
 func _physics_process(delta: float) -> void:
 	if planner_camera != null:
