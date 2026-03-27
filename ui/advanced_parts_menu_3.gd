@@ -268,3 +268,6 @@ func _on_start_level_pressed() -> void:
 
 	elif Global.selected_level == 3:
 		Global.change_scene_to_path("res://levels/Level3.tscn")
+
+func _on_back_pressed() -> void:
+	Global.change_scene_to_path("res://ui/AdvancedPartsMenu2.tscn")

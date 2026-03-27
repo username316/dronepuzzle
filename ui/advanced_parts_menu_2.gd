@@ -257,3 +257,6 @@ func _on_next_pressed() -> void:
 	Global.rearPushForce = rearPushForce
 
 	Global.change_scene_to_path("res://ui/AdvancedPartsMenu3.tscn")
+
+func _on_back_pressed() -> void:
+	Global.change_scene_to_path("res://ui/AdvancedPartsMenu.tscn")

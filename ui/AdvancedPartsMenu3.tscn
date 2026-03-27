@@ -154,6 +154,35 @@ shadow_offset = Vector2(0, 3.41)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qwxvy"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_recft"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xuvsf"]
+bg_color = Color(0.63529414, 0.63529414, 0.63529414, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jw7tg"]
+bg_color = Color(0.8235294, 0.8235294, 0.8235294, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_size = 5
+shadow_offset = Vector2(0, 3.41)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vgjpk"]
+
 [node name="AdvancedPartsMenu3" type="Control" unique_id=1293779404]
 layout_mode = 3
 anchors_preset = 15
@@ -928,7 +957,7 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -219.0
-offset_top = -193.0
+offset_top = -100.0
 offset_right = -15.0
 offset_bottom = -24.0
 grow_horizontal = 0
@@ -943,6 +972,27 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_iupwu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_olpsw")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_qwxvy")
 text = "Start level"
+
+[node name="Button4" type="Button" parent="." unique_id=871902707 groups=["buttons"]]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 933.0
+offset_top = -193.0
+offset_right = 1137.0
+offset_bottom = -117.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 27
+theme_override_styles/normal = SubResource("StyleBoxFlat_recft")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_xuvsf")
+theme_override_styles/hover = SubResource("StyleBoxFlat_jw7tg")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vgjpk")
+text = "Back"
 
 [connection signal="value_changed" from="HSlider" to="." method="_on_planner_progress_weight_value_changed"]
 [connection signal="value_changed" from="HSlider2" to="." method="_on_planner_clearance_weight_value_changed"]
@@ -967,3 +1017,4 @@ text = "Start level"
 [connection signal="pressed" from="Button" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_reset_pressed"]
 [connection signal="pressed" from="Button3" to="." method="_on_start_level_pressed"]
+[connection signal="pressed" from="Button4" to="." method="_on_back_pressed"]
