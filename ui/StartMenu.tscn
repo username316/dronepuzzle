@@ -143,18 +143,18 @@ horizontal_alignment = 1
 
 [node name="Panel2" type="Panel" parent="." unique_id=308261896]
 layout_mode = 0
-offset_left = 15.0
-offset_top = 193.0
-offset_right = 426.0
-offset_bottom = 458.0
+offset_left = 22.0
+offset_top = 151.0
+offset_right = 433.0
+offset_bottom = 416.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_8mr4u")
 
 [node name="Panel3" type="Panel" parent="." unique_id=1778021716]
 layout_mode = 0
-offset_left = 726.0
-offset_top = 193.0
-offset_right = 1137.0
-offset_bottom = 458.0
+offset_left = 719.0
+offset_top = 151.0
+offset_right = 1130.0
+offset_bottom = 416.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_cu6oi")
 
 [connection signal="pressed" from="VBoxContainer/Button" to="." method="_on_start_pressed"]
