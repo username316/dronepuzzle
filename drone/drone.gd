@@ -298,6 +298,17 @@ var stuck_timer: float = 0.0
 var stuck_recover_timer: float = 0.0
 var last_target_dist: float = 0.0
 
+
+func simple_to_signed(v: float) -> float:
+	return clamp(v, 0.0, 1.0) * 2.0 - 1.0
+
+func map_simple(v: float, min_safe: float, default_value: float, max_value: float) -> float:
+	v = clamp(v, 0.0, 1.0)
+	if v < 0.5:
+		return lerpf(min_safe, default_value, v / 0.5)
+	else:
+		return lerpf(default_value, max_value, (v - 0.5) / 0.5)
+
 func _ready() -> void:
 	#Basic parts menu
 	vision_enabled = Global.vision_enabled
@@ -305,89 +316,101 @@ func _ready() -> void:
 	
 	if Global.mode == 0:
 		
-		#speed conversions
-		var s := simple_to_signed(Global.speed)
-
-		max_forward_tilt      = clamp(0.25 + 0.12 * s, 0.0, 1.2)
-		cruise_tilt           = clamp(0.12 + 0.08 * s, 0.0, 1.0)
-		planner_progress_weight = clamp(2.8 + 1.8 * s, -2.0, 10.0)
-		planner_forward_gain  = clamp(1.6 + 0.9 * s, -2.0, 5.0)
-		max_thrust            = clamp(60.0 + 10.0 * s, 0.0, 200.0)
 		
+		#Slider cleanup
+		var s : float = clamp(Global.speed, 0.0, 1.0)
+		var h : float = clamp(Global.handling, 0.0, 1.0)
+		var c : float = clamp(Global.caution, 0.0, 1.0)
+		var cb : float = clamp(Global.climbBias, 0.0, 1.0)
+		var p : float = clamp(Global.precision, 0.0, 1.0)
 		
-		#handling conversions
-		var h := simple_to_signed(Global.handling)
+		#Signed varibles for brake strenth
+		var s_signed := simple_to_signed(s)
+		var c_signed := simple_to_signed(c)
+		var p_signed := simple_to_signed(p)
 
-		tilt_speed            = clamp(3.0 + 2.5 * h, 0.0, 20.0)
-		yaw_speed             = clamp(3.0 + 2.0 * h, 0.0, 20.0)
-		settle_yaw_speed      = clamp(4.5 + 2.5 * h, 0.0, 25.0)
-		max_side_tilt         = clamp(0.25 + 0.12 * h, 0.0, 1.2)
-		planner_direction_smooth = clamp(0.28 - 0.14 * h, 0.0, 2.0)
-		
-		
-		#caution conversions
-		var c := simple_to_signed(Global.caution)
+		# -----------------------
+		# Speed
+		# -----------------------
+		max_forward_tilt = map_simple(s, 0.08, 0.25, 0.60)
+		cruise_tilt = map_simple(s, 0.04, 0.12, 0.28)
+		planner_progress_weight = map_simple(s, 0.50, 2.80, 5.00)
+		planner_forward_gain = map_simple(s, 0.30, 1.60, 3.00)
 
-		planner_clearance_weight   = clamp(2.6 + 1.6 * c, -2.0, 10.0)
-		planner_min_margin_weight  = clamp(2.8 + 1.8 * c, -2.0, 10.0)
+		# -----------------------
+		# Handling
+		# -----------------------
+		tilt_speed = map_simple(h, 0.60, 3.00, 8.00)
+		yaw_speed = map_simple(h, 0.60, 3.00, 8.00)
+		settle_yaw_speed = map_simple(h, 0.80, 4.50, 10.00)
+		max_side_tilt = map_simple(h, 0.05, 0.25, 0.55)
 
-		lidar_trigger_dist         = clamp(9.0 + 4.0 * c, 0.0, 40.0)
-		lidar_clear_dist           = clamp(11.0 + 5.0 * c, 0.0, 50.0)
+		# Higher handling = lower smoothing = snappier planner direction changes
+		planner_direction_smooth = map_simple(1.0 - h, 0.05, 0.28, 0.75)
 
-		avoid_force                = clamp(18.0 + 10.0 * c, 0.0, 100.0)
-		forward_brake_gain         = clamp(22.0 + 12.0 * c, 0.0, 120.0)
-		backoff_force              = clamp(18.0 + 8.0 * c, 0.0, 100.0)
+		# -----------------------
+		# Caution
+		# -----------------------
+		planner_clearance_weight = map_simple(c, 0.20, 2.60, 6.00)
+		planner_min_margin_weight = map_simple(c, 0.20, 2.80, 6.00)
 
-		brake_dist                 = clamp(2.2 + 1.0 * c, 0.0, 10.0)
-		no_forward_dist            = clamp(1.8 + 0.8 * c, 0.0, 10.0)
+		lidar_trigger_dist = map_simple(c, 1.00, 9.00, 18.00)
+		lidar_clear_dist = map_simple(c, 1.50, 11.00, 22.00)
 
-		side_push_force            = clamp(16.0 + 8.0 * c, 0.0, 100.0)
-		rear_push_force            = clamp(12.0 + 6.0 * c, 0.0, 100.0)
-		
-		
-		#Climb bias simple conversions
-		var cb := simple_to_signed(Global.climbBias)
+		avoid_force = map_simple(c, 0.00, 18.00, 45.00)
+		forward_brake_gain = map_simple(c, 0.00, 22.00, 50.00)
+		backoff_force = map_simple(c, 0.00, 18.00, 40.00)
 
-		climb_target_offset        = clamp(4.0 + 3.0 * cb, 0.0, 20.0)
-		climb_rate                 = clamp(5.0 + 2.5 * cb, 0.0, 20.0)
-		descend_rate               = clamp(4.0 - 1.5 * cb, 0.0, 20.0)
-		max_hover_height           = clamp(8.0 + 4.0 * cb, 0.0, 40.0)
+		brake_dist = map_simple(c, 0.20, 2.20, 4.50)
+		no_forward_dist = map_simple(c, 0.20, 1.80, 4.00)
 
-		planner_climb_weight       = clamp(0.05 + 0.55 * cb, -2.0, 5.0)
-		planner_upward_gain        = clamp(0.65 + 0.60 * cb, -2.0, 5.0)
+		side_push_force = map_simple(c, 0.00, 16.00, 35.00)
+		rear_push_force = map_simple(c, 0.00, 12.00, 28.00)
 
-		climb_clear_dist           = clamp(5.0 + 1.8 * cb, 0.0, 20.0)
-		
-		
-		#Simple Menu precision conversions
-		var p := simple_to_signed(Global.precision)
+		# -----------------------
+		# Climb Bias
+		# -----------------------
+		climb_target_offset = map_simple(cb, 0.00, 4.00, 10.00)
+		climb_rate = map_simple(cb, 0.80, 5.00, 12.00)
 
-		arrive_radius              = clamp(8.0 - 3.0 * p, 0.0, 40.0)
-		settle_radius              = clamp(5.0 - 1.8 * p, 0.0, 30.0)
-		stop_radius                = clamp(2.8 - 1.0 * p, 0.0, 15.0)
-		final_vertical_reach_radius = clamp(0.35 - 0.12 * p, 0.0, 5.0)
+		# Higher climb bias = slower descent / less eager to drop
+		descend_rate = map_simple(1.0 - cb, 0.80, 4.00, 10.00)
 
-		hold_kp                    = clamp(10.0 + 5.0 * p, 0.0, 100.0)
-		hold_kd                    = clamp(6.0 + 3.0 * p, 0.0, 60.0)
-		max_hold_force             = clamp(40.0 + 18.0 * p, 0.0, 250.0)
+		max_hover_height = map_simple(cb, 2.00, 8.00, 16.00)
+		planner_climb_weight = map_simple(cb, 0.00, 0.05, 1.00)
+		planner_upward_gain = map_simple(cb, 0.00, 0.65, 2.00)
+		climb_clear_dist = map_simple(cb, 1.00, 5.00, 10.00)
 
-		reached_level_speed        = clamp(12.0 + 4.0 * p, 0.0, 60.0)
-		reached_stop_speed         = clamp(12.0 + 4.0 * p, 0.0, 60.0)
-		
-		
-		#brakes affected by multiple values
+		# -----------------------
+		# Precision
+		# -----------------------
+		# Higher precision = smaller radii, stronger hold, sharper stopping
+		arrive_radius = map_simple(1.0 - p, 1.00, 8.00, 16.00)
+		settle_radius = map_simple(1.0 - p, 0.50, 5.00, 10.00)
+		stop_radius = map_simple(1.0 - p, 0.30, 2.80, 6.00)
+		final_vertical_reach_radius = map_simple(1.0 - p, 0.05, 0.35, 1.00)
+
+		hold_kp = map_simple(p, 0.00, 10.00, 22.00)
+		hold_kd = map_simple(p, 0.00, 6.00, 14.00)
+		max_hold_force = map_simple(p, 0.00, 40.00, 90.00)
+
+		reached_level_speed = map_simple(p, 1.00, 12.00, 25.00)
+		reached_stop_speed = map_simple(p, 1.00, 12.00, 25.00)
+
+		# -----------------------
+		# Shared braking
+		# -----------------------
+		# More speed = less brake
+		# More caution = more brake
+		# More precision = more brake
 		brake_strength = clamp(
 			8.0
-			- 2.0 * s      # more speed = less braking
-			+ 2.5 * c      # more caution = more braking
-			+ 3.0 * p,     # more precision = more braking
-			0.0,
-			60.0
+			- 2.0 * s_signed
+			+ 2.5 * c_signed
+			+ 3.0 * p_signed,
+			0.5,
+			30.0
 		)
-		#handling = Global.handling
-		#caution = Global.caution
-		#climb_bias = Global.climbBias
-		#precision = Global.precision
 	
 	if Global.mode == 1:
 		#Advanced parts menu (1)
@@ -506,8 +529,6 @@ func _ready() -> void:
 func get_target_hover_y() -> float:
 	return clamp(target_position.y + target_height_offset, hover_height - 1.0, max_hover_height)
 
-func simple_to_signed(v: float) -> float:
-	return clamp(v, 0.0, 1.0) * 2.0 - 1.0
 
 func _physics_process(delta: float) -> void:
 	if planner_camera != null:
