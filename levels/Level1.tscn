@@ -13,7 +13,7 @@ refresh_level = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 15)
 
 [node name="Target" parent="." index="7"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0292425, 1.41532, -19.9666)
+transform = Transform3D(0.86, 0, 0, 0, 0.86, 0, 0, 0, 0.86, -0.0292425, 1.41532, -19.9666)
 
 [node name="TextureRect" parent="LevelUI/CameraVeiwer" index="0"]
 texture = SubResource("ViewportTexture_32mhh")

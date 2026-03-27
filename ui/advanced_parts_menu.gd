@@ -266,4 +266,6 @@ func _on_next_pressed() -> void:
 	Global.change_scene_to_path("res://ui/AdvancedPartsMenu2.tscn")
 
 func _on_back_pressed() -> void:
+	Global.mode = 0
 	Global.change_scene_to_path("res://ui/PartsMenu.tscn")
+	

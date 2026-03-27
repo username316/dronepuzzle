@@ -918,7 +918,7 @@ transform = Transform3D(0.00839067, 0, -0.960482, 0, 0.960519, 0, 0.960482, 0, 0
 transform = Transform3D(-0.605314, 0, 0.95155, 0, 1.12776, 0, -0.95155, 0, -0.605314, 63.9272, -1.19867, -96.7544)
 
 [node name="Target" parent="." index="7"]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 87.7345, 1.33189, 72.2515)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 87.7345, 3.21344, 72.2515)
 
 [node name="TextureRect" parent="LevelUI/CameraVeiwer" index="0"]
 texture = SubResource("ViewportTexture_11ac5")

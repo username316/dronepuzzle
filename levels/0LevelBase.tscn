@@ -28,7 +28,7 @@ volumetric_fog_density = 1.0
 volumetric_fog_ambient_inject = 16.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_4eioo"]
-radius = 1.18776
+radius = 1.86494
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_errhk"]
 

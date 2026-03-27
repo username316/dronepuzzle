@@ -103,8 +103,8 @@ func _on_start_level_pressed() -> void:
 	Global.caution = caution
 	Global.climbBias = climbBias
 	Global.precision = precision
-	Global.mode = 0
 	
+
 	if Global.selected_level == 1:
 		Global.change_scene_to_path("res://levels/Level1.tscn")
 
