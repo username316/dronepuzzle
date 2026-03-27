@@ -36,7 +36,6 @@ radius = 1.18776
 script = ExtResource("1_djagn")
 
 [node name="Drone" parent="." node_paths=PackedStringArray("target") instance=ExtResource("2_4eioo")]
-collision_mask = 3
 can_sleep = false
 freeze_mode = 1
 custom_integrator = false

@@ -54,7 +54,7 @@ func get_mouse_dir(x, y):
 		return Vector2(0, 0)
 
 func _on_target_body_entered(body: Node3D) -> void:
-	if body.name == "drone":
+	if body.name == "Drone":
 		stopwatch.stop()
 		level_complete_menu.complete_level(stopwatch.time_elapsed)
 	

@@ -63,3 +63,4 @@ func _on_next_pressed() -> void:
 	Global.lidarStopRange = lidarStopRange
 	Global.tiltSpeed = tiltSpeed
 	Global.change_scene_to_path("res://ui/LevelsMenu.tscn")
+	

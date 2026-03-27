@@ -15,9 +15,9 @@ signal send_message(msg: String)
 
 @export var target: Area3D
 @export var arrive_radius: float = 8.0
-@export var settle_radius: float = 5.0
-@export var stop_radius: float = 2.8
-@export var vertical_stop_radius: float = 1.5
+@export var settle_radius: float = 3.0
+@export var stop_radius: float = 1.0
+@export var vertical_stop_radius: float = .7
 
 @export var max_forward_tilt: float = 0.25
 @export var max_side_tilt: float = 0.25
