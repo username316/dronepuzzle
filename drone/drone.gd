@@ -299,6 +299,7 @@ var stuck_recover_timer: float = 0.0
 var last_target_dist: float = 0.0
 
 func _ready() -> void:
+	#Basic parts menu
 	vision_enabled = Global.vision_enabled
 	lidar_enabled = Global.lidar_enabled
 	min_thrust = Global.minThrust
@@ -306,8 +307,83 @@ func _ready() -> void:
 	brake_strength = Global.brakeStrength
 	lidar_trigger_dist = Global.lidarStopRange
 	tilt_speed = Global.tiltSpeed
-	climb_commit_timer = 0.0
-	vision_scene_clutter = 0.0
+	
+	#Advanced parts menu (1)
+	#Movement
+	tilt_speed = Global.tiltSpeed
+	min_thrust = Global.minThrust
+	max_thrust = Global.maxThrust
+	max_forward_tilt = Global.maxForwardTilt
+	max_side_tilt = Global.maxSideTilt
+	cruise_tilt = Global.cruiseTilt
+	yaw_speed = Global.yawSpeed
+	settle_yaw_speed = Global.settleYawSpeed
+	settle_pitch_scale = Global.settlePitchScale
+	settle_avoid_scale = Global.settleAvoidScale
+	brake_strength = Global.brakeStrength
+	
+	#Hover/Vertical Control
+	hover_height = Global.hoverHeight
+	height_strength = Global.heightStrength
+	height_damping = Global.heightDamping
+	climb_rate = Global.climbRate
+	climb_target_offset = Global.climbTargetOffset
+	max_hover_height = Global.maxHoverHeight
+	descend_rate = Global.descendRate
+	high_return_rate = Global.highReturnRate
+	target_height_offset = Global.targetHeightOffset
+	final_vertical_reach_radius = Global.finalVerticalReachRadius
+	
+	#(2)
+	#Arrival/Precision
+	arrive_radius = Global.arriveRadius
+	settle_radius = Global.settleRadius
+	stop_radius = Global.stopRadius
+	vertical_stop_radius = Global.verticalStopRadius
+	hold_kp = Global.holdKP
+	hold_kd = Global.holdKD
+	max_hold_force = Global.maxHoldForce
+	reached_level_speed = Global.reachedLevelSpeed
+	reached_stop_speed = Global.reachedStopSpeed
+
+	#Avoidance
+	avoid_force = Global.avoidForce
+	backoff_force = Global.backoffForce
+	forward_brake_gain = Global.forwardBrakeGain
+	brake_dist = Global.brakeDist
+	no_forward_dist = Global.noForwardDist
+	reverse_dist = Global.reverseDist
+	avoid_bank = Global.avoidBank
+	avoid_yaw_speed = Global.avoidYawSpeed
+	side_trigger_dist = Global.sideTriggerDist
+	side_push_force = Global.sidePushForce
+	rear_trigger_dist = Global.rearTriggerDist
+	rear_push_force = Global.rearPushForce
+	
+	#(3)
+	#Planner
+	planner_progress_weight = Global.plannerProgressWeight
+	planner_clearance_weight = Global.plannerClearanceWeight
+	planner_climb_weight = Global.plannerClimbWeight
+	planner_direction_smooth = Global.plannerDirectionSmooth
+	planner_upward_gain = Global.plannerUpwardGain
+	planner_forward_gain = Global.plannerForwardGain
+	planner_blocked_penalty_gain = Global.plannerBlockedPenaltyGain
+	planner_centering_weight = Global.plannerCenteringWeight
+	planner_min_margin_weight = Global.plannerMinMarginWeight
+	planner_vertical_balance_weight = Global.plannerVerticalBalanceWeight
+	planner_lateral_balance_weight = Global.plannerLateralBalanceWeight
+	planner_vertical_safe_distance = Global.plannerVerticalSafeDistance
+	planner_body_margin = Global.plannerBodyMargin
+	planner_lookahead_time = Global.plannerLookaheadTime
+
+	#Sensors
+	lidar_trigger_dist = Global.lidarTriggerDist
+	lidar_clear_dist = Global.lidarClearDist
+	lidar_min_avoid_time = Global.lidarMinAvoidTime
+	lidar_dir_deadband = Global.lidarDirDeadband
+	lidar_smooth = Global.lidarSmooth
+	lidar_trigger_hold_time = Global.lidarTriggerHoldTime
 	
 	if target != null:
 		target_position = target.global_position
