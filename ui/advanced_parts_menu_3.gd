@@ -236,7 +236,7 @@ func _on_reset_pressed() -> void:
 	$VBoxContainer4/Label10.text = str($HSlider20.value)
 
 
-func _on_next_pressed() -> void:
+func _on_start_level_pressed() -> void:
 	Global.plannerProgressWeight = plannerProgressWeight
 	Global.plannerClearanceWeight = plannerClearanceWeight
 	Global.plannerClimbWeight = plannerClimbWeight

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bmqefhlaka8kk"]
 
-[ext_resource type="Texture2D" uid="uid://c3dait4iwtn1l" path="res://ui/gradient.png" id="1_j50kq"]
+[ext_resource type="Texture2D" uid="uid://c3dait4iwtn1l" path="res://old_ui_2/gradient.png" id="1_j50kq"]
 [ext_resource type="Script" uid="uid://nr58jlo1vra0" path="res://ui/advanced_parts_menu_2.gd" id="1_q8fgk"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q8fgk"]
@@ -896,7 +896,7 @@ theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Button" type="Button" parent="." unique_id=1651191162]
+[node name="Button" type="Button" parent="." unique_id=1651191162 groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -917,7 +917,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_50kum")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_17qcd")
 text = "Exit"
 
-[node name="Button2" type="Button" parent="." unique_id=324871833]
+[node name="Button2" type="Button" parent="." unique_id=324871833 groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -938,7 +938,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_i1ii6")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ubbi6")
 text = "Reset"
 
-[node name="Button3" type="Button" parent="." unique_id=1628472224]
+[node name="Button3" type="Button" parent="." unique_id=1628472224 groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0

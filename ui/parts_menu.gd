@@ -58,7 +58,7 @@ func _on_exit_pressed() -> void:
 	get_tree().quit()
 
 
-func _on_next_pressed() -> void:
+func _on_advanced_menu_pressed() -> void:
 	Global.vision_enabled = vision
 	Global.lidar_enabled = lidar
 	Global.speed = speed
@@ -66,7 +66,7 @@ func _on_next_pressed() -> void:
 	Global.caution = caution
 	Global.climbBias = climbBias
 	Global.precision = precision
-	Global.mode = 0
+	Global.mode = 1
 	
 	Global.change_scene_to_path("res://ui/AdvancedPartsMenu.tscn")
 
@@ -93,3 +93,23 @@ func _on_reset_pressed() -> void:
 	$Label9.text = str($HSlider3.value)
 	$Label11.text = str($HSlider4.value)
 	$Label13.text = str($HSlider5.value)
+
+
+func _on_start_level_pressed() -> void:
+	Global.vision_enabled = vision
+	Global.lidar_enabled = lidar
+	Global.speed = speed
+	Global.handling = handling
+	Global.caution = caution
+	Global.climbBias = climbBias
+	Global.precision = precision
+	Global.mode = 0
+	
+	if Global.selected_level == 1:
+		Global.change_scene_to_path("res://levels/Level1.tscn")
+
+	elif Global.selected_level == 2:
+		Global.change_scene_to_path("res://levels/Level2.tscn")
+
+	elif Global.selected_level == 3:
+		Global.change_scene_to_path("res://levels/Level3.tscn")

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bgadxyx2dnea"]
 
-[ext_resource type="Texture2D" uid="uid://c3dait4iwtn1l" path="res://ui/gradient.png" id="1_1b68p"]
+[ext_resource type="Texture2D" uid="uid://c3dait4iwtn1l" path="res://old_ui_2/gradient.png" id="1_1b68p"]
 [ext_resource type="Script" uid="uid://dgbi4uqx8lhnq" path="res://ui/advanced_parts_menu_3.gd" id="1_cbnih"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cbnih"]
@@ -878,7 +878,7 @@ max_value = 3.0
 step = 0.01
 value = 0.12
 
-[node name="Button" type="Button" parent="." unique_id=2032653540]
+[node name="Button" type="Button" parent="." unique_id=2032653540 groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -899,7 +899,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_nxu3g")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_jw7tg")
 text = "Exit"
 
-[node name="Button2" type="Button" parent="." unique_id=220552929]
+[node name="Button2" type="Button" parent="." unique_id=220552929 groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -920,7 +920,7 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_c5jd7")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_werok")
 text = "Reset"
 
-[node name="Button3" type="Button" parent="." unique_id=1841732650]
+[node name="Button3" type="Button" parent="." unique_id=1841732650 groups=["buttons"]]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -928,7 +928,7 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -219.0
-offset_top = -100.0
+offset_top = -193.0
 offset_right = -15.0
 offset_bottom = -24.0
 grow_horizontal = 0
@@ -942,7 +942,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_kq2dl")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_iupwu")
 theme_override_styles/hover = SubResource("StyleBoxFlat_olpsw")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_qwxvy")
-text = "Next"
+text = "Start level"
 
 [connection signal="value_changed" from="HSlider" to="." method="_on_planner_progress_weight_value_changed"]
 [connection signal="value_changed" from="HSlider2" to="." method="_on_planner_clearance_weight_value_changed"]
@@ -966,4 +966,4 @@ text = "Next"
 [connection signal="value_changed" from="HSlider20" to="." method="_on_lidar_trigger_hold_time_value_changed"]
 [connection signal="pressed" from="Button" to="." method="_on_exit_pressed"]
 [connection signal="pressed" from="Button2" to="." method="_on_reset_pressed"]
-[connection signal="pressed" from="Button3" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="Button3" to="." method="_on_start_level_pressed"]
