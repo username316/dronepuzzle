@@ -31,11 +31,12 @@ var selected_level: int = 0
 
 var vision_enabled: bool = true
 var lidar_enabled: bool = true
-#var minThrust: float = 0.0
-#var maxThrust: float = 60.0
-#var brakeStrength: float = 8.0
-var lidarStopRange: float = 9.0
-#var tiltSpeed: float = 3.0
+
+var speed: float = 0.5
+var handling: float = 0.5
+var caution: float = 0.5
+var climbBias: float = 0.5
+var precision: float = 0.5
 
 var tiltSpeed: float = 3.0
 var minThrust: float = 0.0
